@@ -1,4 +1,4 @@
-<view class="profile-page">
+<scroll-view class="profile-page" scroll-y="true" enhanced="true" show-scrollbar="false">
 
 <!-- 顶部 header -->
 <view class="profile-header">
@@ -197,4 +197,4 @@
 </view>
 
 <view class="bottom-safe-area"></view>
-</view>
+</scroll-view>

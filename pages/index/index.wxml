@@ -23,8 +23,8 @@
   <view class="toolbar-button {{page == 'instrument' ? 'active' : ''}}"
         bindtap="toolbarClick" data-page="instrument">
     <view class="toolbar-indicator"></view>
-    <van-icon name="desktop{{page == 'instrument' ? '' : '-o'}}" size="24px"
-              color="{{page == 'instrument' ? '#03A9F4' : '#8A9BB0'}}" />
+    <van-icon name="apps{{page == 'instrument' ? '' : '-o'}}" size="24px"
+          color="{{page == 'instrument' ? '#03A9F4' : '#8A9BB0'}}" />
     <text class="toolbar-label">仪器</text>
   </view>
 

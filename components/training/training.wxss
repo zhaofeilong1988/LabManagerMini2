@@ -1,1 +1,360 @@
 /* components/training/training.wxss */
+
+.training-page {
+  background: #F0F4F8;
+  min-height: 100vh;
+  padding: 24rpx 24rpx 0;
+}
+
+/* ── 安全培训卡 ── */
+.safety-card {
+  background: linear-gradient(135deg, #1B5270 0%, #03A9F4 100%);
+  border-radius: 20rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+.safety-card::before {
+  content: '';
+  position: absolute;
+  right: -40rpx;
+  top: -40rpx;
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+}
+
+.safety-card__left {
+  flex: 1;
+}
+
+.safety-card__title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6rpx;
+}
+
+.safety-card__sub {
+  font-size: 24rpx;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 16rpx;
+}
+
+.safety-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.safety-status--passed {
+  background: rgba(76, 175, 80, 0.25);
+  color: #A5D6A7;
+}
+
+.safety-status--ongoing {
+  background: rgba(255, 193, 7, 0.25);
+  color: #FFE082;
+}
+
+.safety-status--none {
+  background: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.85);
+}
+
+.safety-card__right {
+  position: absolute;
+  right: 32rpx;
+  top: 32rpx;
+}
+
+.safety-score {
+  display: flex;
+  align-items: baseline;
+  gap: 4rpx;
+}
+
+.safety-score__num {
+  font-size: 56rpx;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+}
+
+.safety-score__label {
+  font-size: 24rpx;
+  color: rgba(255,255,255,0.75);
+}
+
+.circle-text {
+  font-size: 20rpx;
+  color: #fff;
+}
+
+.safety-card__icon {
+  width: 80rpx;
+  height: 80rpx;
+  opacity: 0.6;
+}
+
+.safety-card__action {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+  margin-top: 24rpx;
+  color: rgba(255,255,255,0.9);
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+/* ── Section Header ── */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+  margin-top: 8rpx;
+}
+
+.section-header__left {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.section-dot {
+  width: 8rpx;
+  height: 32rpx;
+  background: #03A9F4;
+  border-radius: 4rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1B3A50;
+}
+
+.section-badge {
+  background: #03A9F4;
+  color: #fff;
+  font-size: 20rpx;
+  padding: 2rpx 12rpx;
+  border-radius: 20rpx;
+  font-weight: 600;
+}
+
+/* ── 证书横滑 ── */
+.cert-scroll {
+  width: 100%;
+  margin-bottom: 24rpx;
+}
+
+.cert-list {
+  display: flex;
+  gap: 16rpx;
+  padding-bottom: 8rpx;
+  width: max-content;
+}
+
+.cert-card {
+  width: 220rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.cert-card__icon {
+  margin-bottom: 12rpx;
+}
+
+.cert-card__name {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #1B3A50;
+  margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cert-card__date {
+  font-size: 22rpx;
+  color: #8A9BB0;
+}
+
+.cert-card__badge {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  background: #E3F2FD;
+  color: #03A9F4;
+}
+
+.cert-card__badge--special {
+  background: #FFF3E0;
+  color: #FF8F00;
+}
+
+.empty-cert {
+  text-align: center;
+  color: #8A9BB0;
+  font-size: 24rpx;
+  padding: 24rpx 0 32rpx;
+}
+
+/* ── 筛选 Tab ── */
+.filter-tabs {
+  display: flex;
+  gap: 0;
+  background: #E8EEF4;
+  border-radius: 20rpx;
+  padding: 4rpx;
+}
+
+.filter-tab {
+  font-size: 22rpx;
+  padding: 6rpx 20rpx;
+  border-radius: 16rpx;
+  color: #8A9BB0;
+  transition: all 0.2s;
+}
+
+.filter-tab.active {
+  background: #fff;
+  color: #03A9F4;
+  font-weight: 600;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.08);
+}
+
+/* ── 培训卡片 ── */
+.training-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.training-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 28rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+.training-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12rpx;
+}
+
+.training-card__tag {
+  font-size: 20rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  font-weight: 500;
+}
+
+.training-card__tag--safety {
+  background: #E8F5E9;
+  color: #388E3C;
+}
+
+.training-card__tag--special {
+  background: #E3F2FD;
+  color: #1976D2;
+}
+
+.training-card__tag--plan {
+  background: #FFF3E0;
+  color: #E65100;
+}
+
+.training-card__status {
+  font-size: 20rpx;
+  font-weight: 500;
+}
+
+.training-card__status--open { color: #03A9F4; }
+.training-card__status--enrolled { color: #4CAF50; }
+.training-card__status--full { color: #FF7043; }
+.training-card__status--ended { color: #8A9BB0; }
+
+.training-card__title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1B3A50;
+  margin-bottom: 10rpx;
+}
+
+.training-card__instrument {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  font-size: 24rpx;
+  color: #8A9BB0;
+  margin-bottom: 16rpx;
+}
+
+.training-card__meta {
+  display: flex;
+  gap: 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  font-size: 22rpx;
+  color: #8A9BB0;
+}
+
+.training-card__footer {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.capacity-bar {
+  flex: 1;
+  height: 6rpx;
+  background: #EEF2F6;
+  border-radius: 3rpx;
+  overflow: hidden;
+}
+
+.capacity-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, #03A9F4, #1B5270);
+  border-radius: 3rpx;
+}
+
+.btn-enroll {
+  flex-shrink: 0 !important;
+}
+
+.status-full {
+  font-size: 22rpx;
+  color: #FF7043;
+  flex-shrink: 0;
+}
+
+.status-ended {
+  font-size: 22rpx;
+  color: #8A9BB0;
+  flex-shrink: 0;
+}

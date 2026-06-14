@@ -1,2 +1,118 @@
-<!--components/training/training.wxml-->
-<text>components/training/training.wxml</text>
+<!-- components/training/training.wxml -->
+<view class="training-page">
+
+<!-- 顶部：安全培训状态卡 -->
+<view class="safety-card">
+  <view class="safety-card__left">
+    <view class="safety-card__title">安全培训</view>
+    <view class="safety-card__sub">实验室安全规范 · 必选</view>
+    <view class="safety-status safety-status--{{safetyTraining.status}}">
+      <van-icon name="{{safetyTraining.status === 'passed' ? 'success' : safetyTraining.status === 'ongoing' ? 'underway-o' : 'clock-o'}}" size="12px" />
+      <text>{{safetyTraining.statusText}}</text>
+    </view>
+  </view>
+  <view class="safety-card__right">
+    <view wx:if="{{safetyTraining.status === 'passed'}}" class="safety-score">
+      <text class="safety-score__num">{{safetyTraining.score}}</text>
+      <text class="safety-score__label">分</text>
+    </view>
+    <view wx:elif="{{safetyTraining.status === 'ongoing'}}" class="safety-progress-wrap">
+      <van-circle value="{{safetyTraining.progress}}" size="56" stroke-width="4"
+                  color="#03A9F4" layer-color="#E3F2FD">
+        <text class="circle-text">{{safetyTraining.progress}}%</text>
+      </van-circle>
+    </view>
+    <image wx:else src="/assets/icons/safety.png" class="safety-card__icon" mode="aspectFit" />
+  </view>
+  <view class="safety-card__action" bindtap="goSafetyTraining">
+    <text wx:if="{{safetyTraining.status === 'none'}}">开始学习</text>
+    <text wx:elif="{{safetyTraining.status === 'ongoing'}}">继续学习</text>
+    <text wx:else>查看证书</text>
+    <van-icon name="arrow" size="12px" color="#03A9F4" />
+  </view>
+</view>
+
+<!-- 我的证书 -->
+<view class="section-header" bindtap="goCertificates">
+  <view class="section-header__left">
+    <view class="section-dot"></view>
+    <text class="section-title">我的证书</text>
+    <text class="section-badge">{{certificates.length}}</text>
+  </view>
+  <van-icon name="arrow" size="14px" color="#8A9BB0" />
+</view>
+
+<scroll-view scroll-x class="cert-scroll" wx:if="{{certificates.length > 0}}">
+  <view class="cert-list">
+    <view class="cert-card" wx:for="{{certificates}}" wx:key="id" bindtap="viewCert" data-id="{{item.id}}">
+      <view class="cert-card__icon">
+        <van-icon name="medal-o" size="24px" color="#03A9F4" />
+      </view>
+      <view class="cert-card__name">{{item.name}}</view>
+      <view class="cert-card__date">{{item.date}}</view>
+      <view class="cert-card__badge {{item.type === 'special' ? 'cert-card__badge--special' : ''}}">
+        {{item.type === 'special' ? '专项' : '基础'}}
+      </view>
+    </view>
+  </view>
+</scroll-view>
+<view class="empty-cert" wx:else>
+  <text>暂无证书，完成培训考核后获得</text>
+</view>
+
+<!-- 专项培训 -->
+<view class="section-header">
+  <view class="section-header__left">
+    <view class="section-dot"></view>
+    <text class="section-title">专项培训</text>
+  </view>
+  <view class="filter-tabs">
+    <text class="filter-tab {{activeFilter === 'all' ? 'active' : ''}}" bindtap="setFilter" data-val="all">全部</text>
+    <text class="filter-tab {{activeFilter === 'open' ? 'active' : ''}}" bindtap="setFilter" data-val="open">可报名</text>
+    <text class="filter-tab {{activeFilter === 'mine' ? 'active' : ''}}" bindtap="setFilter" data-val="mine">已报名</text>
+  </view>
+</view>
+
+<view class="training-list">
+  <view class="training-card" wx:for="{{filteredTrainings}}" wx:key="id" bindtap="goTrainingDetail" data-id="{{item.id}}">
+    <view class="training-card__header">
+      <view class="training-card__tag training-card__tag--{{item.category}}">{{item.categoryText}}</view>
+      <view class="training-card__status training-card__status--{{item.status}}">{{item.statusText}}</view>
+    </view>
+    <view class="training-card__title">{{item.title}}</view>
+    <view class="training-card__instrument">
+      <van-icon name="orders-o" size="12px" color="#8A9BB0" />
+      <text>{{item.instrument}}</text>
+    </view>
+    <view class="training-card__meta">
+      <view class="meta-item">
+        <van-icon name="underway-o" size="12px" color="#8A9BB0" />
+        <text>{{item.date}}</text>
+      </view>
+      <view class="meta-item">
+        <van-icon name="friends-o" size="12px" color="#8A9BB0" />
+        <text>{{item.enrolled}}/{{item.capacity}} 人</text>
+      </view>
+    </view>
+    <view class="training-card__footer">
+      <view class="capacity-bar">
+        <view class="capacity-bar__fill" style="width: {{item.enrolled / item.capacity * 100}}%"></view>
+      </view>
+      <van-button wx:if="{{item.status === 'open'}}" size="mini" type="info"
+                  custom-class="btn-enroll" catchtap="enrollTraining" data-id="{{item.id}}">
+        立即报名
+      </van-button>
+      <van-button wx:elif="{{item.status === 'enrolled'}}" size="mini" plain type="info"
+                  custom-class="btn-enroll" catchtap="cancelEnroll" data-id="{{item.id}}">
+        已报名
+      </van-button>
+      <view wx:elif="{{item.status === 'full'}}" class="status-full">名额已满</view>
+      <view wx:elif="{{item.status === 'ended'}}" class="status-ended">已结束</view>
+    </view>
+  </view>
+</view>
+
+<!-- 底部占位 -->
+<view style="height: 32rpx;"></view>
+
+</view>

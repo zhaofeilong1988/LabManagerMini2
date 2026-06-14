@@ -2,7 +2,8 @@
 
 .profile-page {
   background: #f4f6f8;
-  min-height: 100vh;
+  height: 100%;
+  box-sizing: border-box;
   padding-bottom: 40rpx;
 }
 

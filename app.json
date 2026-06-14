@@ -1,7 +1,12 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/logs/logs",
+    "pages/onboarding/result/result",
+    "pages/onboarding/index/index",
+    "pages/onboarding/register/register",
+    "pages/onboarding/upload/upload",
+    "pages/onboarding/exam/exam"
   ],
   "window": {
     "navigationBarTextStyle": "black",
