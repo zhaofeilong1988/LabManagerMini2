@@ -1,0 +1,170 @@
+/* components/home/home.wxss */
+
+/* ── Vant 主题覆盖 ── */
+page, .quick-card {
+  background: var(--md-surface);
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 1rpx 6rpx rgba(0,0,0,0.08);
+}
+
+.home-wrap {
+  --van-primary-color:          #03A9F4;
+  --van-cell-group-inset-radius: 16rpx;
+  --van-cell-font-size:         28rpx;
+  --van-cell-label-font-size:   24rpx;
+  --van-cell-label-color:       var(--md-on-surface-variant, #3D5263);
+  --van-grid-item-content-padding: 24rpx 0;
+  --van-tag-primary-color:      #03A9F4;
+}
+
+/* ── 容器 ── */
+.home-wrap {
+  height: 100%;
+  background: var(--md-background, #F5F9FC);
+}
+
+.home-scroll {
+  height: 100%;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 48rpx 32rpx 24rpx;
+  background: linear-gradient(135deg, #1B5270 0%, #03A9F4 100%);
+}
+
+.greeting {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+  display: block;
+}
+
+.subtext {
+  font-size: 24rpx;
+  color: rgba(255,255,255,0.75);
+  display: block;
+  margin-top: 6rpx;
+}
+
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid rgba(255,255,255,0.5);
+}
+
+.avatar-text {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+/* ── 通知条 ── */
+.notice-bar {
+  border-radius: 0;
+  font-size: 26rpx;
+}
+
+/* ── Section ── */
+.section {
+  margin: 24rpx 24rpx 0;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: var(--md-on-surface, #0E1C26);
+  display: block;
+  margin-bottom: 16rpx;
+  padding-left: 4rpx;
+}
+
+.section-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.section-more {
+  font-size: 24rpx;
+  color: var(--md-primary-light, #03A9F4);
+}
+
+/* ── Cell Group ── */
+.cell-group {
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+/* ── Cell 左侧图标圆圈 ── */
+.cell-icon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.duty-icon     { background: var(--md-primary, #1B5270); }
+.error-icon    { background: var(--md-error, #BA1A1A); }
+.appt-icon     { background: var(--md-secondary, #4A6070); }
+.training-icon { background: var(--md-tertiary, #574B6E); }
+
+/* ── Quick Grid ── */
+.quick-grid {
+  background: var(--md-surface, #FFFFFF);
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+.grid-item {
+  font-size: 24rpx;
+}
+
+/* ── 培训进度条 ── */
+.training-progress-wrap {
+  margin-top: 8rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.progress {
+  flex: 1;
+}
+
+.progress-label {
+  font-size: 22rpx;
+  color: var(--md-on-surface-variant, #3D5263);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Empty ── */
+.empty-hint {
+  padding: 40rpx 0;
+  text-align: center;
+}
+
+/* ── 底部安全区 ── */
+.bottom-safe {
+  height: 32rpx;
+}

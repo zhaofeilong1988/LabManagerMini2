@@ -1,0 +1,43 @@
+.label {
+  position: relative;
+  top: -1px;
+  border: 1px solid #fff;
+  color:#fff;
+  padding:1px 4px 1px 4px;
+  border-radius: 4px;
+  font-size: 11px;
+  margin-top:0 !important;
+  min-width: 36px;
+  display: flex;
+  justify-content: center !important;
+  align-items: center !important;
+}
+.label-default {
+  background-color: #777;
+  
+}
+.label-normal {
+  background-color: #fff;
+  border:1px solid #d3d3d3;
+  color:#000;
+}
+
+.label-primary {
+  background-color: #337ab7;
+}
+
+.label-success {
+  background-color: #5cb85c;
+}
+
+.label-info {
+  background-color: #5bc0de;
+}
+
+.label-warning {
+  background-color: #f0ad4e;
+}
+
+.label-danger {
+  background-color: #d9534f;
+}

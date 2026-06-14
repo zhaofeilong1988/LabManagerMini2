@@ -1,0 +1,286 @@
+/* profile.wxss */
+
+.profile-page {
+  background: #f4f6f8;
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+}
+
+/* ---- Header ---- */
+.profile-header {
+  background: linear-gradient(135deg, #1B5270 0%, #03A9F4 100%);
+  padding: 60rpx 32rpx 40rpx;
+}
+.header-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24rpx;
+}
+.avatar-wrap {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+.user-name {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #fff;
+}
+.user-dept {
+  font-size: 24rpx;
+  color: rgba(255,255,255,0.85);
+}
+.user-role-tag {
+  display: inline-block;
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+  font-size: 22rpx;
+  padding: 4rpx 18rpx;
+  border-radius: 20rpx;
+  margin-top: 4rpx;
+  align-self: flex-start;
+}
+
+/* ---- Cards ---- */
+.section-card {
+  background: #fff;
+  border-radius: 16rpx;
+  margin: 0 24rpx 0rpx;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+/* ---- Progress Card ---- */
+.progress-card {
+  margin-top: -20rpx;
+  padding: 28rpx 28rpx 20rpx;
+}
+.card-header-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+.card-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #222;
+}
+.card-link {
+  font-size: 24rpx;
+  color: #03A9F4;
+}
+.progress-steps {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  flex: 0 0 auto;
+}
+.step-circle {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.done-circle {
+  background: #03A9F4;
+}
+.active-circle {
+  background: #fff;
+  border: 3rpx solid #FF9800;
+  color: #FF9800;
+}
+.gray-circle {
+  background: #fff;
+  border: 3rpx solid #ccc;
+}
+.step-num {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #FF9800;
+}
+.gray-num {
+  color: #bbb;
+}
+.step-label {
+  font-size: 20rpx;
+  color: #03A9F4;
+}
+.active-label {
+  color: #FF9800;
+  font-weight: 600;
+}
+.gray-label {
+  color: #bbb;
+}
+.step-line {
+  flex: 1;
+  height: 3rpx;
+  margin-bottom: 20rpx;
+}
+.done-line { background: #03A9F4; }
+.active-line { background: #FF9800; }
+.gray-line { background: #ddd; }
+
+.progress-status-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background: #FFF8E1;
+  border-radius: 10rpx;
+  padding: 14rpx 18rpx;
+}
+.status-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10rpx;
+  flex: 1;
+}
+.orange-dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: #FF9800;
+  flex-shrink: 0;
+}
+.status-text {
+  font-size: 22rpx;
+  color: #555;
+}
+.status-btn {
+  background: #03A9F4;
+  color: #fff;
+  font-size: 22rpx;
+  border-radius: 20rpx;
+  padding: 0 20rpx;
+  line-height: 52rpx;
+  height: 52rpx;
+  border: none;
+  flex-shrink: 0;
+}
+
+/* ---- Group Label ---- */
+.group-label {
+  font-size: 24rpx;
+  color: #999;
+  padding: 28rpx 32rpx 12rpx;
+  font-weight: 500;
+}
+
+/* ---- Menu Items ---- */
+.menu-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 28rpx;
+}
+.menu-item.disabled {
+  opacity: 0.6;
+}
+.menu-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20rpx;
+  flex: 1;
+}
+.menu-icon {
+  flex-shrink: 0;
+}
+.menu-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+.menu-title {
+  font-size: 30rpx;
+  color: #222;
+  font-weight: 500;
+}
+.menu-title.disabled-title {
+  color: #888;
+}
+.menu-desc {
+  font-size: 22rpx;
+  color: #999;
+}
+.menu-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10rpx;
+}
+.divider {
+  height: 1rpx;
+  background: #f2f2f2;
+  margin: 0 28rpx;
+}
+
+/* ---- Badge Tags ---- */
+.badge-tag {
+  font-size: 20rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 20rpx;
+  font-weight: 500;
+}
+.badge-tag.reviewing {
+  background: #FFF3E0;
+  color: #FF9800;
+}
+.badge-tag.coming-soon {
+  background: #FFF3E0;
+  color: #FF9800;
+}
+.badge-tag.approving {
+  background: #FFF3E0;
+  color: #FF9800;
+}
+
+/* ---- Approval Entry ---- */
+.approval-entry {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  margin: 32rpx 24rpx 0;
+  padding: 24rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+.approval-entry-text {
+  font-size: 28rpx;
+  color: #1B5270;
+  font-weight: 500;
+}
+
+.bottom-safe-area {
+  height: 40rpx;
+}

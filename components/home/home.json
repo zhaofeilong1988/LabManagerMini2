@@ -1,0 +1,14 @@
+{
+  "component": true,
+  "usingComponents": {
+    "van-notice-bar":  "@vant/weapp/notice-bar/index",
+    "van-cell":        "@vant/weapp/cell/index",
+    "van-cell-group":  "@vant/weapp/cell-group/index",
+    "van-tag":         "@vant/weapp/tag/index",
+    "van-grid":        "@vant/weapp/grid/index",
+    "van-grid-item":   "@vant/weapp/grid-item/index",
+    "van-progress":    "@vant/weapp/progress/index",
+    "van-empty":       "@vant/weapp/empty/index",
+    "van-icon":        "@vant/weapp/icon/index"
+  }
+}

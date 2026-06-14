@@ -1,0 +1,10 @@
+{
+  "component": true,
+  "usingComponents": {
+    "van-icon": "@vant/weapp/icon/index",
+    "home":       "/components/home/home",
+    "instrument": "/components/instrument/instrument",
+    "training":   "/components/training/training",
+    "profile":    "/components/profile/profile"
+  }
+}

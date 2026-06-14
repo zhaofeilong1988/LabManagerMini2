@@ -1,0 +1,194 @@
+/* app.wxss — 全局样式 & MD3 色彩 Token */
+
+/* ==========================================
+   MD3 Light Scheme
+   Source Color: #03A9F4 (Light Blue 500)
+   ========================================== */
+   page {
+    /* --- Primary --- */
+    --md-primary:                #1B5270;
+    --md-on-primary:             #FFFFFF;
+    --md-primary-container:      #C3E7FF;
+    --md-on-primary-container:   #001E2E;
+    --md-primary-fixed:          #C3E7FF;
+    --md-on-primary-fixed:       #001E2E;
+  
+    /* --- Secondary --- */
+    --md-secondary:              #4A6070;
+    --md-on-secondary:           #FFFFFF;
+    --md-secondary-container:    #CCE5F0;
+    --md-on-secondary-container: #04202D;
+  
+    /* --- Tertiary (紫色调，用于培训/标签) --- */
+    --md-tertiary:               #574B6E;
+    --md-on-tertiary:            #FFFFFF;
+    --md-tertiary-container:     #DDD8F0;
+    --md-on-tertiary-container:  #120827;
+  
+    /* --- Error --- */
+    --md-error:                  #BA1A1A;
+    --md-on-error:               #FFFFFF;
+    --md-error-container:        #FFDAD6;
+    --md-on-error-container:     #410002;
+  
+    /* --- Surface --- */
+    --md-surface:                #F5FAFE;
+    --md-on-surface:             #1A1C1E;
+    --md-surface-variant:        #DCE4EC;
+    --md-on-surface-variant:     #42474E;
+    --md-surface-container-low:  #EFF4F9;
+    --md-surface-container:      #FFFFFF;
+    --md-surface-container-high: #E5EDF3;
+  
+    /* --- Outline --- */
+    --md-outline:                #72787E;
+    --md-outline-variant:        #C2C7CE;
+  
+    /* --- 语义化别名（推荐使用这套） --- */
+    --color-bg:          var(--md-surface);           /* 页面背景 */
+    --color-card:        var(--md-surface-container); /* 卡片背景 */
+    --color-divider:     var(--md-outline-variant);   /* 分割线 */
+    --color-text-main:   var(--md-on-surface);        /* 主体文字 */
+    --color-text-sub:    var(--md-on-surface-variant);/* 说明文字 */
+  
+    /* --- 基础设置 --- */
+    background-color: var(--md-surface);
+    color: var(--md-on-surface);
+    font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+    font-size: 28rpx;
+    line-height: 1.5;
+  }
+  
+  /* ==========================================
+     通用工具类
+     ========================================== */
+  
+  /* 卡片基础样式 */
+  .card {
+    background: var(--md-surface-container);
+    border-radius: 24rpx;
+    padding: 24rpx;
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+  }
+  
+  .card--outlined {
+    background: var(--md-surface-container);
+    border-radius: 24rpx;
+    padding: 24rpx;
+    border: 2rpx solid var(--md-outline-variant);
+  }
+  
+  /* 按钮 - Filled（Primary） */
+  .btn-filled {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 80rpx;
+    padding: 0 40rpx;
+    border-radius: 40rpx;
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    font-size: 28rpx;
+    font-weight: 500;
+    border: none;
+  }
+  
+  /* 按钮 - Tonal（Primary Container） */
+  .btn-tonal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 80rpx;
+    padding: 0 40rpx;
+    border-radius: 40rpx;
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    font-size: 28rpx;
+    font-weight: 500;
+    border: none;
+  }
+  
+  /* 按钮 - Outlined */
+  .btn-outlined {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 80rpx;
+    padding: 0 40rpx;
+    border-radius: 40rpx;
+    background: transparent;
+    color: var(--md-primary);
+    font-size: 28rpx;
+    font-weight: 500;
+    border: 2rpx solid var(--md-outline);
+  }
+  
+  /* Chip */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    height: 56rpx;
+    padding: 0 24rpx;
+    border-radius: 16rpx;
+    font-size: 24rpx;
+    font-weight: 500;
+  }
+  
+  .chip--primary {
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+  }
+  
+  .chip--secondary {
+    background: var(--md-secondary-container);
+    color: var(--md-on-secondary-container);
+  }
+  
+  .chip--tertiary {
+    background: var(--md-tertiary-container);
+    color: var(--md-on-tertiary-container);
+  }
+  
+  .chip--error {
+    background: var(--md-error-container);
+    color: var(--md-on-error-container);
+  }
+  
+  /* Badge（未读数） */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36rpx;
+    height: 36rpx;
+    padding: 0 10rpx;
+    border-radius: 18rpx;
+    background: var(--md-error);
+    color: var(--md-on-error);
+    font-size: 20rpx;
+    font-weight: 600;
+  }
+  
+  /* 分割线 */
+  .divider {
+    height: 1rpx;
+    background: var(--md-outline-variant);
+    margin: 16rpx 0;
+  }
+  
+  /* 文字层级 */
+  .text-title-large  { font-size: 40rpx; font-weight: 400; line-height: 1.4; }
+  .text-title-medium { font-size: 32rpx; font-weight: 500; line-height: 1.4; }
+  .text-title-small  { font-size: 28rpx; font-weight: 500; line-height: 1.4; }
+  .text-body-large   { font-size: 30rpx; font-weight: 400; line-height: 1.6; }
+  .text-body-medium  { font-size: 28rpx; font-weight: 400; line-height: 1.6; }
+  .text-body-small   { font-size: 24rpx; font-weight: 400; line-height: 1.6; }
+  .text-label-large  { font-size: 28rpx; font-weight: 500; }
+  .text-label-medium { font-size: 24rpx; font-weight: 500; }
+  .text-label-small  { font-size: 22rpx; font-weight: 500; }
+  
+  .text-primary     { color: var(--md-primary); }
+  .text-secondary   { color: var(--md-secondary); }
+  .text-sub         { color: var(--md-on-surface-variant); }
+  .text-error       { color: var(--md-error); }
+  

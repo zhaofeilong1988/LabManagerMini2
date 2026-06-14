@@ -1,0 +1,153 @@
+<!-- components/home/home.wxml -->
+<view class="home-wrap">
+  <scroll-view class="home-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+
+    <!-- ① 顶部 Header -->
+    <view class="header">
+      <view class="header-text">
+        <text class="greeting">你好，{{userInfo.name}} 👋</text>
+        <text class="subtext">{{userInfo.group}}</text>
+      </view>
+      <view class="avatar">
+        <text class="avatar-text">{{userInfo.initial}}</text>
+      </view>
+    </view>
+
+    <!-- ② 通知条 -->
+    <van-notice-bar
+      wx:if="{{notice}}"
+      left-icon="volume-o"
+      text="{{notice}}"
+      color="var(--md-on-primary-container)"
+      background="var(--md-primary-container)"
+      custom-class="notice-bar"
+    />
+
+    <!-- ③ 今日待办 -->
+    <view class="section">
+      <text class="section-title">今日待办</text>
+
+      <!-- 值日卡片 -->
+      <van-cell-group inset custom-class="cell-group">
+        <van-cell
+          title="今日值日"
+          label="{{dutyStatus.done ? '已完成打卡' : '记得按时打卡'}}"
+          is-link
+          bindtap="goToDuty"
+        >
+          <view slot="icon" class="cell-icon duty-icon">
+            <van-icon name="clock-o" size="20px" color="#FFFFFF" />
+          </view>
+          <van-tag
+            slot="right-icon"
+            type="{{dutyStatus.done ? 'success' : 'warning'}}"
+            size="medium"
+          >{{dutyStatus.done ? '已完成' : '待办'}}</van-tag>
+        </van-cell>
+
+        <!-- 值日表未设置警告 -->
+        <van-cell
+          wx:if="{{!dutyStatus.scheduleSet}}"
+          title="值日表未设置"
+          label="3月值日表尚未配置，影响仪器预约"
+          is-link
+          bindtap="goToDutyAdmin"
+        >
+          <view slot="icon" class="cell-icon error-icon">
+            <van-icon name="warning-o" size="20px" color="#FFFFFF" />
+          </view>
+          <van-tag slot="right-icon" type="danger" size="medium">去设置</van-tag>
+        </van-cell>
+      </van-cell-group>
+    </view>
+
+    <!-- ④ 快捷入口 -->
+    <view class="section">
+      <text class="section-title">快捷入口</text>
+      <view class="quick-card">
+      <van-grid column-num="4" border="{{false}}" custom-class="quick-grid">
+        <van-grid-item icon="scan" text="扫码签到" bindtap="goToScan"
+                       icon-color="var(--md-primary)" custom-class="grid-item" />
+        <van-grid-item icon="calendar-o" text="仪器预约" bindtap="goToInstrument"
+                       icon-color="var(--md-secondary)" custom-class="grid-item" />
+        <van-grid-item icon="desktop-o" text="实验台" bindtap="goToWorkbench"
+                       icon-color="var(--md-tertiary)" custom-class="grid-item" />
+        <van-grid-item icon="warning-o" text="故障报修" bindtap="goToRepair"
+                       icon-color="#F44336" custom-class="grid-item" />
+        <van-grid-item icon="certificate" text="培训考核" bindtap="goToTraining"
+                       icon-color="var(--md-primary)" custom-class="grid-item" />
+        <van-grid-item icon="records-o" text="申请审批" bindtap="goToApproval"
+                       icon-color="var(--md-secondary)" custom-class="grid-item" />
+        <van-grid-item icon="contact" text="技术指导" bindtap="goToMentor"
+                       icon-color="var(--md-tertiary)" custom-class="grid-item" />
+        <van-grid-item icon="notes-o" text="值日管理" bindtap="goToDutyAdmin"
+                       icon-color="var(--md-outline)" custom-class="grid-item" />
+      </van-grid>
+      </view>
+    </view>
+
+    <!-- ⑤ 近期预约 -->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">近期预约</text>
+        <text class="section-more" bindtap="goToInstrument">查看全部 ›</text>
+      </view>
+
+      <view wx:if="{{appointments.length === 0}}" class="empty-hint">
+        <van-empty image="search" description="暂无预约" />
+      </view>
+
+      <van-cell-group inset wx:else custom-class="cell-group">
+        <van-cell
+          wx:for="{{appointments}}"
+          wx:key="id"
+          title="{{item.name}}"
+          label="{{item.date}} · {{item.timeSlot}}"
+        >
+          <view slot="icon" class="cell-icon appt-icon">
+            <van-icon name="desktop-o" size="20px" color="#FFFFFF" />
+          </view>
+          <van-tag
+            slot="right-icon"
+            type="{{item.status === 'confirmed' ? 'primary' : item.status === 'pending' ? 'warning' : 'default'}}"
+            size="medium"
+          >{{item.statusText}}</van-tag>
+        </van-cell>
+      </van-cell-group>
+    </view>
+
+    <!-- ⑥ 培训进度 -->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">培训进度</text>
+        <text class="section-more" bindtap="goToTraining">查看全部 ›</text>
+      </view>
+      <van-cell-group inset custom-class="cell-group">
+        <van-cell
+          wx:for="{{trainings}}"
+          wx:key="id"
+          title="{{item.name}}"
+          is-link
+          bindtap="goToTraining"
+        >
+          <view slot="icon" class="cell-icon training-icon">
+            <van-icon name="records-o" size="20px" color="#FFFFFF" />
+          </view>
+          <view slot="label" class="training-progress-wrap">
+            <van-progress
+              percentage="{{item.done / item.total * 100}}"
+              stroke-width="6"
+              color="var(--md-primary)"
+              track-color="var(--md-surface-variant)"
+              show-pivot="{{false}}"
+              custom-class="progress"
+            />
+            <text class="progress-label">{{item.done}}/{{item.total}} 课时</text>
+          </view>
+        </van-cell>
+      </van-cell-group>
+    </view>
+
+    <view class="bottom-safe"></view>
+  </scroll-view>
+</view>
