@@ -1,0 +1,53 @@
+<!-- pages/device-log/index.wxml —— 使用记录与费用
+     列表结构与「上机记录」页 (pages/instrument-logs) 完全一致：
+       ① 仪器名称（型号）
+       ② 使用人（所内/所外/院外）  电话
+       ③ 上机时间段  起 ~ 止
+       ④ 金额算式 = 合计(实付) + 铅笔改单 -->
+<view class="dl-page">
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="dl-state">
+    <view class="dl-spin"></view>
+    <text class="dl-state-t">正在加载使用记录…</text>
+  </view>
+
+  <!-- 加载失败 -->
+  <view wx:elif="{{error}}" class="dl-state">
+    <view class="dl-err-ic">⚠️</view>
+    <text class="dl-state-t">{{errMsg}}</text>
+    <view class="dl-state-btn" hover-class="dl-hover" bindtap="onRetry">重新加载</view>
+  </view>
+
+  <!-- 加载成功：列表 -->
+  <view wx:elif="{{logs.length}}" class="il-list">
+    <view class="il-item" wx:for="{{logs}}" wx:key="id">
+
+      <view class="il-head">
+        <text class="il-dev">{{item.devName}}</text>
+        <text class="il-model" wx:if="{{item.devModel}}">（{{item.devModel}}）</text>
+      </view>
+
+      <view class="il-meta">
+        <text class="il-user">{{item.userName}}</text>
+        <text class="il-dept">（{{item.deptText}}）</text>
+        <text class="il-phone" wx:if="{{item.phone}}">电话：{{item.phone}}</text>
+      </view>
+
+      <text class="il-time">{{item.begin}} ~ {{item.finish}}</text>
+
+      <view class="il-fee">
+        <text class="il-fee-txt">{{item.feeLeft}} <text class="il-fee-green">{{item.feeRight}}</text></text>
+        <van-icon name="edit" size="17px" color="#0A7BB8" catch:tap="onEditFee" data-id="{{item.id}}" />
+      </view>
+
+    </view>
+  </view>
+
+  <!-- 空态 -->
+  <view wx:else class="dl-empty">
+    <view class="dl-empty-ic">📋</view>
+    <text class="dl-empty-t">暂无使用记录</text>
+  </view>
+
+</view>

@@ -1,0 +1,384 @@
+<!-- pages/training/detail/detail.wxml -->
+<view wx:if="{{training}}" class="td-page">
+
+  <!-- 自定义导航栏（本页 navigationStyle=custom，见 detail.json）：
+       原生导航栏由系统绘制在页面之上，页面内的 fixed 全屏播放器无法覆盖它，
+       全屏时顶部会一直露着返回按钮。这里自绘一条导航栏，全屏播放时整条隐藏，
+       播放器才能真正铺满整个手机屏（点关闭或把手机竖回来自动退出全屏）。 -->
+  <view wx:if="{{!videoPlayer.fullscreen}}" class="td-nav" style="padding-top: {{statusBarHeight}}px;">
+    <view class="td-nav__bar" style="height: {{navBarHeight}}px;">
+      <view class="td-nav__back" bindtap="goBack" hover-class="td-nav__back--hover" hover-stay-time="120">
+        <van-icon name="arrow-left" size="42rpx" color="#FFFFFF" />
+      </view>
+      <text class="td-nav__title">培训详情</text>
+    </view>
+  </view>
+
+<scroll-view
+  class="td-scroll"
+  scroll-y
+  enhanced
+  show-scrollbar="{{false}}"
+  scroll-with-animation
+  scroll-top="{{scrollTop}}"
+>
+
+  <!-- 占位：导航栏是 fixed（不占布局高度），用它把内容压到导航栏下方 -->
+  <view class="td-nav-placeholder" style="height: {{navTotalHeight}}px;"></view>
+
+  <!-- 头部信息 -->
+  <view class="td-hero">
+    <view class="td-hero__top">
+      <view class="td-hero__tag td-hero__tag--{{training.tagType}}">{{training.categoryText}}</view>
+      <view class="td-hero__status td-hero__status--{{training.status}}">{{training.statusText}}</view>
+    </view>
+    <text class="td-hero__title">{{training.title}}</text>
+    <text class="td-hero__inst">{{training.instrument}}</text>
+    <view class="td-hero__meta">
+      <text class="td-hero__meta-item">培训时间：{{training.date}}</text>
+      <text wx:if="{{training.unlimited}}" class="td-hero__meta-item">人数不限</text>
+      <text wx:elif="{{training.enrolledText}}" class="td-hero__meta-item">报名人数 {{training.enrolledText}}</text>
+    </view>
+  </view>
+
+  <!-- 平台准入入口提示：先完成安全培训学习再参加考试 -->
+  <view wx:if="{{admissionMode}}" class="td-adm-banner">
+    <van-icon name="info-o" size="28rpx" color="#0A7BB8" />
+    <text>{{training.info}}</text>
+  </view>
+
+  <!-- 培训描述 -->
+  <view class="td-card">
+    <view class="td-card__title">
+      <view class="td-dot"></view>
+      <text class="td-card__title-text">培训描述</text>
+    </view>
+    <text class="td-desc">{{training.description}}</text>
+  </view>
+
+  <!-- 学习资料（文档列表，点击标记已学） -->
+  <view class="td-card">
+    <view class="td-card__title">
+      <view class="td-dot"></view>
+      <text class="td-card__title-text">学习资料</text>
+      <text class="td-count">已学 {{training.learnedDocs}}/{{training.docs.length}}</text>
+    </view>
+    <view
+      class="td-doc"
+      wx:for="{{training.docs}}"
+      wx:key="name"
+      bindtap="openDoc"
+      data-index="{{index}}"
+    >
+      <view class="td-doc__icon">
+        <van-icon name="description" size="18px" color="#0A7BB8" />
+      </view>
+      <view class="td-doc__body">
+        <text class="td-doc__name">{{item.name}}</text>
+        <text class="td-doc__size">{{item.size}}</text>
+      </view>
+      <text wx:if="{{item.learned}}" class="td-learned-tag">已学</text>
+      <van-icon wx:else name="arrow" size="14px" color="#6E7F8A" />
+    </view>
+    <view wx:if="{{training.docs.length === 0}}" class="td-empty">
+      <van-icon name="file-o" size="40px" color="#C2CAD0" />
+      <text>暂无学习资料</text>
+    </view>
+  </view>
+
+  <!-- 学习视频：点击某个视频卡片，播放器就在该卡片原位展开（不跳页、不弹框、不换位置） -->
+  <view class="td-card">
+    <view class="td-card__title">
+      <view class="td-dot"></view>
+      <text class="td-card__title-text">学习视频</text>
+      <text class="td-count">已看 {{training.learnedVideos}}/{{training.videos.length}}</text>
+    </view>
+
+    <!-- 视频卡片列表（16:9 缩略图 + 进度条 + 时长角标，模仿主流视频 App） -->
+    <view class="td-vlist">
+      <!-- 卡片本身不绑定点击：播放只由封面上的透明点击层（.td-vcard__tap）触发。
+           这样点下方标题 / 已观看等信息区不会有任何动作（它们只是展示），
+           也避免播放中误点信息区重新触发 playVideo、把正在播放的视频重置。 -->
+      <view
+        class="td-vcard"
+        wx:for="{{training.videos}}"
+        wx:key="name"
+      >
+        <!-- 正在播放的卡片：播放器就地展开在缩略图原本的位置，卡片位置不变 -->
+        <view
+          wx:if="{{videoPlayer.visible && videoPlayer.activeIndex === index}}"
+          id="td-video-player"
+          class="td-vp-embed {{videoPlayer.fullscreen ? 'td-vp-embed--fs' : ''}}"
+        >
+          <!-- 视频舞台：16:9 固定比例（与上方缩略图尺寸完全一致）。
+               fullscreen 时加 --fs 类：舞台固定为「手机屏幕」尺寸并旋转 90°，
+               横向铺满手机屏幕（页面内自定义全屏，不调用原生全屏接口）。 -->
+          <view class="td-vp-stage {{videoPlayer.fullscreen ? 'td-vp-stage--fs' : ''}}">
+            <!-- 视频本体（关闭原生控件与原生进度手势，进度条由自定义控件接管） -->
+            <video
+              id="td-vp-video"
+              class="td-vp-video"
+              src="{{videoPlayer.src}}"
+              initial-time="{{videoPlayer.initialTime}}"
+              controls="{{false}}"
+              autoplay="{{true}}"
+              show-fullscreen-btn="{{false}}"
+              show-play-btn="{{false}}"
+              show-center-play-btn="{{false}}"
+              show-mute-btn="{{false}}"
+              enable-progress-gesture="{{false}}"
+              enable-play-gesture="{{false}}"
+              object-fit="contain"
+              bindtap="onVideoStageTap"
+              bindplay="onVideoPlay"
+              bindpause="onVideoPause"
+              bindtimeupdate="onVideoTimeUpdate"
+              bindloadedmetadata="onVideoLoadedMeta"
+              bindseeked="onVideoSeeked"
+              bindended="onVideoEnded"
+              bindfullscreenchange="onVideoFullscreenChange"
+              binderror="onVideoError"
+            >
+              <!-- 覆盖层：普通播放与全屏下都显示；点它切换控件显隐 -->
+              <view class="td-vp-ui" catchtap="onVideoStageTap">
+                <!-- 手势层：铺满整个画面，在画面任意位置横向拖动即可快进 / 快退（不必非得拖时间轴）。
+                     z-index 低于底部控件条 / 中央按钮 / 右上角按钮，因此触摸优先命中控件，
+                     只有落在画面空白处才触发快进手势；全屏（舞台旋转 90°）时改判纵向拖动。
+                     轻点画面（未发生位移）同样在这里判定并切换控件显隐：
+                     容器上绑了 catchtouchmove，轻点时手指略有抖动就可能不再派发 tap，
+                     因此改为在 touchend 里按「位移是否超过 10px」判定，比依赖 tap 更可靠。 -->
+                <view
+                  class="td-vp-gesture"
+                  catchtap="onVideoStageTap"
+                  catchtouchstart="onVideoSwipeStart"
+                  catchtouchmove="onVideoSwipeMove"
+                  catchtouchend="onVideoSwipeEnd"
+                  catchtouchcancel="onVideoSwipeCancel"
+                >
+                  <!-- 拖动中：只显示「快进 +45s / 快退 30s」文案，不显示目标秒数 -->
+                  <view wx:if="{{videoPlayer.swipeSeeking}}" class="td-vp-swipe">
+                    <text class="td-vp-swipe__delta {{videoPlayer.swipeForward ? 'td-vp-swipe__delta--fwd' : 'td-vp-swipe__delta--back'}}">{{videoPlayer.swipeDeltaText}}</text>
+                  </view>
+                </view>
+
+                <!-- 右上角常驻按钮：仅保留「关闭」（不随控件自动隐藏，播放过程中始终可见）；
+                     全屏/退出全屏统一由底部控件条的按钮负责，避免出现两个全屏入口。
+                     全屏状态下点它 = 退出全屏，回到卡片原位播放 -->
+                <view class="td-vp-topbar">
+                  <view
+                    wx:if="{{videoPlayer.fullscreen}}"
+                    class="td-vp-iconbtn"
+                    catchtap="onVideoExitFullscreen"
+                    hover-class="td-vp-iconbtn--hover"
+                  >
+                    <van-icon name="cross" size="18px" color="#FFFFFF" />
+                  </view>
+                  <view
+                    wx:else
+                    class="td-vp-iconbtn"
+                    catchtap="closeVideoPlayer"
+                    hover-class="td-vp-iconbtn--hover"
+                  >
+                    <van-icon name="cross" size="18px" color="#FFFFFF" />
+                  </view>
+                </view>
+
+                <!-- 本次累计观看：悬浮角标（随控件一起显隐） -->
+                <view wx:if="{{videoPlayer.controlsVisible}}" class="td-vp-session">
+                  <text class="td-vp-session-text">本次累计观看 {{videoPlayer.sessionText}}</text>
+                </view>
+
+                <!-- 拖动定位兜底：视频源不支持定位时，改为下载本地文件播放。
+                     下载中 / 切换源并定位期间，用全舞台遮罩盖住「回到原点」「闪一下暂停」等中间画面，
+                     只给用户看到加载提示，定位完成后遮罩自动消失、直接露出目标位置的画面。 -->
+                <view wx:if="{{videoPlayer.loadingText || videoPlayer.switching}}" class="td-vp-mask"></view>
+                <view wx:if="{{videoPlayer.loadingText || videoPlayer.switching}}" class="td-vp-loading">
+                  <view class="td-vp-loading__spinner"></view>
+                  <text class="td-vp-loading__text">{{videoPlayer.loadingText || '正在定位…'}}</text>
+                </view>
+
+                <!-- 中央按钮：与底部控件条同步显隐（时间轴显示时它就显示）。
+                     播放中显示「暂停」图标，暂停时显示「播放」图标，点击都切换播放/暂停。
+                     切换源过渡态下不显示，避免重新加载瞬间闪出暂停图标 -->
+                <view
+                  wx:if="{{videoPlayer.controlsVisible && !videoPlayer.switching && !videoPlayer.loadingText}}"
+                  class="td-vp-center"
+                  catchtap="onVideoTogglePlay"
+                >
+                  <view class="td-vp-center__btn">
+                    <van-icon name="{{videoPlayer.playing ? 'pause' : 'play'}}" size="56rpx" color="#FFFFFF" />
+                  </view>
+                </view>
+
+                <!-- 倍速选项条：浮在底部控件条上方，横向排列，点选即切换倍速 -->
+                <view wx:if="{{videoPlayer.controlsVisible && videoPlayer.rateVisible}}" class="td-vp-rates">
+                  <view
+                    wx:for="{{rateOptions}}"
+                    wx:key="rate"
+                    class="td-vp-rates__item {{videoPlayer.rate === item.rate ? 'td-vp-rates__item--on' : ''}}"
+                    catchtap="onVideoPickRate"
+                    data-rate="{{item.rate}}"
+                  >{{item.text}}</view>
+                </view>
+
+                <!-- 底部自定义控件条：进度条可拖动 + 播放/暂停 + 时间 + 倍速 + 全屏 -->
+                <view wx:if="{{videoPlayer.controlsVisible}}" class="td-vp-bottom">
+                  <view class="td-vp-bottom__play" catchtap="onVideoTogglePlay">
+                    <van-icon name="{{videoPlayer.playing ? 'pause' : 'play'}}" size="30rpx" color="#FFFFFF" />
+                  </view>
+                  <text class="td-vp-bottom__time">{{videoPlayer.currentText}}</text>
+                  <!-- 进度条：点击定位 / 拖动定位。
+                       触摸事件全部用 catch 绑定（而不是 bind）：避免事件继续冒泡到舞台（触发控件显隐）
+                       或被外层 scroll-view 当成页面滚动吞掉，保证拖动时坐标与定位都稳定 -->
+                  <view
+                    class="td-vp-bottom__track"
+                    catchtap="onVideoTrackTap"
+                    catchtouchstart="onVideoSeekStart"
+                    catchtouchmove="onVideoSeekMove"
+                    catchtouchend="onVideoSeekEnd"
+                    catchtouchcancel="onVideoSeekEnd"
+                    data-role="track"
+                  >
+                    <view class="td-vp-bottom__track-bg"></view>
+                    <view class="td-vp-bottom__track-played" style="width: {{videoPlayer.playedPercent}}%;"></view>
+                    <view class="td-vp-bottom__track-thumb" style="left: {{videoPlayer.playedPercent}}%;"></view>
+                  </view>
+                  <text class="td-vp-bottom__time">{{videoPlayer.durationText}}</text>
+                  <!-- 倍速：显示当前倍速，点它展开 / 收起倍速选项 -->
+                  <view class="td-vp-bottom__rate" catchtap="onVideoToggleRate">
+                    <text class="td-vp-bottom__rate-text">{{videoPlayer.rateText}}</text>
+                  </view>
+                  <view class="td-vp-bottom__full" catchtap="onVideoToggleFullscreen">
+                    <van-icon name="{{videoPlayer.fullscreen ? 'shrink' : 'enlarge'}}" size="30rpx" color="#FFFFFF" />
+                  </view>
+                </view>
+              </view>
+            </video>
+          </view>
+        </view>
+
+        <!-- 缩略图区（16:9，与播放器舞台尺寸/位置完全一致）：该视频播放时由上方播放器取代 -->
+        <view wx:if="{{!(videoPlayer.visible && videoPlayer.activeIndex === index)}}" class="td-vcard__cover">
+          <!-- 封面 = 视频首帧：这里放一个「不自动播放、无原生控件」的 video 组件，
+               原生加载完成后会停在首帧画面上，尺寸与播放时一模一样（object-fit 也保持一致）；
+               点击时并不播放它，而是由透明点击层展开上方真正的播放器。
+               取不到首帧（地址缺失 / 加载失败）时自动露出下层的深色渐变占位，不影响点击播放。 -->
+          <video
+            wx:if="{{item.src && !item.coverError}}"
+            class="td-vcard__frame"
+            src="{{item.src}}"
+            initial-time="0"
+            controls="{{false}}"
+            autoplay="{{false}}"
+            muted="{{true}}"
+            object-fit="contain"
+            show-fullscreen-btn="{{false}}"
+            show-play-btn="{{false}}"
+            show-center-play-btn="{{false}}"
+            show-mute-btn="{{false}}"
+            enable-progress-gesture="{{false}}"
+            enable-play-gesture="{{false}}"
+            binderror="onCoverError"
+            data-index="{{index}}"
+          ></video>
+          <view class="td-vcard__cover-deco"></view>
+          <!-- 学习状态标签（左上角）：未学习 / 学习中 / 已学完，按观看时长占总时长的比例判定 -->
+          <view class="td-vcard__badge td-vcard__badge--{{item.statusType}}">
+            <van-icon wx:if="{{item.statusType === 'done'}}" name="passed" size="20rpx" color="#FFFFFF" />
+            <text>{{item.statusText}}</text>
+          </view>
+          <view class="td-vcard__play">
+            <van-icon name="play" size="40rpx" color="#FFFFFF" />
+          </view>
+          <view wx:if="{{item.duration}}" class="td-vcard__dur">{{item.duration}}</view>
+          <view wx:if="{{item.progress > 0}}" class="td-vcard__progress">
+            <view class="td-vcard__progress-bar" style="width: {{item.progress}}%;"></view>
+          </view>
+          <!-- 透明点击层（最上层）：点缩略图任意位置（含居中播放按钮）即在该卡片原位展开播放器 -->
+          <view class="td-vcard__tap" catchtap="playVideo" data-index="{{index}}"></view>
+        </view>
+        <!-- 标题与观看信息 -->
+        <view class="td-vcard__info">
+          <view class="td-vcard__name">{{item.name}}</view>
+          <view class="td-vcard__meta">
+            <view class="td-vcard__meta-info">
+              <text class="td-vcard__watched">已观看 {{item.watchedText}}</text>
+              <text wx:if="{{item.durationText}}" class="td-vcard__sep">/</text>
+              <text wx:if="{{item.durationText}}" class="td-vcard__total">{{item.durationText}}</text>
+              <text wx:if="{{item.progressPercentText}}" class="td-vcard__percent">· {{item.progressPercentText}}</text>
+            </view>
+            <view
+              class="td-vcard__reset"
+              catchtap="resetWatched"
+              data-index="{{index}}"
+              hover-class="td-vcard__reset--hover"
+              hover-stay-time="120"
+            >
+              <van-icon name="replay" size="22rpx" color="#6E7F8A" />
+              <text>重置</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{training.videos.length === 0}}" class="td-empty">
+      <van-icon name="video-o" size="40px" color="#C2CAD0" />
+      <text>暂无学习视频</text>
+    </view>
+  </view>
+
+  <!-- 考试信息 / 考核说明 -->
+  <view wx:if="{{training.hasOnlineExam}}" class="td-card">
+    <view class="td-card__title">
+      <view class="td-dot"></view>
+      <text class="td-card__title-text">考试信息</text>
+    </view>
+    <view class="td-exam-row">
+      <text class="td-exam-row__label">考试名称</text>
+      <text class="td-exam-row__value">{{training.exam.title}}</text>
+    </view>
+    <view class="td-exam-row">
+      <text class="td-exam-row__label">考试时长</text>
+      <text class="td-exam-row__value">{{training.exam.duration}}</text>
+    </view>
+    <view class="td-exam-row">
+      <text class="td-exam-row__label">题目数量</text>
+      <text class="td-exam-row__value">{{training.exam.questions}}</text>
+    </view>
+    <view class="td-exam-row">
+      <text class="td-exam-row__label">通过标准</text>
+      <text class="td-exam-row__value">{{training.exam.passLine}}</text>
+    </view>
+    <view class="td-exam-note">{{training.examNote}}</view>
+    <!-- 最新考试记录（一行小字）：ExamRecord 为空表示尚未参加考试，不渲染 -->
+    <view wx:if="{{examRecord}}" class="td-exam-record td-exam-record--{{examRecord.stateType}}">
+      <van-icon
+        name="{{examRecord.stateType === 'passed' ? 'passed' : (examRecord.stateType === 'failed' ? 'close' : 'clock-o')}}"
+        size="16px"
+        color="{{examRecord.stateType === 'passed' ? '#0D86BE' : (examRecord.stateType === 'failed' ? '#FF7043' : '#F5A623')}}"
+      />
+      <text>最近考试：{{examRecord.stateText}}{{examRecord.scoreText ? ' · ' + examRecord.scoreText : ''}}{{examRecord.time ? ' · ' + examRecord.time : ''}}</text>
+    </view>
+  </view>
+  <view wx:else class="td-card">
+    <view class="td-card__title">
+      <view class="td-dot"></view>
+      <text class="td-card__title-text">考核信息</text>
+    </view>
+    <view class="td-exam-note">{{training.examText}}</view>
+  </view>
+
+  <!-- 去考试（不满足条件时置灰） -->
+  <view class="td-cta">
+    <button
+      class="td-btn-main {{canExam ? '' : 'td-btn-main--disabled'}}"
+      disabled="{{!canExam}}"
+      hover-class="td-btn-main--hover"
+      bindtap="goExam"
+    >去考试</button>
+    <text wx:if="{{examCtaHint}}" class="td-cta-hint">{{examCtaHint}}</text>
+  </view>
+
+  <view class="td-bottom"></view>
+</scroll-view>
+</view>

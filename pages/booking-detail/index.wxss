@@ -1,0 +1,272 @@
+/* pages/booking-detail/index.wxss */
+/* === 基础页面 === */
+.bd-page {
+  min-height: 100vh;
+  background: var(--md-background, #F5FAFD);
+  padding-bottom: 60rpx;
+  box-sizing: border-box;
+}
+
+/* === 加载态 === */
+.bd-loading {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24rpx;
+}
+.bd-load-spin {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  border: 6rpx solid #DBEFF9;
+  border-top-color: #0A7BB8;
+  animation: bd-spin 0.9s linear infinite;
+}
+.bd-load-t {
+  font-size: 26rpx;
+  color: #6B7785;
+}
+@keyframes bd-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* === 空态 === */
+.bd-empty {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+  padding: 0 60rpx;
+}
+.bd-empty-ic {
+  font-size: 96rpx;
+  line-height: 1;
+}
+.bd-empty-t {
+  font-size: 28rpx;
+  color: #6B7785;
+  text-align: center;
+}
+
+/* === 顶部单头 === */
+.bd-head {
+  background: #ffffff;
+  margin: 20rpx 24rpx 0;
+  padding: 28rpx 28rpx 24rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+.bd-head-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20rpx;
+  flex-wrap: nowrap;
+}
+.bd-head-sub {
+  font-size: 24rpx;
+  color: #8A99A8;
+  flex: 1;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 状态色块 */
+.bd-status {
+  flex-shrink: 0;
+  font-size: 22rpx;
+  font-weight: 600;
+  padding: 6rpx 18rpx;
+  border-radius: 999rpx;
+  letter-spacing: 1rpx;
+}
+.bd-status--warn  { color: #B26A00; background: #FFF4E0; }
+.bd-status--ok    { color: #0E7A3D; background: #E2F6EA; }
+.bd-status--err   { color: #BA1A1A; background: #FCE7E7; }
+.bd-status--gray  { color: #6B7785; background: #EEF2F6; }
+
+/* === 卡片通用 === */
+.bd-card {
+  background: #ffffff;
+  margin: 20rpx 24rpx 0;
+  padding: 28rpx 28rpx 24rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+.bd-card-t {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14rpx;
+  margin-bottom: 18rpx;
+}
+.bd-dot {
+  width: 8rpx;
+  height: 24rpx;
+  background: linear-gradient(180deg, #0A7BB8, #44B3E8);
+  border-radius: 4rpx;
+}
+.bd-card-tt {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #11243A;
+}
+.bd-card-tip {
+  margin-left: auto;
+  font-size: 22rpx;
+  color: #8A99A8;
+}
+
+/* === 行：键值对 === */
+.bd-rows {
+  display: flex;
+  flex-direction: column;
+}
+.bd-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 18rpx 0;
+  border-bottom: 1rpx solid #F0F4F8;
+  gap: 16rpx;
+}
+.bd-row:last-child {
+  border-bottom: none;
+}
+.bd-row-k {
+  flex-shrink: 0;
+  width: 168rpx;
+  font-size: 26rpx;
+  color: #6B7785;
+}
+.bd-row-v {
+  flex: 1;
+  font-size: 28rpx;
+  color: #11243A;
+  word-break: break-all;
+}
+.bd-row-v--em {
+  color: #0A7BB8;
+  font-weight: 600;
+}
+.bd-row-v--muted {
+  color: #B0BBC8;
+  font-style: italic;
+}
+.bd-row--multi {
+  align-items: flex-start;
+}
+.bd-row--multi .bd-row-k {
+  padding-top: 6rpx;
+}
+.bd-row--multi .bd-row-v {
+  line-height: 1.55;
+}
+
+/* === 联系电话（可拨号）— 复刻仪器详情样式：行内图标 + 蓝色文字 === */
+.bd-phone {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8rpx;
+  color: #0A7BB8;
+  font-weight: 600;
+}
+.bd-phone-ic {
+  font-size: 24rpx;
+  color: #0D86BE;
+  flex-shrink: 0;
+}
+.bd-phone--hover {
+  opacity: 0.55;
+}
+.bd-phone-num {
+  font-size: 26rpx;
+  color: #0A7BB8;
+  font-weight: 600;
+}
+
+/* === 收费表 === */
+.bd-fee {
+  border: 1rpx solid #EAEFF5;
+  border-radius: 16rpx;
+  overflow: hidden;
+  background: #FBFDFF;
+}
+.bd-fee-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-bottom: 1rpx solid #EAEFF5;
+}
+.bd-fee-row:last-child {
+  border-bottom: none;
+}
+.bd-fee-row--head {
+  background: #F4F8FB;
+}
+.bd-fee-cell {
+  padding: 18rpx 12rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: #11243A;
+}
+.bd-fee-cell--cat {
+  flex: 0 0 32%;
+  border-right: 1rpx solid #EAEFF5;
+}
+.bd-fee-cell--money {
+  flex: 1;
+  border-right: 1rpx solid #EAEFF5;
+}
+.bd-fee-cell--money:last-child {
+  border-right: none;
+}
+.bd-fee-cell--self {
+  color: #0A7BB8;
+  font-weight: 600;
+}
+.bd-fee-row--head .bd-fee-cell {
+  font-size: 24rpx;
+  color: #6B7785;
+  font-weight: 500;
+}
+.bd-tip {
+  margin-top: 16rpx;
+  font-size: 22rpx;
+  color: #8A99A8;
+  line-height: 1.6;
+}
+
+/* === 预约时间调整按钮（仅待审核显示） === */
+.bd-adjust {
+  margin-top: 24rpx;
+  height: 84rpx;
+  border-radius: 42rpx;
+  background: linear-gradient(135deg, #33ADDE, #0A7BB8);
+  color: #ffffff;
+  font-size: 28rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 20rpx rgba(27, 82, 112, 0.24);
+}
+.bd-adjust--hover {
+  opacity: 0.88;
+}
+
+/* === 底部留白 === */
+.bd-bottom {
+  height: 40rpx;
+}

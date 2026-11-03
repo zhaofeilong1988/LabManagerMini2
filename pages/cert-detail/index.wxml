@@ -1,0 +1,137 @@
+<!--pages/cert-detail/index.wxml-->
+<view class="cd-page" wx:if="{{cert}}">
+
+  <!-- ===== 顶部主视觉（hero） ===== -->
+  <view class="cd-hero">
+    <view class="cd-hero-bg"></view>
+    <view class="cd-hero-glow cd-hero-glow--a"></view>
+    <view class="cd-hero-glow cd-hero-glow--b"></view>
+    <view class="cd-hero-glow cd-hero-glow--c"></view>
+
+    <!-- 状态徽章 -->
+    <view class="cd-hero-status cd-hero-status--{{cert.statusCls}}">
+      <view class="cd-hero-status-dot"></view>
+      <text class="cd-hero-status-t">{{cert.statusText}}</text>
+    </view>
+
+    <view class="cd-hero-body">
+      <!-- 奖章框架 -->
+      <view class="cd-hero-medal-wrap">
+        <view class="cd-hero-medal-ring">
+          <view class="cd-hero-medal-inner">
+            <van-icon name="medal-o" size="64rpx" color="#0A7BB8" />
+          </view>
+        </view>
+        <view class="cd-hero-medal-ribbon">
+          <van-icon name="bookmark-o" size="24rpx" color="#FFD27A" />
+        </view>
+      </view>
+
+      <!-- 证书名 -->
+      <view class="cd-hero-name">{{cert.name}}</view>
+      <view class="cd-hero-type" wx:if="{{cert.typeLabel}}">{{cert.typeLabel}}</view>
+
+      <!-- 编号 -->
+      <view wx:if="{{cert.certNo}}" class="cd-hero-no" hover-class="cd-hero-no--hover" hover-stay-time="80" bindtap="onCopyCertNo">
+        <text class="cd-hero-no-l">CERT NO.</text>
+        <text class="cd-hero-no-v">{{cert.certNo}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 关键信息：发证 / 失效 大字对开 ===== -->
+  <view class="cd-validity">
+    <view class="cd-validity-item">
+      <view class="cd-validity-l">发证日期</view>
+      <view class="cd-validity-v">{{cert.issueDateElegant || '--'}}</view>
+    </view>
+    <view class="cd-validity-divider">
+      <view class="cd-validity-divider-dot"></view>
+      <view class="cd-validity-divider-line"></view>
+      <view class="cd-validity-divider-dot"></view>
+    </view>
+    <view class="cd-validity-item">
+      <view class="cd-validity-l">有效期至</view>
+      <view class="cd-validity-v">{{cert.expireDateElegant || '长期有效'}}</view>
+    </view>
+    <view wx:if="{{cert.isLongTerm}}" class="cd-validity-tag cd-validity-tag--permanent">长期有效</view>
+    <view wx:elif="{{cert.daysLeft > 0 && cert.statusCls === 'valid'}}" class="cd-validity-tag cd-validity-tag--ok">
+      剩余 {{cert.daysLeft}} 天
+    </view>
+  </view>
+
+  <!-- ===== 证书简介（info 字段） ===== -->
+  <!-- 占位移动到「证书信息」之后，保持布局干净 -->
+  <view class="cd-card">
+    <view class="cd-card-hd">
+      <view class="cd-card-dot"></view>
+      <text class="cd-card-hd-t">证书信息</text>
+    </view>
+    <view class="cd-row">
+      <view class="cd-row-ico"><van-icon name="user-o" size="14px" color="#0A7BB8" /></view>
+      <view class="cd-row-l">持证人</view>
+      <view class="cd-row-v">{{cert.holderName || '--'}}</view>
+    </view>
+    <view class="cd-row" wx:if="{{cert.issuer}}">
+      <view class="cd-row-ico"><van-icon name="manager-o" size="14px" color="#0A7BB8" /></view>
+      <view class="cd-row-l">颁发单位</view>
+      <view class="cd-row-v">{{cert.issuer}}</view>
+    </view>
+    <view class="cd-row" wx:if="{{cert.trainingName}}">
+      <view class="cd-row-ico"><van-icon name="orders-o" size="14px" color="#0A7BB8" /></view>
+      <view class="cd-row-l">关联培训</view>
+      <view class="cd-row-v">{{cert.trainingName}}</view>
+    </view>
+    <view class="cd-row" wx:if="{{cert.deviceName}}">
+      <view class="cd-row-ico"><van-icon name="experiment" size="14px" color="#0A7BB8" /></view>
+      <view class="cd-row-l">关联设备</view>
+      <view class="cd-row-v">{{cert.deviceName}}</view>
+    </view>
+    <view class="cd-row" wx:if="{{cert.score}}">
+      <view class="cd-row-ico"><van-icon name="chart-trending-o" size="14px" color="#0A7BB8" /></view>
+      <view class="cd-row-l">考核成绩</view>
+      <view class="cd-row-v cd-row-v--em">{{cert.score}}</view>
+    </view>
+    <view class="cd-row" wx:if="{{cert.examDate}}">
+      <view class="cd-row-ico"><van-icon name="clock-o" size="14px" color="#0A7BB8" /></view>
+      <view class="cd-row-l">考试日期</view>
+      <view class="cd-row-v">{{cert.examDate}}</view>
+    </view>
+  </view>
+
+  <!-- ===== 证书简介（info 字段）===== 复刻 cd-card 视觉，与证书信息同款样式 -->
+  <view class="cd-card" wx:if="{{cert.brief}}">
+    <view class="cd-card-hd">
+      <view class="cd-card-dot"></view>
+      <text class="cd-card-hd-t">证书简介</text>
+    </view>
+    <view class="cd-card-text">{{cert.brief}}</view>
+  </view>
+
+  <view class="cd-bottom-space"></view>
+
+  <!-- ===== 底部固定操作栏 ===== -->
+  <view class="cd-actions" wx:if="{{cert.hasAttachment}}">
+    <view
+      class="cd-action cd-action--primary cd-action--solo"
+      bindtap="onPreviewAttachment"
+      hover-class="cd-action--primary-hover"
+    >
+      <van-icon name="description" size="16px" color="#FFFFFF" />
+      <text class="cd-action-t">查看证书原件</text>
+    </view>
+  </view>
+</view>
+
+<!-- 加载态 -->
+<view class="cd-state" wx:elif="{{loading}}">
+  <view class="cd-state-spin"></view>
+  <text class="cd-state-t">正在加载证书详情…</text>
+</view>
+
+<!-- 错误态 -->
+<view class="cd-state" wx:else>
+  <view class="cd-state-ic">📭</view>
+  <text class="cd-state-t">{{loadError || '未找到该证书'}}</text>
+  <view class="cd-state-btn" bindtap="onBackToList">返回</view>
+</view>

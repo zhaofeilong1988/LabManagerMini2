@@ -1,0 +1,952 @@
+/* pages/training/detail/detail.wxss */
+page {
+  background: #F5FAFD;
+}
+
+/* ── 自定义导航栏（本页 navigationStyle=custom）──
+   原生导航栏由系统绘制在页面之上，页面内 position:fixed 的元素（全屏播放器）
+   永远盖不住它，全屏时顶部会一直露着返回按钮。改为自绘导航栏后，
+   全屏播放时整条隐藏，播放器即可真正铺满整个手机屏。 */
+.td-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: #0A7BB8;
+}
+
+.td-nav__bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.td-nav__back {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.td-nav__back--hover {
+  opacity: 0.6;
+}
+
+.td-nav__title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.td-nav-placeholder {
+  width: 100%;
+}
+
+.td-page {
+  height: 100%;
+  background: #F5FAFD;
+}
+
+.td-scroll {
+  height: 100%;
+  padding: 24rpx 24rpx 0;
+  box-sizing: border-box;
+}
+
+/* ── 头部信息 ── */
+.td-hero {
+  background: linear-gradient(135deg, #0A7BB8 0%, #33ADDE 100%);
+  border-radius: 20rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+.td-hero::before {
+  content: '';
+  position: absolute;
+  right: -50rpx;
+  top: -50rpx;
+  width: 220rpx;
+  height: 220rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.td-hero__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.td-hero__tag {
+  font-size: 20rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.td-hero__tag--safety { color: #0D86BE; }
+.td-hero__tag--special { color: #0D86BE; }
+.td-hero__tag--plan { color: #E65100; }
+
+.td-hero__status {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(0, 0, 0, 0.14);
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.td-hero__status--open { color: #CAEAF7; }
+.td-hero__status--enrolled { color: #BCE4F7; }
+.td-hero__status--full { color: #FFCCBC; }
+.td-hero__status--ended { color: rgba(255, 255, 255, 0.6); }
+
+.td-hero__title {
+  display: block;
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12rpx;
+}
+
+.td-hero__inst {
+  display: block;
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.78);
+  margin-bottom: 20rpx;
+}
+
+.td-hero__meta {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.td-hero__meta-item {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ── 平台准入学习提示条 ── */
+.td-adm-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12rpx;
+  background: #DBEFF9;
+  border: 1rpx solid #A3CDE6;
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+  margin-bottom: 24rpx;
+  box-sizing: border-box;
+}
+
+.td-adm-banner text {
+  font-size: 24rpx;
+  line-height: 1.6;
+  color: #0A7BB8;
+  word-break: break-all;
+}
+
+/* ── 通用卡片 ── */
+.td-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.td-card__title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.td-dot {
+  width: 8rpx;
+  height: 28rpx;
+  background: #33ADDE;
+  border-radius: 4rpx;
+  margin-right: 12rpx;
+}
+
+.td-card__title-text {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #0E3A50;
+}
+
+.td-count {
+  margin-left: auto;
+  font-size: 22rpx;
+  color: #6E7F8A;
+}
+
+.td-desc {
+  display: block;
+  font-size: 26rpx;
+  line-height: 1.7;
+  color: #41484D;
+}
+
+/* ── 文档列表 ── */
+.td-doc {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #F5FAFD;
+}
+
+.td-doc:last-child {
+  border-bottom: none;
+}
+
+.td-doc__icon {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 12rpx;
+  background: #E1ECF3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 16rpx;
+}
+
+.td-doc__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  min-width: 0;
+}
+
+.td-doc__name {
+  font-size: 26rpx;
+  color: #0E3A50;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.td-doc__size {
+  font-size: 20rpx;
+  color: #6E7F8A;
+}
+
+/* ── 视频列表（卡片式，仿主流视频 App：16:9 缩略图 + 时长角标 + 进度条 + 标题/观看信息） ── */
+.td-vlist {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.td-vcard {
+  background: #fff;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  transition: opacity 0.15s ease;
+}
+
+.td-vcard--hover {
+  opacity: 0.92;
+}
+
+/* 缩略图：宽 100%，padding-bottom 56.25% 形成 16:9 自适应高度 */
+.td-vcard__cover {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  background:
+    radial-gradient(circle at 82% 18%, rgba(255, 255, 255, 0.18), transparent 55%),
+    linear-gradient(135deg, #143A5E 0%, #0A7BB8 60%, #33ADDE 100%);
+  overflow: hidden;
+}
+
+/* 封面首帧：不自动播放的 video 组件，绝对定位铺满整个 16:9 缩略图区。
+   尺寸、位置、object-fit 均与播放器舞台内的 video 一致，切换播放时画面不跳动。 */
+.td-vcard__frame {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* 封面透明点击层：位于首帧画面与所有角标之上，
+   保证点「画面任意处 / 居中播放按钮」都能触发卡片播放（原生 video 自身不接管点击） */
+.td-vcard__tap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+}
+
+/* 装饰纹理：底部暗色压暗，让白字与时长角标在首帧画面上依然清晰 */
+.td-vcard__cover-deco {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.06), transparent 40%),
+    linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.55) 100%);
+  pointer-events: none;
+}
+
+/* 居中播放按钮 */
+.td-vcard__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.42);
+  border: 2rpx solid rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  box-shadow: 0 6rpx 24rpx rgba(0, 0, 0, 0.3);
+}
+
+/* 播放按钮悬浮视觉（已学完时整体变蓝） */
+.td-vcard__cover .td-vcard__play {
+  transition: background 0.2s ease;
+}
+
+.td-vcard--hover .td-vcard__play {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+/* 时长角标：右下角 */
+.td-vcard__dur {
+  position: absolute;
+  right: 12rpx;
+  bottom: 12rpx;
+  font-size: 22rpx;
+  color: #FFFFFF;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  line-height: 1.3;
+  z-index: 2;
+  letter-spacing: 0.5rpx;
+}
+
+/* 观看进度条：贴底 */
+.td-vcard__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6rpx;
+  background: rgba(255, 255, 255, 0.2);
+  z-index: 2;
+}
+
+.td-vcard__progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #33ADDE 0%, #0A7BB8 100%);
+  border-radius: 0 4rpx 4rpx 0;
+  transition: width 0.3s ease;
+}
+
+/* 学习状态徽章：左上角（未学习 / 学习中 / 已学完） */
+.td-vcard__badge {
+  position: absolute;
+  top: 14rpx;
+  left: 14rpx;
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  background: rgba(13, 134, 190, 0.95);
+  color: #FFFFFF;
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  line-height: 1.4;
+  z-index: 2;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+}
+
+/* 未学习：灰 */
+.td-vcard__badge--none {
+  background: rgba(110, 127, 138, 0.9);
+}
+
+/* 学习中：橙 */
+.td-vcard__badge--doing {
+  background: rgba(230, 81, 0, 0.92);
+}
+
+/* 已学完：蓝（与主色一致） */
+.td-vcard__badge--done {
+  background: rgba(13, 134, 190, 0.95);
+}
+
+/* 标题区 */
+.td-vcard__info {
+  padding: 20rpx 24rpx 24rpx;
+}
+
+.td-vcard__name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  word-break: break-all;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #0E3A50;
+  line-height: 1.4;
+  margin-bottom: 8rpx;
+}
+
+.td-vcard__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12rpx;
+}
+
+.td-vcard__meta-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+  flex-wrap: wrap;
+}
+
+.td-vcard__watched {
+  font-size: 22rpx;
+  color: #6E7F8A;
+}
+
+.td-vcard__sep {
+  font-size: 22rpx;
+  color: #C2CAD0;
+  margin: 0 4rpx;
+}
+
+.td-vcard__total {
+  font-size: 22rpx;
+  color: #6E7F8A;
+}
+
+.td-vcard__percent {
+  font-size: 22rpx;
+  color: #0D86BE;
+  font-weight: 500;
+}
+
+/* 重置观看时长按钮：胶囊样式 + 浅灰背景，点击加深 */
+.td-vcard__reset {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+  padding: 4rpx 14rpx;
+  height: 40rpx;
+  border-radius: 20rpx;
+  background: #F2F7FA;
+  font-size: 20rpx;
+  color: #6E7F8A;
+  line-height: 1.2;
+}
+
+.td-vcard__reset--hover {
+  background: #E6EEF4;
+  color: #0D86BE;
+}
+
+/* ── 空态 ── */
+.td-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+  padding: 32rpx 0;
+  color: #6E7F8A;
+  font-size: 24rpx;
+}
+
+/* ── 考试信息 ── */
+.td-exam-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14rpx 0;
+  border-bottom: 1rpx solid #EEF4F8;
+}
+
+.td-exam-row__label {
+  font-size: 24rpx;
+  color: #6E7F8A;
+  flex-shrink: 0;
+  margin-right: 24rpx;
+}
+
+.td-exam-row__value {
+  font-size: 26rpx;
+  color: #0E3A50;
+  font-weight: 500;
+  text-align: right;
+}
+
+.td-exam-note {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  line-height: 1.6;
+  color: #71797E;
+  background: #EFF6FB;
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+}
+
+.td-exam-hint {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: #E65100;
+  text-align: center;
+}
+
+/* ── 最新考试记录（一行小字，位于考试信息卡片内）── */
+.td-exam-record {
+  margin-top: 16rpx;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 24rpx;
+  color: #41484D;
+  background: #E1F2FA;
+  border-radius: 12rpx;
+  padding: 14rpx 20rpx;
+}
+
+/* 状态文字颜色：待评卷 橙 / 通过 蓝 / 未通过 红 */
+.td-exam-record--pending { color: #B27400; }
+.td-exam-record--passed { color: #0D86BE; }
+.td-exam-record--failed { color: #E65100; }
+
+/* ── 去考试按钮 ── */
+.td-btn-main {
+  margin-top: 24rpx;
+  height: 84rpx;
+  line-height: 84rpx;
+  border-radius: 42rpx;
+  border: none;
+  background: linear-gradient(135deg, #33ADDE, #0A7BB8);
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 600;
+  padding: 0;
+}
+
+.td-btn-main::after {
+  border: none;
+}
+
+.td-btn-main--hover {
+  opacity: 0.85;
+}
+
+/* 置灰状态（不在考试范围 / 未报名 / 未完成学习） */
+.td-btn-main[disabled],
+.td-btn-main--disabled {
+  background: #C3CBD3 !important;
+  color: rgba(255, 255, 255, 0.92);
+  opacity: 1;
+}
+
+/* ── 去考试操作区 ── */
+.td-cta {
+  padding: 4rpx 0 12rpx;
+}
+
+.td-cta-hint {
+  display: block;
+  margin-top: 16rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #E65100;
+}
+
+/* ── 已学 / 已看标签 ── */
+.td-learned-tag {
+  flex-shrink: 0;
+  font-size: 20rpx;
+  padding: 2rpx 14rpx;
+  border-radius: 20rpx;
+  background: #E1F2FA;
+  color: #0D86BE;
+  font-weight: 500;
+}
+
+.td-vcard__play--hover {
+  background: #0D86BE;
+}
+
+/* ── 底部占位 ── */
+.td-bottom {
+  height: 32rpx;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-sizing: content-box;
+}
+
+/* ── 内嵌视频播放器（就地展开在被点击的视频卡片内，取代该卡片的缩略图区；非弹框、非跳页） ── */
+.td-vp-embed {
+  background: #0B2233;
+}
+
+/* 全屏时舞台脱离文档流（fixed），这里补回 16:9 占位高度，
+   让卡片高度与列表位置保持不变，退出全屏时不会有跳动。 */
+.td-vp-embed--fs {
+  padding-bottom: 56.25%;
+}
+
+/* 覆盖层：撑满 video；全屏时随舞台一起旋转，控件仍位于视频的画面底部 */
+.td-vp-ui {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 手势层：铺满整个视频画面，用于「在画面上横向拖动快进 / 快退」。
+   z-index(1) 低于底部控件条(2) / 中央按钮(3) / 右上角按钮(4)，高于视频画面本身：
+   触摸先命中控件，落在画面空白处才进入快进手势，因此不会抢走进度条与按钮的点击。 */
+.td-vp-gesture {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* 拖动定位提示：只显示快进 / 快退秒数（不拦截触摸） */
+.td-vp-swipe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 16rpx 32rpx;
+  border-radius: 16rpx;
+  background: rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
+
+.td-vp-swipe__delta {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+/* 快进 / 快退用不同强调色，方向一眼可辨 */
+.td-vp-swipe__delta--fwd { color: #7FE0FF; }
+.td-vp-swipe__delta--back { color: #FFD79A; }
+
+/* 右上角常驻按钮：关闭（全屏时为退出全屏）。绝对定位，不占布局高度，保证与缩略图尺寸一致 */
+.td-vp-topbar {
+  position: absolute;
+  top: 12rpx;
+  right: calc(12rpx + env(safe-area-inset-right));
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.td-vp-iconbtn {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.td-vp-iconbtn--hover {
+  background: rgba(0, 0, 0, 0.68);
+}
+
+/* 本次累计观看：悬浮角标，位于舞台左上角（随控件一起显隐，不占布局高度） */
+.td-vp-session {
+  position: absolute;
+  top: 12rpx;
+  left: calc(12rpx + env(safe-area-inset-left));
+  z-index: 4;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  background: rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.td-vp-session-text {
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.92);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 视频舞台：宽度撑满卡片，padding-bottom 56.25% 固定 16:9 比例，子元素绝对定位 */
+.td-vp-stage {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  background: #000;
+  overflow: hidden;
+}
+
+/* 全屏（自定义全屏，不调用原生 requestFullScreen）：
+   舞台脱离卡片，固定为「手机屏幕」大小（宽=100vh、高=100vw）并旋转 90°，
+   于是视觉上横向铺满手机屏幕，且所有自定义控件随舞台一起旋转、位置不变。
+   因为是页面内布局，开发者工具里也只在手机模拟器内全屏，不会铺满整个电脑屏幕。 */
+.td-vp-stage--fs {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 100vh;
+  height: 100vw;
+  padding-bottom: 0;
+  transform: translate(-50%, -50%) rotate(90deg);
+  transform-origin: center center;
+  z-index: 9999;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.td-vp-video {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
+
+/* 拖动定位兜底：切换视频源（远程 → 本地文件）过渡期的全舞台遮罩。
+   盖住重新加载时播放器显示的 0 帧与暂停图标，让用户只看到加载提示。
+   z-index 低于右上角关闭按钮（4），高于底部控件条（2）与中央按钮（3）。
+   pointer-events: none：不拦截触摸，关闭按钮与进度条仍可操作。 */
+.td-vp-mask {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: #0B2233;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* 拖动定位兜底：加载本地文件时的提示（居中，不拦截触摸） */
+.td-vp-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+  padding: 20rpx 28rpx;
+  border-radius: 16rpx;
+  background: rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+
+.td-vp-loading__spinner {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  border-top-color: #FFFFFF;
+  animation: td-vp-spin 0.8s linear infinite;
+}
+
+@keyframes td-vp-spin {
+  to { transform: rotate(360deg); }
+}
+
+.td-vp-loading__text {
+  font-size: 22rpx;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+/* 中央暂停/播放按钮 */
+.td-vp-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+
+.td-vp-center__btn {
+  width: 104rpx;
+  height: 104rpx;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  border: 2rpx solid rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.4);
+}
+
+/* 底部控件条：渐变背景 + 控件组（内嵌尺寸，避免挤压进度条）；
+   左右 padding 叠加安全区，全屏横屏（刘海在侧边）时控件不被遮挡 */
+.td-vp-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10rpx calc(16rpx + env(safe-area-inset-right)) 10rpx calc(16rpx + env(safe-area-inset-left));
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.72), transparent);
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  z-index: 2;
+}
+
+.td-vp-bottom__play,
+.td-vp-bottom__full {
+  flex-shrink: 0;
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.td-vp-bottom__time {
+  flex-shrink: 0;
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.92);
+  font-variant-numeric: tabular-nums;
+  min-width: 64rpx;
+  text-align: center;
+}
+
+/* 倍速按钮：只显示当前倍速（如 1.0x），点击展开倍速选项条 */
+.td-vp-bottom__rate {
+  flex-shrink: 0;
+  width: 60rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.td-vp-bottom__rate-text {
+  font-size: 20rpx;
+  line-height: 1.5;
+  color: #FFFFFF;
+  padding: 2rpx 8rpx;
+  border-radius: 6rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.5);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 倍速选项条：浮在底部控件条上方，右对齐，点选即切换 */
+.td-vp-rates {
+  position: absolute;
+  right: calc(16rpx + env(safe-area-inset-right));
+  bottom: calc(74rpx + env(safe-area-inset-bottom));
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 10rpx 14rpx;
+  border-radius: 14rpx;
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.td-vp-rates__item {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.85);
+  padding: 6rpx 14rpx;
+  border-radius: 8rpx;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 当前倍速：高亮 */
+.td-vp-rates__item--on {
+  color: #FFFFFF;
+  font-weight: 600;
+  background: #0D86BE;
+}
+
+/* 进度条：背景 + 已播放段 + 拖动圆点 */
+.td-vp-bottom__track {
+  flex: 1;
+  position: relative;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+}
+
+/* 关键：进度条内部装饰元素全部 pointer-events: none，让触摸事件直接穿透到 track 自身，
+   避免绝对定位子元素捕获事件后导致坐标取不到，拖动/点击进度条时视频跳回开始位置。 */
+.td-vp-bottom__track-bg,
+.td-vp-bottom__track-played,
+.td-vp-bottom__track-thumb {
+  pointer-events: none;
+}
+
+.td-vp-bottom__track-bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 6rpx;
+  border-radius: 3rpx;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.td-vp-bottom__track-played {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 6rpx;
+  border-radius: 3rpx;
+  background: linear-gradient(90deg, #33ADDE 0%, #0D86BE 100%);
+}
+
+.td-vp-bottom__track-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 22rpx;
+  height: 22rpx;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
+  border: 2rpx solid #0D86BE;
+}
+

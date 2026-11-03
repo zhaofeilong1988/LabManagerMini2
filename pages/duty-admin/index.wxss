@@ -1,0 +1,307 @@
+/* pages/duty-admin/index.wxss —— 值日管理（精致版本周值班表） */
+page {
+  background: #F2F7FB;
+}
+.da-wrap {
+  padding: 28rpx 24rpx 48rpx;
+}
+/* 有底部浮动打卡按钮时，给内容留出让位空间：
+   按钮栏高 = 18rpx(上内边距) + 92rpx(按钮) + 18rpx(下内边距) + 安全区，
+   这里留 150rpx + 安全区 + 一点余量，避免底部提示文字被压住 */
+.da-wrap--fab {
+  padding-bottom: 150rpx;
+  padding-bottom: calc(170rpx + env(safe-area-inset-bottom));
+}
+
+/* ── 组长卡 ── */
+.da-leader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 28rpx 28rpx;
+  margin-bottom: 28rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(10, 123, 184, .08);
+  overflow: hidden;
+}
+.da-leader::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 8rpx;
+  background: linear-gradient(180deg, #0A7BB8 0%, #2BA3D4 100%);
+}
+.da-leader-avatar {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0A7BB8 0%, #2BA3D4 100%);
+  color: #fff;
+  font-size: 36rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 20rpx 0 12rpx;
+  box-shadow: 0 4rpx 12rpx rgba(10, 123, 184, .25);
+}
+.da-leader-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.da-leader-tag {
+  font-size: 22rpx;
+  color: #6b7785;
+  letter-spacing: 1rpx;
+}
+.da-leader-name {
+  margin-top: 6rpx;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1f2d3d;
+  letter-spacing: 2rpx;
+}
+.da-leader-badge {
+  padding: 6rpx 14rpx;
+  border-radius: 999rpx;
+  background: rgba(10, 123, 184, .1);
+  color: #0A7BB8;
+  font-size: 20rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+}
+
+/* ── 每天（白卡列表） ── */
+.da-list {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 8rpx 0;
+  box-shadow: 0 4rpx 16rpx rgba(10, 123, 184, .06);
+}
+.da-row {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 28rpx;
+  border-top: 1rpx solid #eef2f6;
+}
+.da-row:first-child {
+  border-top: none;
+}
+/* 今天：整行高亮（加深蓝底 + 左侧粗蓝竖条 + 文字/头像一并加深） */
+.da-row--today {
+  background: linear-gradient(90deg, #CBE7F6 0%, #E1F2FB 100%);
+  box-shadow: inset 10rpx 0 0 #0A7BB8, 0 2rpx 12rpx rgba(10, 123, 184, .12);
+}
+.da-row--today .da-row-dow {
+  color: #075C8A;
+}
+.da-row--today .da-row-num {
+  color: #075C8A;
+  font-weight: 700;
+}
+/* 人名加深加粗 */
+.da-row--today .da-person-name {
+  color: #075C8A;
+  font-weight: 700;
+}
+/* 头像改成实心主题蓝，与浅底拉开对比 */
+.da-row--today .da-person-avatar {
+  background: #0A7BB8;
+  color: #fff;
+  border-color: #0A7BB8;
+}
+.da-row--today .da-row-plus {
+  color: #7FA9BF;
+}
+.da-row-day {
+  width: 140rpx;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+.da-row-dow {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1f2d3d;
+  letter-spacing: 1rpx;
+}
+.da-row-num {
+  margin-top: 4rpx;
+  font-size: 20rpx;
+  color: #9aa6ad;
+  letter-spacing: 1rpx;
+  font-weight: 600;
+}
+.da-row-divider {
+  width: 2rpx;
+  height: 56rpx;
+  margin-right: 24rpx;
+  background: linear-gradient(180deg, transparent 0%, #d9e3eb 50%, transparent 100%);
+}
+.da-row-people {
+  flex: 1;
+  /* 值日人数不固定（1 人 / 2 人 / 多人）→ 用 flex 横向排列，人员之间插入 + 号；
+     默认 nowrap：一行最多 3 人（多的折叠成 +N），点 +N 展开后才允许换行 */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
+  column-gap: 12rpx;
+  min-width: 0;
+  overflow: hidden;
+}
+/* 展开态：允许换行，显示该天全部人员 */
+.da-row-people--wrap {
+  flex-wrap: wrap;
+  row-gap: 10rpx;
+  overflow: visible;
+}
+.da-person {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.da-person--first {
+  /* 列1:靠左,跨天所有人头像都在同一列 */
+  justify-content: flex-start;
+}
+.da-person--second {
+  /* 列3:靠左,跨天第二人头在另一同列 */
+  justify-content: flex-start;
+}
+.da-person-avatar {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: #E8F4FA;
+  color: #0A7BB8;
+  font-size: 22rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6rpx;
+  border: 2rpx solid #CFE8F4;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.da-person--second .da-person-avatar {
+  background: #F0F8FF;
+  color: #1E88E5;
+  border-color: #BBDEFB;
+}
+.da-person-name {
+  font-size: 24rpx;
+  color: #1f2d3d;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1;
+  /* 一行 3 人：限宽 + 省略，保证不换行也不挤掉左侧日期列 */
+  max-width: 74rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* 人员之间的 + 号（flex 布局下无需负 margin） */
+.da-row-plus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16rpx;
+  flex-shrink: 0;
+  font-size: 22rpx;
+  color: #cbd2d9;
+  font-weight: 300;
+  line-height: 1;
+}
+
+/* ── 加载中 / 空数据 / 失败重试 ── */
+.da-state {
+  margin: 48rpx 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20rpx;
+}
+.da-state-text {
+  font-size: 26rpx;
+  color: #9aa6ad;
+  letter-spacing: 1rpx;
+}
+.da-state-text--err {
+  color: #BA1A1A;
+}
+.da-retry {
+  padding: 14rpx 40rpx;
+  border-radius: 999rpx;
+  background: #fff;
+  color: #0A7BB8;
+  font-size: 26rpx;
+  font-weight: 600;
+  border: 2rpx solid #0A7BB8;
+}
+.da-row-empty {
+  font-size: 26rpx;
+  color: #9aa6ad;
+  letter-spacing: 1rpx;
+}
+/* 折叠提示：+N（点击展开该天全部人员） */
+.da-row-more {
+  margin-left: 8rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 999rpx;
+  background: #F1F6FA;
+  color: #0A7BB8;
+  font-size: 22rpx;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* ── 底部浮动「值日打卡」按钮 ── */
+.da-fab-wrap {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  padding: 18rpx 32rpx calc(18rpx + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, .94);
+  border-top: 1rpx solid #EEF2F6;
+}
+.da-fab {
+  height: 92rpx;
+  border-radius: 46rpx;
+  background: linear-gradient(135deg, #0A7BB8 0%, #2BA3D4 100%);
+  box-shadow: 0 8rpx 20rpx rgba(10, 123, 184, .28);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+}
+.da-fab-icon {
+  font-size: 30rpx;
+  line-height: 1;
+}
+.da-fab-text {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2rpx;
+}
+/* 已打卡：置灰不可再点 */
+.da-fab--done {
+  background: #B9CBD4;
+  box-shadow: none;
+}
+
+/* ── 底部提示 ── */
+.da-tip {
+  margin-top: 28rpx;
+  text-align: center;
+  font-size: 22rpx;
+  color: #9aa6ad;
+  letter-spacing: 1rpx;
+}

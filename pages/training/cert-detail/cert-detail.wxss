@@ -1,0 +1,238 @@
+/* pages/training/cert-detail/cert-detail.wxss */
+page {
+  background: #F5FAFD;
+}
+
+.cd-page {
+  height: 100%;
+  background: #F5FAFD;
+}
+
+.cd-scroll {
+  height: 100%;
+  padding: 24rpx 24rpx 0;
+  box-sizing: border-box;
+}
+
+/* ── 证书主视觉 ── */
+.cd-hero {
+  background: linear-gradient(135deg, #0A7BB8 0%, #33ADDE 100%);
+  border-radius: 20rpx;
+  padding: 28rpx 32rpx 36rpx;
+  margin-bottom: 24rpx;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cd-hero::before {
+  content: '';
+  position: absolute;
+  right: -50rpx;
+  top: -50rpx;
+  width: 220rpx;
+  height: 220rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cd-hero::after {
+  content: '';
+  position: absolute;
+  left: -60rpx;
+  bottom: -80rpx;
+  width: 260rpx;
+  height: 260rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.cd-hero__top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+  position: relative;
+  z-index: 1;
+}
+
+.cd-hero__badge {
+  font-size: 20rpx;
+  padding: 6rpx 18rpx;
+  border-radius: 20rpx;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.cd-hero__badge--basic { color: #0D86BE; }
+.cd-hero__badge--special { color: #0D86BE; }
+
+.cd-hero__status {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(0, 0, 0, 0.14);
+  padding: 6rpx 18rpx;
+  border-radius: 20rpx;
+}
+
+.cd-medal {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8rpx 0 16rpx;
+  position: relative;
+  z-index: 1;
+}
+
+.cd-hero__name {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+
+.cd-hero__no {
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.78);
+  letter-spacing: 1rpx;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── 通用卡片 ── */
+.cd-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.cd-card__title {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-bottom: 20rpx;
+}
+
+.cd-dot {
+  width: 8rpx;
+  height: 30rpx;
+  background: #33ADDE;
+  border-radius: 4rpx;
+}
+
+.cd-card__title-text {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #0E3A50;
+}
+
+/* ── 信息行 ── */
+.cd-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18rpx 0;
+  border-bottom: 1rpx solid #F5FAFD;
+}
+
+.cd-row:last-child {
+  border-bottom: none;
+}
+
+.cd-row__label {
+  font-size: 26rpx;
+  color: #6E7F8A;
+}
+
+.cd-row__value {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #0E3A50;
+}
+
+/* ── 关联培训 ── */
+.cd-course {
+  display: flex;
+  align-items: flex-start;
+  gap: 20rpx;
+  background: #F5FAFD;
+  border: 1rpx solid #D5E4ED;
+  border-radius: 14rpx;
+  padding: 24rpx;
+}
+
+.cd-course__icon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 14rpx;
+  background: #DBEFF9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cd-course__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  min-width: 0;
+}
+
+.cd-course__name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #0E3A50;
+}
+
+.cd-course__inst {
+  font-size: 24rpx;
+  color: #6E7F8A;
+}
+
+.cd-course__tag {
+  align-self: flex-start;
+  font-size: 22rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  font-weight: 500;
+  margin-top: 4rpx;
+}
+
+.cd-course__tag--basic {
+  background: #E1F2FA;
+  color: #0D86BE;
+}
+
+.cd-course__tag--special {
+  background: #DBEFF9;
+  color: #0D86BE;
+}
+
+/* ── 证书说明 ── */
+.cd-desc {
+  font-size: 26rpx;
+  line-height: 1.7;
+  color: #41484D;
+}
+
+.cd-bottom {
+  height: 24rpx;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-sizing: content-box;
+}

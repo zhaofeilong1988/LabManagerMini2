@@ -1,0 +1,45 @@
+<!-- pages/login/index.wxml -->
+<view class="login-page">
+
+  <!-- 品牌区 -->
+  <view class="login-hero">
+    <view class="hero-logo">
+      <van-icon name="cluster-o" size="56px" color="#ffffff" />
+    </view>
+    <view class="hero-title">实验室共享平台</view>
+    <view class="hero-sub">手机号授权登录，畅享仪器预约 / 培训 / 准入服务</view>
+  </view>
+
+  <!-- 主体区 -->
+  <view class="login-body">
+    <view class="tips-card">
+      <van-icon name="shield-o" size="34rpx" color="#0A7BB8" />
+      <text class="tips-text">仅用于身份识别与登录，你的手机号不会对外公开展示</text>
+    </view>
+
+    <!-- 协议勾选 -->
+    <view class="agree-row" bindtap="toggleAgree">
+      <view class="checkbox {{agreed ? 'checked' : ''}}">
+        <text wx:if="{{agreed}}" class="check-mark">✓</text>
+      </view>
+      <text class="agree-text">我已阅读并同意<text class="agree-link">《用户协议》</text>与<text class="agree-link">《隐私政策》</text></text>
+    </view>
+
+    <!-- 微信手机号授权登录 -->
+    <button class="login-btn {{loading ? 'is-loading' : ''}}"
+            open-type="getPhoneNumber"
+            bindgetphonenumber="onGetPhoneNumber"
+            loading="{{loading}}"
+            disabled="{{!agreed || loading}}">
+      <van-icon name="phone-o" size="34rpx" color="#ffffff" />
+      <text class="login-btn-text">{{loading ? '登录中...' : '手机号快捷登录'}}</text>
+    </button>
+
+    <!-- 开发期兜底入口 -->
+    <view class="demo-entry" bindtap="onDemoLogin">
+      <text>暂不支持微信授权？使用体验账号浏览 ›</text>
+    </view>
+  </view>
+
+  <view class="login-footer">登录即代表你同意本平台用户协议与隐私政策</view>
+</view>

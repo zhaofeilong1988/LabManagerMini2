@@ -1,0 +1,163 @@
+/* pages/login/index.wxss */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--md-surface);
+}
+
+/* ── 品牌区 ── */
+.login-hero {
+  background: var(--grad-hero);
+  padding: 72rpx 48rpx 84rpx;
+  border-radius: 0 0 56rpx 56rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-logo {
+  width: 148rpx;
+  height: 148rpx;
+  border-radius: 38rpx;
+  background: rgba(255, 255, 255, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12rpx 32rpx rgba(10, 123, 184, 0.35);
+}
+
+.hero-title {
+  margin-top: 32rpx;
+  color: #ffffff;
+  font-size: 44rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+}
+
+.hero-sub {
+  margin-top: 14rpx;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 26rpx;
+  text-align: center;
+}
+
+/* ── 主体区 ── */
+.login-body {
+  padding: 56rpx 48rpx 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.tips-card {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  background: var(--md-primary-container);
+  border-radius: 20rpx;
+  padding: 24rpx 28rpx;
+}
+
+.tips-text {
+  flex: 1;
+  color: var(--md-on-primary-container);
+  font-size: 26rpx;
+  line-height: 1.5;
+}
+
+/* ── 协议勾选行 ── */
+.agree-row {
+  display: flex;
+  align-items: center;
+  margin-top: 40rpx;
+}
+
+.checkbox {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 10rpx;
+  border: 3rpx solid var(--md-outline);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 16rpx;
+}
+
+.checkbox.checked {
+  background: var(--md-primary);
+  border-color: var(--md-primary);
+}
+
+.check-mark {
+  color: #ffffff;
+  font-size: 24rpx;
+  line-height: 1;
+}
+
+.agree-text {
+  flex: 1;
+  color: var(--md-on-surface-variant);
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.agree-link {
+  color: var(--md-primary);
+}
+
+/* ── 登录按钮（覆盖原生 button 样式） ── */
+.login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14rpx;
+  margin-top: 48rpx;
+  height: 96rpx;
+  border-radius: 48rpx;
+  background: linear-gradient(135deg, #0A7BB8 0%, #33ADDE 100%);
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0 40rpx;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(10, 123, 184, 0.32);
+}
+
+.login-btn::after {
+  border: none;
+}
+
+.login-btn[disabled] {
+  background: #C9E9FA;
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow: none;
+}
+
+.login-btn-text {
+  color: #ffffff;
+}
+
+.login-btn[disabled] .login-btn-text {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* ── 开发期兜底入口 ── */
+.demo-entry {
+  margin-top: 40rpx;
+  text-align: center;
+  color: var(--md-secondary);
+  font-size: 26rpx;
+  padding: 8rpx 0;
+}
+
+/* ── 页脚 ── */
+.login-footer {
+  margin-top: auto;
+  padding: 48rpx 48rpx 56rpx;
+  text-align: center;
+  color: var(--md-outline);
+  font-size: 22rpx;
+}

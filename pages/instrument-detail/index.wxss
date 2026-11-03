@@ -1,1 +1,353 @@
 /* pages/instrument-detail/index.wxss */
+.id-page {
+  min-height: 100vh;
+  background: var(--md-background, #F5FAFD);
+  padding-bottom: 160rpx;
+  box-sizing: border-box;
+}
+
+/* ── 图片轮播 ── */
+.id-swiper-wrap {
+  padding: 24rpx 24rpx 0;
+}
+
+.id-swiper {
+  width: 100%;
+  height: 360rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+}
+
+.id-slide {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.id-img {
+  width: 100%;
+  height: 100%;
+}
+
+.id-img-fb {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #DBEFF9, #C9E9FA);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 96rpx;
+}
+
+/* ── 卡片 ── */
+.id-card {
+  background: #ffffff;
+  border-radius: 24rpx;
+  margin: 20rpx 24rpx 0;
+  padding: 28rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.id-hd {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.id-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: var(--md-on-surface, #161C20);
+  line-height: 1.4;
+}
+
+.id-tag {
+  flex-shrink: 0;
+  font-size: 20rpx;
+  padding: 4rpx 18rpx;
+  border-radius: 16rpx;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.id-tag--idle {
+  background: #E1F2FA;
+  color: #0D86BE;
+}
+
+.id-tag--online {
+  background: #DBEFF9;
+  color: #0D86BE;
+}
+
+.id-flags {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  margin-top: 14rpx;
+}
+
+.id-flag {
+  font-size: 20rpx;
+  padding: 2rpx 16rpx;
+  border-radius: 16rpx;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.id-flag--book {
+  background: #DBEFF9;
+  color: #0D86BE;
+}
+
+.id-flag--appr {
+  background: #FFF3E0;
+  color: #E65100;
+}
+
+.id-meta {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: var(--md-on-surface-variant, #41484D);
+}
+
+.id-meta-ic {
+  margin-right: 10rpx;
+  font-size: 24rpx;
+}
+
+.id-meta-t {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── 卡片标题 ── */
+.id-card-t {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.id-dot {
+  width: 8rpx;
+  height: 28rpx;
+  border-radius: 4rpx;
+  background: linear-gradient(180deg, #33ADDE, #0A7BB8);
+  margin-right: 12rpx;
+}
+
+.id-card-tt {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--md-on-surface, #161C20);
+}
+
+.id-count {
+  margin-left: auto;
+  font-size: 22rpx;
+  color: #6E7F8A;
+}
+
+/* ── 收费标准表 ── */
+.fee-table {
+  border-radius: 16rpx;
+  overflow: hidden;
+  border: 2rpx solid #E1ECF3;
+}
+
+.fee-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: #ffffff;
+}
+
+.fee-row + .fee-row {
+  border-top: 2rpx solid #E1ECF3;
+}
+
+.fee-row--head {
+  background: #EAF4FB;
+}
+
+.fee-row--head .fee-cell {
+  font-weight: 600;
+  color: var(--md-on-surface-variant, #41484D);
+}
+
+.fee-cell {
+  flex: 1;
+  padding: 20rpx 8rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: var(--md-on-surface, #161C20);
+}
+
+.fee-cell--cat {
+  flex: 1.1;
+  background: #EFF6FB;
+  color: #566B78;
+  font-weight: 500;
+  text-align: left;
+  padding-left: 28rpx;
+}
+
+.fee-row--head .fee-cell--cat {
+  background: transparent;
+}
+
+.fee-cell--money + .fee-cell--money,
+.fee-row--head .fee-cell--cat + .fee-cell {
+  border-left: 2rpx solid #E1ECF3;
+}
+
+.fee-cell--self {
+  color: #33ADDE;
+  font-weight: 600;
+}
+
+.id-tip {
+  margin-top: 16rpx;
+  font-size: 22rpx;
+  color: #6E7F8A;
+  line-height: 1.6;
+}
+
+/* ── 资产与位置说明 ── */
+.id-ai-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 20rpx 0;
+  border-bottom: 2rpx solid #EEF4F8;
+}
+
+.id-ai-row:last-child {
+  border-bottom: none;
+}
+
+.id-ai-k {
+  width: 200rpx;
+  flex-shrink: 0;
+  font-size: 26rpx;
+  color: #6E7F8A;
+}
+
+.id-ai-v {
+  flex: 1;
+  min-width: 0;
+  font-size: 26rpx;
+  color: var(--md-on-surface, #161C20);
+  line-height: 1.5;
+  text-align: right;
+}
+
+/* 联系电话：可点击呼出 */
+.id-phone {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8rpx;
+  color: #0A7BB8;
+  font-weight: 600;
+}
+
+.id-phone-ic {
+  font-size: 24rpx;
+  color: #0D86BE;
+  flex-shrink: 0;
+}
+
+.id-phone--hover {
+  opacity: 0.55;
+}
+
+/* ── 仪器说明（仅内容，不带标题） ── */
+.id-desc {
+  margin-top: 20rpx;
+  padding: 20rpx 24rpx;
+  background: #EAF4FB;
+  border-radius: 12rpx;
+  font-size: 24rpx;
+  color: #33576B;
+  line-height: 1.7;
+}
+
+.id-bottom {
+  height: 20rpx;
+}
+
+/* ── 底部按钮 ── */
+.id-cta {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+.id-btn {
+  height: 88rpx;
+  border-radius: 44rpx;
+  background: linear-gradient(135deg, #33ADDE, #0A7BB8);
+  color: #ffffff;
+  font-size: 30rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 20rpx rgba(27, 82, 112, 0.28);
+}
+
+.id-btn:active {
+  opacity: 0.88;
+}
+
+/* 管理功能卡片：标题居中（收费标准等卡片仍是左对齐） */
+.id-card-t--center {
+  justify-content: center;
+}
+
+/* ── 管理功能：预约调整 / 预约记录 / 上机记录 ── */
+.id-acts {
+  display: flex;
+  flex-direction: row;
+  gap: 18rpx;
+}
+.id-act {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  padding: 26rpx 8rpx;
+  border-radius: 18rpx;
+  background: #F2F9FE;
+  border: 1rpx solid #DCEDF8;
+}
+.id-act--hover {
+  background: #E4F3FC;
+}
+.id-act-t {
+  font-size: 24rpx;
+  color: #0A7BB8;
+  font-weight: 600;
+  line-height: 1.3;
+}

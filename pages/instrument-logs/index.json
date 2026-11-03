@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "使用记录",
+  "navigationBarBackgroundColor": "#0A7BB8",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#ffffff",
+  "usingComponents": {
+    "van-icon": "@vant/weapp/icon/index"
+  }
+}

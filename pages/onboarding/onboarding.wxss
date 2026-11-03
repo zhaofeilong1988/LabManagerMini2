@@ -1,0 +1,737 @@
+/* pages/onboarding/onboarding.wxss — 公共样式，各子页面 @import 引入 */
+
+/* ── 全局变量（component 内不能用 page 选择器，改用 .ob-wrap 承载变量） ── */
+.ob-wrap {
+  --ob-primary:    #0A7BB8;
+  --ob-accent:     #33ADDE;
+  --ob-bg:         #F5FAFD;
+  --ob-surface:    #FFFFFF;
+  --ob-border:     #D5E4ED;
+  --ob-text:       #161C20;
+  --ob-sub:        #41484D;
+  --ob-hint:       #6E7F8A;
+  --ob-done:       #0D86BE;
+  --ob-warn:       #FFB300;
+  --ob-error:      #BA1A1A;
+}
+
+/* ── 准入总览 ── */
+.ob-wrap {
+  min-height: 100vh;
+  background: var(--ob-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.ob-header {
+  background: linear-gradient(135deg, #0A7BB8 0%, #33ADDE 100%);
+  padding: 60rpx 32rpx 40rpx;
+}
+
+.ob-header-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #fff;
+  display: block;
+}
+
+.ob-header-sub {
+  font-size: 26rpx;
+  color: rgba(255,255,255,0.8);
+  display: block;
+  margin-top: 8rpx;
+}
+
+/* ── 步骤条 ── */
+.ob-steps {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  background: var(--ob-surface);
+  padding: 32rpx 16rpx 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+.ob-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+}
+
+.step-line {
+  position: absolute;
+  top: 22rpx;
+  right: 50%;
+  left: -50%;
+  height: 3rpx;
+  background: var(--ob-border);
+  z-index: 0;
+}
+
+.step-line.done {
+  background: var(--ob-accent);
+}
+
+.step-circle {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: var(--ob-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  position: relative;
+}
+
+.ob-step.done .step-circle {
+  background: var(--ob-done);
+}
+
+.ob-step.active .step-circle {
+  background: var(--ob-accent);
+  box-shadow: 0 0 0 6rpx rgba(3,169,244,0.2);
+}
+
+.step-num {
+  font-size: 22rpx;
+  font-weight: 700;
+  color: #fff;
+}
+
+.ob-step.pending .step-num {
+  color: var(--ob-hint);
+}
+
+.ob-step.pending .step-circle {
+  background: var(--ob-bg);
+  border: 2rpx solid var(--ob-border);
+}
+
+.step-label {
+  font-size: 20rpx;
+  margin-top: 8rpx;
+  color: var(--ob-hint);
+  text-align: center;
+}
+
+.ob-step.active .step-label {
+  color: var(--ob-accent);
+  font-weight: 600;
+}
+
+.ob-step.done .step-label {
+  color: var(--ob-done);
+}
+
+/* ── 步骤卡片 ── */
+.ob-card {
+  margin: 24rpx;
+  background: var(--ob-surface);
+  border-radius: 20rpx;
+  padding: 40rpx 32rpx;
+  box-shadow: 0 2rpx 16rpx rgba(0,0,0,0.07);
+  flex: 1;
+}
+
+.ob-card-icon {
+  font-size: 64rpx;
+  text-align: center;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.ob-card-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: var(--ob-text);
+  display: block;
+  text-align: center;
+  margin-bottom: 12rpx;
+}
+
+.ob-card-desc {
+  font-size: 26rpx;
+  color: var(--ob-sub);
+  display: block;
+  text-align: center;
+  line-height: 1.7;
+  margin-bottom: 28rpx;
+}
+
+.ob-card-checklist {
+  background: #E7F4FB;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+}
+
+.checklist-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+  padding: 10rpx 0;
+  font-size: 26rpx;
+  color: var(--ob-text);
+  border-bottom: 1rpx solid #D5E4ED;
+}
+
+.checklist-item:last-child {
+  border-bottom: none;
+}
+
+.checklist-item .optional {
+  color: var(--ob-hint);
+}
+
+.ob-score-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24rpx;
+  background: #E7F4FB;
+  border-radius: 16rpx;
+}
+
+.score-pass {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: var(--ob-accent);
+}
+
+.score-label {
+  font-size: 24rpx;
+  color: var(--ob-sub);
+  margin-top: 6rpx;
+}
+
+.ob-pending-info {
+  background: #FFF8E1;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+}
+
+.pending-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10rpx 0;
+  font-size: 26rpx;
+  border-bottom: 1rpx solid #FFE082;
+}
+
+.pending-row:last-child {
+  border-bottom: none;
+}
+
+.pending-key { color: var(--ob-sub); }
+.pending-val { color: var(--ob-text); font-weight: 600; }
+
+/* ── 底部按钮区 ── */
+.ob-footer {
+  padding: 0 24rpx 48rpx;
+}
+
+.ob-withdraw {
+  text-align: center;
+  margin-top: 20rpx;
+  font-size: 26rpx;
+  color: var(--ob-error);
+  padding: 16rpx;
+}
+
+/* ── 通用表单样式 ── */
+.form-section {
+  margin: 24rpx;
+}
+
+.form-section-title {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: var(--ob-hint);
+  letter-spacing: 2rpx;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 12rpx;
+  padding-left: 4rpx;
+}
+
+.form-card {
+  background: var(--ob-surface);
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+/* ── 身份切换 ── */
+.identity-tabs {
+  display: flex;
+  flex-direction: row;
+  background: var(--ob-surface);
+  border-radius: 16rpx;
+  padding: 8rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+  margin: 24rpx 24rpx 0;
+}
+
+.identity-tab {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 28rpx;
+  color: var(--ob-hint);
+  border-radius: 12rpx;
+  transition: all 0.2s;
+}
+
+.identity-tab.active {
+  background: linear-gradient(135deg, #0A7BB8, #33ADDE);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ── 上传文件区块 ── */
+.upload-doc-block {
+  background: var(--ob-surface);
+  border-radius: 16rpx;
+  margin: 0 24rpx 20rpx;
+  padding: 28rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+.upload-doc-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.upload-doc-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--ob-text);
+}
+
+.upload-doc-required {
+  font-size: 22rpx;
+  color: var(--ob-error);
+  background: #FDECEA;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+}
+
+.upload-doc-optional-tag {
+  font-size: 22rpx;
+  color: var(--ob-hint);
+  background: #F5FAFD;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+}
+
+.upload-doc-desc {
+  font-size: 24rpx;
+  color: var(--ob-hint);
+  display: block;
+  margin-bottom: 20rpx;
+  line-height: 1.6;
+}
+
+.upload-photo-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.upload-photo-thumb {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  background: var(--ob-bg);
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-photo-thumb image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb-del {
+  position: absolute;
+  top: 4rpx;
+  right: 4rpx;
+  width: 36rpx;
+  height: 36rpx;
+  background: rgba(0,0,0,0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-add-btn {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  border: 2rpx dashed var(--ob-accent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  background: #E7F4FB;
+}
+
+.upload-add-text {
+  font-size: 22rpx;
+  color: var(--ob-accent);
+}
+
+.upload-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 16rpx;
+  margin-top: 16rpx;
+}
+
+/* ── 考试页 ── */
+.exam-header {
+  background: linear-gradient(135deg, #0A7BB8 0%, #33ADDE 100%);
+  padding: 40rpx 32rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.exam-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #fff;
+}
+
+.exam-timer {
+  background: rgba(255,255,255,0.2);
+  border-radius: 20rpx;
+  padding: 8rpx 20rpx;
+  font-size: 28rpx;
+  color: #fff;
+  font-weight: 700;
+}
+
+.exam-timer.warning {
+  background: rgba(255,59,48,0.7);
+}
+
+.exam-progress-bar {
+  background: #D5E4ED;
+  height: 8rpx;
+}
+
+.exam-progress-fill {
+  height: 8rpx;
+  background: var(--ob-accent);
+  transition: width 0.3s;
+}
+
+.question-card {
+  margin: 24rpx;
+  background: var(--ob-surface);
+  border-radius: 16rpx;
+  padding: 32rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+.question-meta {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.question-index {
+  font-size: 22rpx;
+  color: var(--ob-hint);
+}
+
+.question-text {
+  font-size: 30rpx;
+  color: var(--ob-text);
+  line-height: 1.7;
+  display: block;
+  margin-bottom: 28rpx;
+}
+
+.option-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16rpx;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  margin-bottom: 12rpx;
+  border: 2rpx solid var(--ob-border);
+  background: var(--ob-bg);
+  transition: all 0.2s;
+}
+
+.option-item.selected {
+  border-color: var(--ob-accent);
+  background: #E3F4FD;
+}
+
+.option-item.correct {
+  border-color: var(--ob-done);
+  background: #E1F2FA;
+}
+
+.option-item.wrong {
+  border-color: var(--ob-error);
+  background: #FDECEA;
+}
+
+.option-circle {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  border: 2rpx solid var(--ob-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 24rpx;
+  color: var(--ob-hint);
+  font-weight: 700;
+}
+
+.option-item.selected .option-circle {
+  background: var(--ob-accent);
+  border-color: var(--ob-accent);
+  color: #fff;
+}
+
+.option-text {
+  font-size: 28rpx;
+  color: var(--ob-text);
+  flex: 1;
+  line-height: 1.5;
+}
+
+.exam-nav {
+  display: flex;
+  flex-direction: row;
+  gap: 20rpx;
+  padding: 0 24rpx 48rpx;
+}
+
+/* ── 结果页 ── */
+.result-wrap {
+  min-height: 100vh;
+  background: var(--ob-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80rpx 32rpx 48rpx;
+}
+
+.result-icon {
+  font-size: 120rpx;
+  margin-bottom: 24rpx;
+}
+
+.result-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--ob-text);
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.result-sub {
+  font-size: 28rpx;
+  color: var(--ob-sub);
+  text-align: center;
+  line-height: 1.7;
+  display: block;
+  margin-bottom: 40rpx;
+}
+
+.result-card {
+  width: 100%;
+  background: var(--ob-surface);
+  border-radius: 20rpx;
+  padding: 32rpx;
+  box-shadow: 0 2rpx 16rpx rgba(0,0,0,0.07);
+  margin-bottom: 40rpx;
+}
+
+.result-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 16rpx 0;
+  font-size: 28rpx;
+  border-bottom: 1rpx solid var(--ob-border);
+}
+
+.result-row:last-child { border-bottom: none; }
+.result-key { color: var(--ob-sub); }
+.result-val { color: var(--ob-text); font-weight: 600; }
+.result-val.pass { color: var(--ob-done); }
+.result-val.fail { color: var(--ob-error); }
+
+.reject-reason {
+  background: #FDECEA;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+  margin-top: 16rpx;
+}
+
+.reject-reason-text {
+  font-size: 26rpx;
+  color: var(--ob-error);
+  line-height: 1.7;
+}
+
+/* ── 页面根容器（register / upload / exam 复用 .ob-wrap 变量） ── */
+.reg-wrap,
+.upload-wrap,
+.exam-wrap {
+  --ob-primary: #0A7BB8;
+  --ob-accent:  #33ADDE;
+  --ob-bg:      #F5FAFD;
+  --ob-surface: #FFFFFF;
+  --ob-border:  #D5E4ED;
+  --ob-text:    #161C20;
+  --ob-sub:     #41484D;
+  --ob-hint:    #6E7F8A;
+  --ob-done:    #0D86BE;
+  --ob-warn:    #FFB300;
+  --ob-error:   #BA1A1A;
+  min-height: 100vh;
+  background: var(--ob-bg);
+}
+
+/* ── 上传提示条 ── */
+.upload-tip-bar {
+  margin: 24rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+  background: #DBEFF9;
+  color: #0A7BB8;
+  font-size: 24rpx;
+  padding: 16rpx 24rpx;
+  border-radius: 12rpx;
+}
+
+.upload-tip-text {
+  flex: 1;
+  line-height: 1.5;
+}
+
+/* ── 声明复选框 ── */
+.declare-box {
+  padding: 24rpx 28rpx;
+}
+
+.declare-text {
+  font-size: 24rpx;
+  color: var(--ob-sub);
+  line-height: 1.6;
+}
+
+/* ── 考试导航按钮 ── */
+.btn-sec {
+  width: 100%;
+  height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  border: 2rpx solid var(--ob-border);
+  background: #ffffff;
+  color: #0A7BB8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 76rpx;
+  padding: 0;
+}
+
+.btn-main {
+  width: 100%;
+  height: 80rpx;
+  border-radius: 40rpx;
+  background: linear-gradient(135deg, #0A7BB8, #33ADDE);
+  color: #ffffff;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 80rpx;
+  padding: 0;
+}
+
+/* 主按钮置灰态：条件未满足（如提交审核需 attachmentFlag=1 且 hasValid=true）时不可点击 */
+.btn-main--disabled,
+.btn-main[disabled] {
+  background: #E2EAF0 !important;
+  color: #9FB0BA !important;
+  opacity: 1 !important;
+}
+
+.btn-sec::after,
+.btn-main::after,
+.btn-upload-sm::after {
+  border: none;
+}
+
+/* ── 上传操作小按钮（原生 button，替代 van-button） ── */
+.btn-upload-sm {
+  flex: 1;
+  height: 64rpx;
+  border-radius: 32rpx;
+  border: 2rpx solid var(--ob-accent);
+  background: #ffffff;
+  color: var(--ob-accent);
+  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 60rpx;
+  padding: 0;
+}
+
+/* 考试导航内按钮均分宽度 */
+.exam-nav .btn-sec,
+.exam-nav .btn-main {
+  width: auto;
+  flex: 1;
+}
+
+/* ── 演示入口 ── */
+.demo-entry {
+  margin: 8rpx 24rpx 0;
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 24rpx 28rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.demo-entry-text {
+  font-size: 24rpx;
+  color: var(--ob-sub);
+}

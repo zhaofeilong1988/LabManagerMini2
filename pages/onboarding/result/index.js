@@ -1,4 +1,4 @@
-// pages/instrument/index.js
+// pages/onboarding/result/index.js
 Page({
 
   /**

@@ -1,0 +1,223 @@
+<!-- pages/onboarding/index/index.wxml -->
+<view class="ob-wrap">
+
+<!-- 顶部 Header -->
+<view class="ob-header">
+  <text class="ob-header-title">平台准入申请</text>
+  <text class="ob-header-sub">完成以下步骤即可获得仪器预约权限</text>
+</view>
+
+<!-- 步骤进度条（点击节点查看对应信息） -->
+<view class="ob-steps">
+  <view wx:for="{{steps}}" wx:key="id"
+        class="ob-step {{item.status}}"
+        hover-class="ob-step-hover"
+        bindtap="openStepInfo" data-id="{{item.id}}">
+    <!-- 连接线（第一个前不显示） -->
+    <view wx:if="{{index > 0}}" class="step-line {{steps[index-1].status === 'done' ? 'done' : ''}}"></view>
+    <!-- 圆圈 -->
+    <view class="step-circle">
+      <van-icon wx:if="{{item.status === 'done'}}" name="success" size="18px" color="#fff" />
+      <text wx:else class="step-num">{{index+1}}</text>
+    </view>
+    <!-- 标签 -->
+    <text class="step-label">{{item.label}}</text>
+  </view>
+</view>
+
+<!-- 节点查看提示 -->
+<view class="ob-step-hint">
+  <van-icon name="info-o" size="24rpx" color="#6E7F8A" />
+  <text class="ob-step-hint-text">点击上方节点可查看各步骤已填写的进度与内容</text>
+</view>
+
+<!-- 当前步骤卡片 -->
+<view class="ob-card">
+  <!-- 步骤1：申请登记 -->
+  <view wx:if="{{currentStep === 0}}">
+    <view class="ob-card-icon">📝</view>
+    <text class="ob-card-title">申请登记</text>
+    <text class="ob-card-desc">填写您的基本信息和所属课题组，并声明遵守平台使用规则。</text>
+    <view class="ob-card-checklist">
+      <view class="checklist-item">
+        <van-icon name="passed" color="#33ADDE" size="16px" />
+        <text>姓名、学号/工号</text>
+      </view>
+      <view class="checklist-item">
+        <van-icon name="passed" color="#33ADDE" size="16px" />
+        <text>所属课题组与导师</text>
+      </view>
+      <view class="checklist-item">
+        <van-icon name="passed" color="#33ADDE" size="16px" />
+        <text>院内/院外身份声明</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 步骤2：材料提交（上传文件 + 安全考试 合并为一步） -->
+  <view wx:elif="{{currentStep === 1}}">
+    <view class="ob-card-icon">🗂️</view>
+    <text class="ob-card-title">材料提交</text>
+    <text class="ob-card-desc">上传审批文件并通过安全考试后，点击下方「提交审核」进入审核环节。</text>
+
+    <!-- 两项子任务：点击进入对应页面 -->
+    <view class="ob-task-list">
+      <view class="ob-task {{uploadStateType === 'done' ? 'done' : uploadStateType === 'partial' ? 'partial' : ''}}" hover-class="ob-task-hover" bindtap="goUpload">
+        <view class="ob-task-icon {{uploadStateType === 'done' ? 'done' : uploadStateType === 'partial' ? 'partial' : ''}}">
+          <!-- 全部上传：与安全考试「通过」一致的 ✔ 图标（深蓝实心） -->
+          <van-icon wx:if="{{uploadStateType === 'done'}}" name="passed" size="18px" color="#fff" />
+          <!-- 部分上传：亮蓝实心 + 相机图标（提示需补全） -->
+          <van-icon wx:elif="{{uploadStateType === 'partial'}}" name="photograph" size="18px" color="#fff" />
+          <!-- 未上传：白底 + 相机图标 -->
+          <van-icon wx:else name="photograph" size="18px" color="#33ADDE" />
+        </view>
+        <view class="ob-task-main">
+          <text class="ob-task-title">上传文件</text>
+          <text class="ob-task-sub">{{uploadText}}</text>
+        </view>
+        <van-icon name="arrow" size="14px" color="#6E7F8A" />
+      </view>
+
+      <view class="ob-task {{examStateType === 'passed' ? 'done' : examStateType === 'failed' ? 'failed' : examStateType === 'grading' ? 'grading' : ''}}"
+            hover-class="ob-task-hover" bindtap="goExam">
+        <view class="ob-task-icon {{examStateType === 'passed' ? 'done' : examStateType === 'failed' ? 'failed' : ''}}">
+          <!-- 通过：与上方「已上传文件」一致的 ✔ 图标（深蓝实心） -->
+          <van-icon wx:if="{{examStateType === 'passed'}}" name="passed" size="18px" color="#fff" />
+          <!-- 未通过：警示红色 ✖ -->
+          <van-icon wx:elif="{{examStateType === 'failed'}}" name="close" size="18px" color="#fff" />
+          <!-- 未获证时（未考 / 评卷中）：统一的奖牌图标，与上传完成态的 ✔ 区分开 -->
+          <van-icon wx:else name="medal-o" size="18px" color="#33ADDE" />
+        </view>
+        <view class="ob-task-main">
+          <text class="ob-task-title">安全考试</text>
+          <text class="ob-task-sub {{examStateType === 'failed' ? 'ob-task-sub--failed' : ''}}">{{examText}}</text>
+        </view>
+        <van-icon name="arrow" size="14px" color="#6E7F8A" />
+      </view>
+    </view>
+
+    <!-- 提交审核：attachmentFlag=1 且 hasValid=true 时才亮起可点击，否则置灰 -->
+    <button
+      class="btn-main ob-submit-btn {{canSubmit ? '' : 'btn-main--disabled'}}"
+      hover-class="{{canSubmit ? 'ob-btn-hover' : 'none'}}"
+      disabled="{{!canSubmit}}"
+      bindtap="openSubmitReview"
+    >提交审核</button>
+    <view class="ob-submit-hint" wx:if="{{!canSubmit}}">
+      <van-icon name="info-o" size="24rpx" color="#33ADDE" />
+      <text>请先完成材料上传并通过安全考试，方可提交审核</text>
+    </view>
+  </view>
+
+  <!-- 步骤3：等待审核 -->
+  <view wx:elif="{{currentStep === 2}}">
+    <view class="ob-card-icon">⏳</view>
+    <text class="ob-card-title">等待审核</text>
+    <text class="ob-card-desc">您的材料已提交，请等待相关负责人审批。审批完成后将通过消息通知您。</text>
+    <view class="ob-pending-info">
+      <view class="pending-row">
+        <text class="pending-key">提交时间</text>
+        <text class="pending-val">{{submitTime}}</text>
+      </view>
+      <view class="pending-row">
+        <text class="pending-key">预计时长</text>
+        <text class="pending-val">1-3 个工作日</text>
+      </view>
+      <view class="pending-row">
+        <text class="pending-key">审批节点</text>
+        <text class="pending-val">科室主任 → 平台管理员</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 步骤4：准入成功 -->
+  <view wx:elif="{{currentStep === 3}}">
+    <view class="ob-card-icon">🎉</view>
+    <text class="ob-card-title">准入成功</text>
+    <text class="ob-card-desc">恭喜您已完成平台准入！现在可以预约仪器和申请工位了。</text>
+  </view>
+</view>
+
+<!-- 底部按钮 -->
+<view class="ob-footer">
+  <!-- 步骤1：申请登记 -->
+  <button
+    wx:if="{{currentStep === 0}}"
+    class="btn-main"
+    bindtap="goNextStep"
+  >开始填写</button>
+
+  <!-- 步骤2：材料提交（子任务按钮在卡片内，底部仅保留返回修改） -->
+  <view wx:if="{{currentStep === 1}}" class="ob-withdraw" hover-class="ob-withdraw-hover" bindtap="openResetModal" data-mode="restart">
+    <text>返回修改（回到第一步）</text>
+  </view>
+
+  <!-- 步骤3：等待审核 -->
+  <button
+    wx:if="{{currentStep === 2}}"
+    class="btn-main"
+    bindtap="goNextStep"
+  >{{btnText}}</button>
+  <view wx:if="{{currentStep === 2}}" class="ob-withdraw" hover-class="ob-withdraw-hover" bindtap="openResetModal" data-mode="withdraw">
+    <text>撤回申请重新提交</text>
+  </view>
+
+  <!-- 步骤4：准入成功 -->
+  <button
+    wx:if="{{currentStep === 3}}"
+    class="btn-main"
+    bindtap="goHome"
+  >返回首页</button>
+  <view wx:if="{{currentStep === 3}}" class="ob-withdraw" hover-class="ob-withdraw-hover" bindtap="openResetModal" data-mode="backRegister">
+    <text>回退到申请登记</text>
+  </view>
+</view>
+
+<!-- 重新开始 / 撤回 / 回退 二次确认弹窗（自绘居中卡片，规避系统 wx.showModal 不弹出） -->
+<view wx:if="{{resetModal.show}}" class="ob-mask" catchtouchmove="noop" catchtap="closeResetModal">
+  <view class="ob-modal" catchtap="noop">
+    <view class="ob-modal-title">{{resetModal.title}}</view>
+    <view class="ob-modal-content">{{resetModal.content}}</view>
+    <view class="ob-modal-actions">
+      <view class="ob-modal-btn ob-modal-cancel" hover-class="ob-modal-hover" catchtap="closeResetModal">再想想</view>
+      <view class="ob-modal-btn ob-modal-confirm {{resetModal.mode === 'backRegister' ? 'danger' : ''}}" hover-class="ob-modal-hover" bindtap="confirmReset">{{resetModal.confirmText}}</view>
+    </view>
+  </view>
+</view>
+
+<!-- 演示入口：模拟管理员审批通过 -->
+<view wx:if="{{currentStep === 2}}" class="demo-entry" bindtap="goToResult">
+  <text class="demo-entry-text">演示：模拟管理员审批通过，查看准入结果</text>
+  <van-icon name="arrow" size="14px" color="#C4D0D8" />
+</view>
+
+<!-- 节点详情弹层（点击步骤节点查看对应信息） -->
+<view wx:if="{{nodePop.show}}" class="node-mask" catchtouchmove="noop" catchtap="closeNodePop">
+  <view class="node-sheet" catchtap="noop">
+    <view class="node-sheet-grip"></view>
+    <view class="node-sheet-head">
+      <text class="node-sheet-title">{{nodePop.title}}</text>
+      <view class="node-sheet-x" hover-class="node-hover" catchtap="closeNodePop">
+        <van-icon name="cross" size="16px" color="#6E7F8A" />
+      </view>
+    </view>
+    <scroll-view scroll-y class="node-sheet-body" style="max-height: 56vh;">
+      <view wx:if="{{nodePop.empty}}" class="node-empty">
+        <van-icon name="info-o" size="40px" color="#C4D0D8" />
+        <text class="node-empty-text">{{nodePop.empty}}</text>
+      </view>
+      <block wx:else>
+        <view wx:for="{{nodePop.rows}}" wx:key="label" class="node-row">
+          <text class="node-row-key">{{item.label}}</text>
+          <text class="node-row-val {{item.accent ? 'node-row-val--accent' : ''}}">{{item.value}}</text>
+        </view>
+      </block>
+    </scroll-view>
+    <view class="node-sheet-foot">
+      <button wx:if="{{nodePop.actionText}}" class="btn-main node-sheet-btn" hover-class="node-btn-hover" bindtap="nodePopAction">{{nodePop.actionText}}</button>
+      <button wx:else class="btn-sec node-sheet-btn" hover-class="node-btn-hover" bindtap="closeNodePop">关闭</button>
+    </view>
+  </view>
+</view>
+
+</view>

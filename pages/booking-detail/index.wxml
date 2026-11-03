@@ -1,0 +1,187 @@
+<!-- pages/booking-detail/index.wxml -->
+<!-- 加载/错误态 -->
+<view class="bd-loading" wx:if="{{loading}}">
+  <view class="bd-load-spin"></view>
+  <text class="bd-load-t">正在加载预约详情…</text>
+</view>
+<view class="bd-empty" wx:elif="{{!detail}}">
+  <view class="bd-empty-ic">📭</view>
+  <text class="bd-empty-t">{{errMsg || '未找到该预约记录'}}</text>
+</view>
+
+<view class="bd-page" wx:else>
+
+  <!-- 顶部预约单头：状态 + 提交时间（同一行展示，按用户要求不显示预约编号 ID） -->
+  <view class="bd-head">
+    <view class="bd-head-row">
+      <text class="bd-status {{detail.statusCls}}">{{detail.statusText}}</text>
+      <text class="bd-head-sub" wx:if="{{detail.submitTime}}">提交于 {{detail.submitTime}}</text>
+    </view>
+  </view>
+
+  <!-- ① 预约信息 -->
+  <view class="bd-card">
+    <view class="bd-card-t">
+      <view class="bd-dot"></view>
+      <text class="bd-card-tt">预约信息</text>
+    </view>
+    <view class="bd-rows">
+      <view class="bd-row">
+        <text class="bd-row-k">仪器</text>
+        <text class="bd-row-v">{{detail.device.name}}</text>
+      </view>
+      <view class="bd-row">
+        <text class="bd-row-k">实验室</text>
+        <text class="bd-row-v">🧪 {{detail.device.lab}}</text>
+      </view>
+      <view class="bd-row">
+        <text class="bd-row-k">开始时间</text>
+        <text class="bd-row-v">{{detail.startAt || '--'}}</text>
+      </view>
+      <view class="bd-row">
+        <text class="bd-row-k">结束时间</text>
+        <text class="bd-row-v">{{detail.finishAt || '--'}}</text>
+      </view>
+      <view class="bd-row" wx:if="{{detail.durText}}">
+        <text class="bd-row-k">时长</text>
+        <text class="bd-row-v">{{detail.durText}}</text>
+      </view>
+      <view class="bd-row">
+        <text class="bd-row-k">计费方式</text>
+        <text class="bd-row-v">{{detail.operateName || '--'}}</text>
+      </view>
+      <view class="bd-row">
+        <text class="bd-row-k">小时单价</text>
+        <text class="bd-row-v">{{detail.priceText}}</text>
+      </view>
+      <view class="bd-row">
+        <text class="bd-row-k">总费用</text>
+        <text class="bd-row-v bd-row-v--em">{{detail.amountText}}</text>
+      </view>
+    </view>
+    <!-- 待审核：可调整预约时间 → pages/booking-adjust（带仪器名进入该仪器的预约调整） -->
+    <view
+      wx:if="{{detail.status === 'pending'}}"
+      class="bd-adjust"
+      hover-class="bd-adjust--hover"
+      hover-stay-time="80"
+      bindtap="onAdjustTime"
+    >预约时间调整</view>
+  </view>
+
+  <!-- ② 测试信息 -->
+  <view class="bd-card">
+    <view class="bd-card-t">
+      <view class="bd-dot"></view>
+      <text class="bd-card-tt">测试信息</text>
+    </view>
+    <view class="bd-rows">
+      <view class="bd-row bd-row--multi" wx:if="{{detail.memo1}}">
+        <text class="bd-row-k">测试目的</text>
+        <text class="bd-row-v">{{detail.memo1}}</text>
+      </view>
+      <view class="bd-row bd-row--multi" wx:if="{{detail.memo2}}">
+        <text class="bd-row-k">测试内容</text>
+        <text class="bd-row-v">{{detail.memo2}}</text>
+      </view>
+      <view class="bd-row bd-row--multi" wx:if="{{detail.memo3}}">
+        <text class="bd-row-k">备注</text>
+        <text class="bd-row-v">{{detail.memo3}}</text>
+      </view>
+      <view class="bd-row bd-row--multi" wx:if="{{detail.memo4}}">
+        <text class="bd-row-k">补充信息</text>
+        <text class="bd-row-v">{{detail.memo4}}</text>
+      </view>
+      <view class="bd-row bd-row--multi" wx:if="{{!detail.memo1 && !detail.memo2 && !detail.memo3 && !detail.memo4}}">
+        <text class="bd-row-v bd-row-v--muted">暂无测试信息</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ③ 收费标准 -->
+  <view class="bd-card">
+    <view class="bd-card-t">
+      <view class="bd-dot"></view>
+      <text class="bd-card-tt">收费标准</text>
+      <text class="bd-card-tip">单位：元 / 小时</text>
+    </view>
+    <view class="bd-fee">
+      <view class="bd-fee-row bd-fee-row--head">
+        <view class="bd-fee-cell bd-fee-cell--cat">类别</view>
+        <view class="bd-fee-cell bd-fee-cell--money">自助价</view>
+        <view class="bd-fee-cell bd-fee-cell--money">委托价</view>
+      </view>
+      <view class="bd-fee-row" wx:for="{{detail.device.priceRows}}" wx:key="cat">
+        <view class="bd-fee-cell bd-fee-cell--cat">{{item.cat}}</view>
+        <view class="bd-fee-cell bd-fee-cell--money bd-fee-cell--self">{{item.self || '¥0'}}</view>
+        <view class="bd-fee-cell bd-fee-cell--money">{{item.entrust || '¥0'}}</view>
+      </view>
+    </view>
+    <view class="bd-tip">自助操作费用较低；委托测试按委托价收取，结果数据由平台统一交付。</view>
+  </view>
+
+  <!-- ④ 管理员信息 -->
+  <view class="bd-card">
+    <view class="bd-card-t">
+      <view class="bd-dot"></view>
+      <text class="bd-card-tt">管理员信息</text>
+    </view>
+    <view class="bd-rows">
+      <view class="bd-row">
+        <text class="bd-row-k">管理员</text>
+        <text class="bd-row-v">{{detail.admin.userName}}</text>
+      </view>
+      <view class="bd-row">
+        <text class="bd-row-k">联系电话</text>
+        <view
+          wx:if="{{detail.admin.phonenumber}}"
+          class="bd-row-v bd-phone"
+          hover-class="bd-phone--hover"
+          hover-stay-time="80"
+          catchtap="onCallPhone"
+          data-phone="{{detail.admin.phonenumber}}"
+        >
+          <van-icon class="bd-phone-ic" name="phone-o" size="15px" color="#0D86BE" />
+          <text class="bd-phone-num">{{detail.admin.phonenumber}}</text>
+        </view>
+        <text wx:else class="bd-row-v bd-row-v--muted">--</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ⑤ 资产与位置说明（精简版：与 detail 页相比去掉规格/厂家/成本价/购置日期等冗余字段） -->
+  <view class="bd-card">
+    <view class="bd-card-t">
+      <view class="bd-dot"></view>
+      <text class="bd-card-tt">资产与位置</text>
+    </view>
+    <view class="bd-rows">
+      <view class="bd-row">
+        <text class="bd-row-k">地址</text>
+        <text class="bd-row-v">📍 {{detail.device.address}}</text>
+      </view>
+      <view class="bd-row">
+        <text class="bd-row-k">仪器所属</text>
+        <text class="bd-row-v">{{detail.device.ownership}}</text>
+      </view>
+      <view class="bd-row">
+        <text class="bd-row-k">SN 编号</text>
+        <text class="bd-row-v">{{detail.device.sn}}</text>
+      </view>
+      <view class="bd-row">
+        <text class="bd-row-k">固定资产编号</text>
+        <text class="bd-row-v">{{detail.device.serialNo}}</text>
+      </view>
+      <view class="bd-row">
+        <text class="bd-row-k">所资产编号</text>
+        <text class="bd-row-v">{{detail.device.companyNo}}</text>
+      </view>
+      <view class="bd-row">
+        <text class="bd-row-k">型号</text>
+        <text class="bd-row-v">{{detail.device.model}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="bd-bottom"></view>
+</view>

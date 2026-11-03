@@ -1,29 +1,32 @@
 /* index.wxss */
 
-/* ── MD3 天蓝色色彩 Token ── */
+/* ── MD3 天蓝色色彩 Token（源色 #33ADDE） ── */
 page {
-  --md-primary:           #1B5270;
-  --md-primary-light:     #03A9F4;
+  --md-primary:           #0A7BB8;
+  --md-primary-light:     #33ADDE;
   --md-on-primary:        #FFFFFF;
-  --md-primary-container: #C3E7FF;
-  --md-on-primary-container: #001E2E;
+  --md-primary-container: #C9E9FA;
+  --md-on-primary-container: #06324A;
 
-  --md-secondary:         #4A6070;
-  --md-secondary-container: #CCE5F5;
-  --md-tertiary:          #574B6E;
-  --md-tertiary-container: #DCDAF5;
+  --md-secondary:         #4C6673;
+  --md-secondary-container: #D4E6F0;
+  --md-tertiary:          #5C5A9E;
+  --md-tertiary-container: #E0DFF8;
 
   --md-error:             #BA1A1A;
   --md-error-container:   #FFDAD6;
 
-  --md-background:        #F5F9FC;
+  --md-background:        #F5FAFD;
   --md-surface:           #FFFFFF;
-  --md-surface-variant:   #DCE4EA;
-  --md-outline:           #6E8090;
-  --md-outline-variant:   #C0CDD6;
+  --md-surface-variant:   #DCE5EA;
+  --md-outline:           #71797E;
+  --md-outline-variant:   #C2CAD0;
 
-  --md-on-surface:        #0E1C26;
-  --md-on-surface-variant:#3D5263;
+  --md-on-surface:        #161C20;
+  --md-on-surface-variant:#41484D;
+
+  --grad-primary:         linear-gradient(135deg, #0A7BB8 0%, #33ADDE 100%);
+  --grad-primary-rev:     linear-gradient(135deg, #33ADDE 0%, #0A7BB8 100%);
 
   background-color: var(--md-background);
   font-family: -apple-system, 'PingFang SC', sans-serif;

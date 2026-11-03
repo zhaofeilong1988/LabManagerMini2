@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "预约审批",
+  "navigationBarBackgroundColor": "#0A7BB8",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#F2F4F6",
+  "usingComponents": {
+    "van-icon": "@vant/weapp/icon/index"
+  }
+}

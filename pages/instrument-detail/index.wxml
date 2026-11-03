@@ -1,2 +1,174 @@
-<!--pages/instrument-detail/index.wxml-->
-<text>pages/instrument-detail/index.wxml</text>
+<!-- pages/instrument-detail/index.wxml -->
+<view class="id-page" wx:if="{{detail}}">
+
+  <!-- 顶部：仪器图片轮播 -->
+  <view class="id-swiper-wrap">
+    <swiper
+      class="id-swiper"
+      indicator-dots="{{detail.gallery.length > 1}}"
+      indicator-color="rgba(255,255,255,0.45)"
+      indicator-active-color="#ffffff"
+      circular
+      autoplay
+      interval="3500"
+      duration="400"
+    >
+      <swiper-item wx:for="{{detail.gallery}}" wx:key="*this">
+        <view class="id-slide">
+          <image
+            wx:if="{{imgErrIdx.indexOf(index) < 0}}"
+            class="id-img"
+            src="{{item}}"
+            mode="aspectFill"
+            binderror="onImgErr"
+            data-idx="{{index}}"
+          />
+          <view wx:else class="id-img-fb">{{detail.icon}}</view>
+        </view>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 基本信息 -->
+  <view class="id-card">
+    <view class="id-hd">
+      <view class="id-name">{{detail.name}}</view>
+      <view class="id-tag {{detail.status === 'online' ? 'id-tag--online' : 'id-tag--idle'}}">{{detail.statusText}}</view>
+    </view>
+    <view class="id-flags">
+      <text wx:if="{{detail.needBook}}" class="id-flag id-flag--book">需预约</text>
+      <text wx:if="{{detail.needApprove}}" class="id-flag id-flag--appr">需审批</text>
+    </view>
+    <view class="id-meta"><text class="id-meta-ic">🧪</text><text class="id-meta-t">{{detail.lab}}</text></view>
+    <view class="id-meta"><text class="id-meta-ic">🏛️</text><text class="id-meta-t">{{detail.platform}}</text></view>
+    <view class="id-meta"><text class="id-meta-ic">📍</text><text class="id-meta-t">{{detail.address}}</text></view>
+  </view>
+
+  <!-- 管理功能：预约调整 / 预约记录 / 上机记录（标题居中）
+       仅当 /api/deviceApply 返回的 device.admin.userId === user.userId 时展示 -->
+  <view class="id-card" wx:if="{{detail.canManage}}">
+    <view class="id-card-t id-card-t--center">
+      <text class="id-card-tt">管理功能</text>
+    </view>
+    <view class="id-acts">
+      <view class="id-act" hover-class="id-act--hover" bindtap="onAdjust">
+        <van-icon name="clock-o" size="22px" color="#0A7BB8" />
+        <text class="id-act-t">预约调整</text>
+      </view>
+      <view class="id-act" hover-class="id-act--hover" bindtap="onBookingRecords">
+        <van-icon name="orders-o" size="22px" color="#0A7BB8" />
+        <text class="id-act-t">预约记录</text>
+      </view>
+      <view class="id-act" hover-class="id-act--hover" bindtap="onDeviceLog">
+        <van-icon name="desktop-o" size="22px" color="#0A7BB8" />
+        <text class="id-act-t">上机记录</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 收费标准 -->
+  <view class="id-card">
+    <view class="id-card-t">
+      <view class="id-dot"></view>
+      <text class="id-card-tt">收费标准</text>
+      <text class="id-count">单位：元 / 小时</text>
+    </view>
+    <view class="fee-table">
+      <view class="fee-row fee-row--head">
+        <view class="fee-cell fee-cell--cat">类别</view>
+        <view class="fee-cell fee-cell--money">自助价</view>
+        <view class="fee-cell fee-cell--money">委托价</view>
+      </view>
+      <view class="fee-row" wx:for="{{detail.price}}" wx:key="cat">
+        <view class="fee-cell fee-cell--cat">{{item.cat}}</view>
+        <view class="fee-cell fee-cell--money fee-cell--self">{{item.self}}</view>
+        <view class="fee-cell fee-cell--money">{{item.entrust}}</view>
+      </view>
+    </view>
+    <view class="id-tip">自助操作费用较低；委托测试按委托价收取，结果数据由平台统一交付。</view>
+  </view>
+
+  <!-- 资产与位置说明 -->
+  <view class="id-card">
+    <view class="id-card-t">
+      <view class="id-dot"></view>
+      <text class="id-card-tt">资产与位置说明</text>
+    </view>
+    <view class="id-ai">
+      <view class="id-ai-row">
+        <text class="id-ai-k">管理员</text>
+        <text class="id-ai-v">{{detail.manager}}</text>
+      </view>
+      <view class="id-ai-row">
+        <text class="id-ai-k">联系人</text>
+        <text class="id-ai-v">{{detail.contact}}</text>
+      </view>
+      <view class="id-ai-row">
+        <text class="id-ai-k">联系电话</text>
+        <view
+          wx:if="{{detail.contactPhone}}"
+          class="id-ai-v id-phone"
+          hover-class="id-phone--hover"
+          hover-stay-time="80"
+          catchtap="onCallPhone"
+          data-phone="{{detail.contactPhone}}"
+        >
+          <van-icon class="id-phone-ic" name="phone-o" size="15px" color="#0D86BE" />
+          <text class="id-phone-num">{{detail.contactPhone}}</text>
+        </view>
+        <text wx:else class="id-ai-v">--</text>
+      </view>
+      <view class="id-ai-row">
+        <text class="id-ai-k">地址</text>
+        <text class="id-ai-v">{{detail.address}}</text>
+      </view>
+      <view class="id-ai-row">
+        <text class="id-ai-k">SN 编号</text>
+        <text class="id-ai-v">{{detail.sn}}</text>
+      </view>
+      <view class="id-ai-row">
+        <text class="id-ai-k">固定资产编号</text>
+        <text class="id-ai-v">{{detail.assetNo}}</text>
+      </view>
+      <view class="id-ai-row">
+        <text class="id-ai-k">所资产编号</text>
+        <text class="id-ai-v">{{detail.instAssetNo}}</text>
+      </view>
+      <view class="id-ai-row">
+        <text class="id-ai-k">型号</text>
+        <text class="id-ai-v">{{detail.model}}</text>
+      </view>
+      <view class="id-ai-row">
+        <text class="id-ai-k">规格</text>
+        <text class="id-ai-v">{{detail.spec}}</text>
+      </view>
+      <view class="id-ai-row">
+        <text class="id-ai-k">厂家</text>
+        <text class="id-ai-v">{{detail.manufacturer}}</text>
+      </view>
+      <view class="id-ai-row">
+        <text class="id-ai-k">成本价</text>
+        <text class="id-ai-v">{{detail.costPrice}}</text>
+      </view>
+      <view class="id-ai-row">
+        <text class="id-ai-k">购置日期</text>
+        <text class="id-ai-v">{{detail.purchaseDate}}</text>
+      </view>
+      <view class="id-ai-row">
+        <text class="id-ai-k">经费来源</text>
+        <text class="id-ai-v">{{detail.fundSource}}</text>
+      </view>
+      <view class="id-ai-row">
+        <text class="id-ai-k">仪器所属</text>
+        <text class="id-ai-v">{{detail.ownership}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="id-bottom"></view>
+
+  <!-- 底部预约操作 -->
+  <view class="id-cta">
+    <view class="id-btn" bindtap="goBook">立即预约</view>
+  </view>
+</view>

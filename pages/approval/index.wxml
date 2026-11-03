@@ -1,2 +1,251 @@
-<!--pages/approval/index.wxml-->
-<text>pages/approval/index.wxml</text>
+<!-- pages/approval/index.wxml -->
+<view class="ap-wrap">
+
+  <!-- 列表视图 -->
+  <block wx:if="{{view === 'list'}}">
+    <view class="approval-tabs">
+      <view class="approval-tab {{tab === 'pending' ? 'active' : ''}}" bindtap="setTab" data-t="pending">待审核</view>
+      <view class="approval-tab {{tab === 'done' ? 'active' : ''}}" bindtap="setTab" data-t="done">审批记录</view>
+    </view>
+
+    <view class="approval-list">
+      <!-- 待审核 + 接口加载中 -->
+      <view wx:if="{{tab === 'pending' && pendingLoading}}" class="approval-state">
+        <view class="approval-spin"></view>
+        <text class="approval-state-t">正在加载待审核列表…</text>
+      </view>
+
+      <!-- 待审核 + 接口失败 -->
+      <view wx:elif="{{tab === 'pending' && pendingError}}" class="approval-state" bindtap="onRetry">
+        <text class="approval-state-ic">⚠️</text>
+        <text class="approval-state-t">{{pendingErrorMsg}}</text>
+        <text class="approval-state-btn">点击重试</text>
+      </view>
+
+      <!-- 审批记录 + 接口加载中 -->
+      <view wx:if="{{tab === 'done' && doneLoading}}" class="approval-state">
+        <view class="approval-spin"></view>
+        <text class="approval-state-t">正在加载审批记录…</text>
+      </view>
+
+      <!-- 审批记录 + 接口失败 -->
+      <view wx:elif="{{tab === 'done' && doneError}}" class="approval-state" bindtap="onRetryDone">
+        <text class="approval-state-ic">⚠️</text>
+        <text class="approval-state-t">{{doneErrorMsg}}</text>
+        <text class="approval-state-btn">点击重试</text>
+      </view>
+
+      <!-- 已渲染列表 -->
+      <view wx:else>
+        <view wx:for="{{list}}" wx:key="id" class="approval-card" bindtap="openDetail" data-id="{{item.id}}">
+          <view class="approval-head">
+            <text class="approval-name">{{item.name}}</text>
+            <text class="ap-tag {{item.statusClass}}">{{item.statusText}}</text>
+          </view>
+          <text class="approval-type">{{item.typeText}}</text>
+          <text class="approval-meta">{{item.meta}}</text>
+        </view>
+        <view wx:if="{{list.length === 0}}" class="empty-hint">
+          {{tab === 'pending' ? '暂无待审核申请' : '暂无审批记录'}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 分页状态：加载中 / 上拉加载更多 / 已全部加载（待审核与审批记录共用） -->
+    <view wx:if="{{tab === 'pending' && !pendingLoading && !pendingError && pendingLoadingMore}}" class="ap-list-footer">正在加载更多…</view>
+    <view wx:elif="{{tab === 'pending' && !pendingLoading && !pendingError && pendingHasMore}}" class="ap-list-footer">上拉加载更多</view>
+    <view wx:elif="{{tab === 'pending' && !pendingLoading && !pendingError && list.length > 0}}" class="ap-list-footer">已加载全部 {{pendingTotal}} 条</view>
+    <view wx:elif="{{tab === 'done' && !doneLoading && !doneError && doneLoadingMore}}" class="ap-list-footer">正在加载更多…</view>
+    <view wx:elif="{{tab === 'done' && !doneLoading && !doneError && doneHasMore}}" class="ap-list-footer">上拉加载更多</view>
+    <view wx:elif="{{tab === 'done' && !doneLoading && !doneError && list.length > 0}}" class="ap-list-footer">已加载全部 {{doneTotal}} 条</view>
+  </block>
+
+  <!-- 详情视图 -->
+  <block wx:else>
+    <view class="detail-back" bindtap="backToList">
+      <van-icon name="arrow-left" size="16px" color="#0A7BB8" />
+      <text>返回列表</text>
+    </view>
+
+    <!-- 详情加载中 -->
+    <view wx:if="{{detailLoading}}" class="approval-state">
+      <view class="approval-spin"></view>
+      <text class="approval-state-t">正在加载详情…</text>
+    </view>
+
+    <!-- 详情加载失败 -->
+    <view wx:elif="{{detailError}}" class="approval-state" bindtap="onRetryDetail">
+      <text class="approval-state-ic">⚠️</text>
+      <text class="approval-state-t">{{detailErrorMsg}}</text>
+      <text class="approval-state-btn">点击重试</text>
+    </view>
+
+    <!-- 已加载详情 -->
+    <block wx:else>
+      <view class="approval-detail-card">
+        <text class="detail-title">申请人信息</text>
+        <view class="result-row"><text class="result-key">姓名</text><text class="result-val">{{detail.name}}</text></view>
+        <view class="result-row">
+          <text class="result-key">申请状态</text>
+          <text class="result-val {{detail.statusValClass || 'st-warn'}}">{{detail.statusText || '待审核'}}</text>
+        </view>
+        <view class="result-row"><text class="result-key">身份</text><text class="result-val">{{detail.identity}}</text></view>
+        <view class="result-row" wx:if="{{detail.userNo}}"><text class="result-key">工号 / 申请编号</text><text class="result-val">{{detail.userNo}}</text></view>
+        <view class="result-row"><text class="result-key">所属单位</text><text class="result-val">{{detail.unit}}</text></view>
+        <view class="result-row" wx:if="{{detail.profession}}"><text class="result-key">专业</text><text class="result-val">{{detail.profession}}</text></view>
+        <view class="result-row" wx:if="{{detail.technicalTitle}}"><text class="result-key">导师</text><text class="result-val">{{detail.technicalTitle}}</text></view>
+        <view class="result-row" wx:if="{{detail.teacherPhone}}"><text class="result-key">导师电话</text><text class="result-val">{{detail.teacherPhone}}</text></view>
+        <view class="result-row" wx:if="{{detail.phone}}"><text class="result-key">联系电话</text><text class="result-val">{{detail.phone}}</text></view>
+        <view class="result-row" wx:if="{{detail.email}}"><text class="result-key">邮箱</text><text class="result-val">{{detail.email}}</text></view>
+        <view class="result-row"><text class="result-key">申请时间</text><text class="result-val">{{detail.time}}</text></view>
+        <view class="result-row" wx:if="{{detail.projectName}}"><text class="result-key">项目名称</text><text class="result-val">{{detail.projectName}}</text></view>
+        <view class="result-row" wx:if="{{detail.researchDir}}"><text class="result-key">研究方向</text><text class="result-val">{{detail.researchDir}}</text></view>
+      </view>
+
+      <view class="approval-detail-card">
+        <text class="detail-title">审批材料（点击查看）</text>
+        <view wx:if="{{detail.materialGroups.length}}">
+          <view wx:for="{{detail.materialGroups}}" wx:for-item="group" wx:key="docType" class="material-group">
+
+            <!-- 分组头部：图标 + 名称 + 说明 -->
+            <view class="material-group-header">
+              <view class="material-group-icon">
+                <van-icon name="notes-o" size="30rpx" color="#0A7BB8" />
+              </view>
+              <view class="material-group-main">
+                <text class="material-group-name">{{group.name}}</text>
+                <text class="material-group-desc">{{group.desc}}</text>
+              </view>
+            </view>
+
+            <!-- 文件网格：图片缩略图 / 文档卡片 -->
+            <view class="material-grid">
+              <block wx:for="{{group.files}}" wx:for-item="file" wx:for-index="fIdx" wx:key="fIdx">
+                <view class="material-grid-item" bindtap="previewFile" data-gidx="{{index}}" data-fidx="{{fIdx}}">
+                  <image wx:if="{{file.isImage}}" class="material-grid-img" src="{{file.thumb}}" mode="aspectFill" />
+                  <view wx:else class="material-file-card">
+                    <text class="material-file-icon">📄</text>
+                    <text class="material-file-name">{{file.fileName}}</text>
+                    <text wx:if="{{file.ext}}" class="material-file-ext">{{file.ext}}</text>
+                  </view>
+                </view>
+              </block>
+            </view>
+
+          </view>
+        </view>
+        <view wx:else class="material-empty">该申请人暂未上传材料</view>
+      </view>
+
+      <view class="approval-detail-card">
+        <text class="detail-title">考试记录</text>
+        <view wx:if="{{detail.examRecord}}">
+          <view class="result-row">
+            <text class="result-key">安全证书</text>
+            <text class="result-val {{detail.examRecord.hasValid === true ? 'pass' : (detail.examRecord.hasValid === false ? 'fail' : '')}}">{{detail.examRecord.hasValid === true ? '已获得' : (detail.examRecord.hasValid === false ? '未获得' : '--')}}</text>
+          </view>
+          <view class="result-row" wx:if="{{detail.examRecord.markingTime}}">
+            <text class="result-key">通过时间</text>
+            <text class="result-val">{{detail.examRecord.markingTime}}</text>
+          </view>
+          <view class="result-row" wx:if="{{detail.examRecord.totalScore != null}}">
+            <text class="result-key">总分</text>
+            <text class="result-val">{{detail.examRecord.totalScore}}</text>
+          </view>
+          <view class="result-row" wx:if="{{detail.examRecord.score != null}}">
+            <text class="result-key">考生得分</text>
+            <text class="result-val">{{detail.examRecord.score}}</text>
+          </view>
+        </view>
+        <view wx:else class="material-empty">暂无考试记录</view>
+      </view>
+
+      <!-- 仅「待审核」且非终态（state≠2 已通过 / state≠3 已驳回）时才展示审批按钮 -->
+      <view wx:if="{{detail.canAudit}}" class="ap-footer">
+        <button class="btn-reject" bindtap="rejectApp">驳回</button>
+        <button class="btn-approve" bindtap="approveApp">通过</button>
+      </view>
+
+      <!-- 终态 / 审批记录进入：只读，不展示「驳回 / 通过」 -->
+      <view wx:else class="ap-footer-readonly">
+        <text class="ap-footer-readonly-text">该申请已处理（{{detail.statusText || '已处理'}}），仅可查看</text>
+      </view>
+    </block>
+  </block>
+
+  <!-- 现代风格驳回弹窗 -->
+  <van-dialog
+    use-slot
+    show="{{rejectDialog.show}}"
+    custom-class="reject-dialog-modern"
+    show-cancel-button
+    cancel-button-text="我再想想"
+    confirm-button-text="确认驳回"
+    confirm-button-color="#BA1A1A"
+    close-on-click-overlay="{{false}}"
+    bind:close="onRejectDialogClose"
+    bind:confirm="onRejectDialogConfirm">
+
+    <!-- 自定义标题：渐变红色圆形 + 警告图标 + 粗体标题 + 灰色副标题 -->
+    <view slot="title">
+      <view class="reject-banner">
+        <view class="reject-banner-icon">
+          <van-icon name="warning-o" size="44rpx" color="#FFFFFF" />
+        </view>
+        <view class="reject-banner-title">确认驳回该申请？</view>
+        <view class="reject-banner-sub">驳回后申请人将收到通知，可修改后再次提交</view>
+      </view>
+    </view>
+
+    <!-- 正文：必填标签 + 输入框 + 字数 -->
+    <view class="reject-dialog-body">
+      <view class="reject-field-label">
+        <text class="reject-field-required">*</text>
+        <text>驳回原因</text>
+      </view>
+      <textarea
+        class="reject-textarea {{rejectDialog.placeholderVisible ? '' : 'reject-textarea-focus'}}"
+        placeholder="{{rejectDialog.placeholderVisible ? '请简要说明驳回理由…' : ''}}"
+        placeholder-style="color:#A8B5BD;"
+        value="{{rejectDialog.reason}}"
+        maxlength="200"
+        hold-keyboard="{{true}}"
+        bindinput="onRejectInput"
+        bindfocus="onRejectFocus"
+        bindblur="onRejectBlur" />
+      <text class="reject-counter">{{rejectDialog.reason.length}}/200</text>
+    </view>
+  </van-dialog>
+
+  <!-- ════════ 终审签字弹层（终审「通过」前必须手写签名） ════════
+       签名图片先上传，取到的 URL 用 signPic 字段随 audit 接口一起提交 -->
+  <view wx:if="{{sign.show}}" class="sign-mask" catch:touchmove="noop">
+    <view class="sign-panel">
+      <view class="sign-hd">
+        <text class="sign-title">终审签字</text>
+        <text class="sign-sub">请在下方手写签名，确认后将作为本次终审的签字凭证</text>
+      </view>
+
+      <view class="sign-board">
+        <canvas
+          type="2d"
+          id="signCanvas"
+          class="sign-canvas"
+          disable-scroll="{{true}}"
+          bindtouchstart="onSignStart"
+          bindtouchmove="onSignMove"
+          bindtouchend="onSignEnd"
+          bindtouchcancel="onSignEnd"></canvas>
+        <text wx:if="{{!sign.hasInk}}" class="sign-placeholder">请在此区域签名</text>
+        <text wx:if="{{sign.hasInk}}" class="sign-clear" catchtap="onSignClear">清除重写</text>
+      </view>
+
+      <view class="sign-btns">
+        <button class="sign-btn sign-btn--cancel" bindtap="closeSignPad">取消</button>
+        <button
+          class="sign-btn sign-btn--ok {{sign.hasInk ? '' : 'sign-btn--disabled'}}"
+          bindtap="confirmSign">{{sign.saving ? '提交中…' : '确认签字并通过'}}</button>
+      </view>
+    </view>
+  </view>
+</view>

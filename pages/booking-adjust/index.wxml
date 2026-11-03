@@ -1,0 +1,260 @@
+<!-- pages/booking-adjust/index.wxml
+     预约调整（仪器维度）：
+       ① 日历选日期 ② 时段表（保持原状）
+       ③ 取消禁用 / 新增禁用时段 / 禁用全天
+       ④ 该仪器预约单列表：逐条修改开始、结束时间 -->
+<view class="bk-page">
+
+  <!-- 仪器信息条 -->
+  <view class="bk-ins">
+    <view class="bk-ins-ic">🔬</view>
+    <view class="bk-ins-b">
+      <view class="bk-ins-r">
+        <text class="bk-ins-n">{{name}}</text>
+        <text class="bk-tag on">预约管理</text>
+      </view>
+      <text class="bk-ins-m">共 {{bookingCount}} 条预约 · 可调整时间与禁用时段</text>
+    </view>
+  </view>
+
+  <!-- ① 选择日期 -->
+  <view class="bk-card">
+    <view class="bk-card-hd">
+      <view class="bk-dot"></view>
+      <text class="bk-card-tt">选择日期</text>
+    </view>
+    <view class="cal-head">
+      <view class="cal-arrow {{canPrev ? '' : 'dis'}}" bindtap="onPrevMonth">‹</view>
+      <text class="cal-title">{{year}} 年 {{month}} 月</text>
+      <view class="cal-arrow {{canNext ? '' : 'dis'}}" bindtap="onNextMonth">›</view>
+    </view>
+    <view class="cal-week">
+      <text wx:for="{{weekTitles}}" wx:key="*this">{{item}}</text>
+    </view>
+    <view class="cal-grid">
+      <view
+        wx:for="{{days}}"
+        wx:key="id"
+        class="cal-cell {{item.blank ? 'blank' : ''}} {{item.td ? 'td' : ''}} {{item.dis ? 'dis' : ''}} {{item.sel ? 'sel' : ''}}"
+        data-ds="{{item.ds}}"
+        bindtap="onPickDate"
+      >
+        <text class="cal-d">{{item.d || ''}}</text>
+        <!-- spot 标记：蓝点＝有预约（ MyDate ），灰点＝有禁用（参考 calendar 的 spot） -->
+        <view wx:if="{{item.hasBook || item.hasBan}}" class="cal-spots">
+          <view wx:if="{{item.hasBook}}" class="cal-spot cal-spot--book"></view>
+          <view wx:if="{{item.hasBan}}" class="cal-spot cal-spot--ban"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ② 选择时段 + ③ 禁用操作 -->
+  <view class="bk-card">
+    <view class="bk-card-hd">
+      <view class="bk-dot"></view>
+      <text class="bk-card-tt">选择时段</text>
+      <text class="bk-clear" wx:if="{{hasSel}}" bindtap="onClear">清空重选</text>
+    </view>
+
+    <view class="bk-legend">
+      <view class="bk-lg"><view class="lg-dot sel"></view><text>调整后</text></view>
+      <view class="bk-lg"><view class="lg-dot occ"></view><text>已占用</text></view>
+      <view class="bk-lg"><view class="lg-dot idle"></view><text>空闲（可约）</text></view>
+      <view class="bk-lg"><view class="lg-dot off"></view><text>禁用</text></view>
+    </view>
+
+    <view class="slot-tag">预约日期 · {{dateLabel}}</view>
+    <view class="time-table">
+      <view class="time-group" wx:for="{{timeGroups}}" wx:key="g" wx:for-index="g">
+        <view class="group-header">
+          <view class="header-cell" wx:for="{{item.cols}}" wx:key="h" wx:for-item="col">{{col.h}}时</view>
+        </view>
+        <view class="group-body">
+          <view class="hour-col" wx:for="{{item.cols}}" wx:key="h" wx:for-item="col">
+            <view
+              wx:for="{{col.quads}}"
+              wx:key="i"
+              wx:for-item="c"
+              class="tcell {{c.state}}"
+              data-i="{{c.i}}"
+              bindtap="onCell"
+            ></view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 禁用操作（参考 appointChange）：
+         ① 取消禁用 → picker 选「未来多久」后二次确认
+         ② 新增禁用时段 → 追加一条记录进入编辑态，保存后生效
+         ③ 禁用全天 → 当天 00:00 ~ 24:00 整体禁用 -->
+    <view class="adj-acts">
+      <picker class="adj-picker" mode="selector" range="{{cancelDayList}}" bindchange="onRemoveDisable">
+        <view class="adj-act" hover-class="adj-act--hover">取消禁用</view>
+      </picker>
+      <view class="adj-act" hover-class="adj-act--hover" bindtap="onAddDisable">新增禁用时段</view>
+      <view class="adj-act" hover-class="adj-act--hover" bindtap="onAddDisableAllDay">禁用全天</view>
+    </view>
+
+    <!-- ④ 禁用时段列表（参考 appointChange 的 disableList[date]） -->
+    <!-- 当前日期没有禁用、但接口返回了别的日期的禁用 → 提示去日历上看（灰点＝有禁用） -->
+    <view class="dis-hint" wx:if="{{banHint}}">{{banHint}}</view>
+    <view class="dis-box" wx:if="{{disableRows.length}}">
+      <view class="dis-t">禁用时段 · {{disableRows.length}} 条</view>
+      <view class="dis-item" wx:for="{{disableRows}}" wx:key="k">
+        <view class="dis-row">
+          <text class="dis-lab">禁用时段</text>
+          <view class="dis-ops">
+            <picker
+              class="dis-pick"
+              wx:if="{{!item.edited}}"
+              mode="multiSelector"
+              range="{{dayList}}"
+              data-k="{{item.k}}"
+              bindchange="onBatchDisable"
+            >
+              <view class="dis-op dis-op--plain">批量复制</view>
+            </picker>
+            <view
+              wx:if="{{!item.edited}}"
+              class="dis-op dis-op--del"
+              hover-class="dis-op--hover"
+              data-k="{{item.k}}"
+              bindtap="onDelDisable"
+            >删除</view>
+            <view
+              wx:if="{{!item.edited}}"
+              class="dis-op dis-op--edit"
+              hover-class="dis-op--hover"
+              data-k="{{item.k}}"
+              bindtap="onEditDisable"
+            >修改</view>
+            <view
+              wx:if="{{item.edited}}"
+              class="dis-op"
+              hover-class="dis-op--hover"
+              data-k="{{item.k}}"
+              bindtap="onCancelDisable"
+            >取消</view>
+            <view
+              wx:if="{{item.edited}}"
+              class="dis-op dis-op--save"
+              hover-class="dis-op--hover"
+              data-k="{{item.k}}"
+              bindtap="onSaveDisable"
+            >保存</view>
+          </view>
+        </view>
+        <view class="dis-time">
+          <picker
+            class="dis-pick dis-pick--time"
+            mode="time"
+            value="{{item.begin}}"
+            disabled="{{!item.edited}}"
+            data-k="{{item.k}}"
+            bindchange="onPickBanBegin"
+          >
+            <view class="dis-input {{item.edited ? 'dis-input--edit' : ''}}">{{item.begin}}</view>
+          </picker>
+          <text class="dis-sep">-</text>
+          <view class="dis-input dis-input--readonly">{{item.end}}</view>
+          <picker
+            class="dis-pick dis-pick--dur"
+            mode="selector"
+            range="{{timeList}}"
+            disabled="{{!item.edited}}"
+            data-k="{{item.k}}"
+            bindchange="onPickBanDur"
+          >
+            <view class="dis-input dis-input--dur {{item.edited ? 'dis-input--edit' : ''}}">{{item.dur}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ④ 预约单列表（数据只来自 /api/deviceApply.apply，无演示数据） -->
+  <view class="bk-card ad-list">
+    <view class="ad-empty" wx:if="{{loading}}">正在加载预约数据…</view>
+    <view class="ad-empty" wx:elif="{{!bookings.length}}">该仪器暂无预约记录</view>
+    <view class="ad-item" wx:for="{{bookings}}" wx:key="id">
+
+      <view class="ad-item-hd">
+        <text class="ad-item-lab">{{item.lab}}</text>
+        <text class="ad-item-dept">{{item.dept}}</text>
+        <text class="ad-item-mode">{{item.mode}}</text>
+        <view
+          class="ad-item-btn {{editingId === item.id ? 'ad-item-btn--save' : ''}}"
+          hover-class="ad-item-btn--hover"
+          data-id="{{item.id}}"
+          bindtap="onToggleEdit"
+        >{{editingId === item.id ? '保存' : '修改'}}</view>
+      </view>
+
+      <view class="ad-user">
+        <text class="ad-user-k">预约人：</text>
+        <text class="ad-user-n">{{item.user}}</text>
+        <text class="ad-user-wx">({{item.wx}})</text>
+        <van-icon wx:if="{{item.phone}}" class="ad-user-ic" name="phone" size="15px" color="#2E86D8" />
+        <text class="ad-user-p">{{item.phone || '—'}}</text>
+      </view>
+
+      <view class="ad-row">
+        <text class="ad-row-k">开始：</text>
+        <picker
+          class="ad-picker"
+          mode="date"
+          value="{{item.beginDate}}"
+          disabled="{{editingId !== item.id}}"
+          data-id="{{item.id}}"
+          data-field="beginDate"
+          bindchange="onPickDT"
+        >
+          <view class="ad-box {{editingId === item.id ? 'ad-box--edit' : ''}}">{{item.beginDate}}</view>
+        </picker>
+        <picker
+          class="ad-picker ad-picker--time"
+          mode="time"
+          value="{{item.beginTime}}"
+          disabled="{{editingId !== item.id}}"
+          data-id="{{item.id}}"
+          data-field="beginTime"
+          bindchange="onPickDT"
+        >
+          <view class="ad-box ad-box--time {{editingId === item.id ? 'ad-box--edit' : ''}}">{{item.beginTime}}</view>
+        </picker>
+      </view>
+
+      <view class="ad-row">
+        <text class="ad-row-k">结束：</text>
+        <picker
+          class="ad-picker"
+          mode="date"
+          value="{{item.endDate}}"
+          disabled="{{editingId !== item.id}}"
+          data-id="{{item.id}}"
+          data-field="endDate"
+          bindchange="onPickDT"
+        >
+          <view class="ad-box {{editingId === item.id ? 'ad-box--edit' : ''}}">{{item.endDate}}</view>
+        </picker>
+        <picker
+          class="ad-picker ad-picker--time"
+          mode="time"
+          value="{{item.endTime}}"
+          disabled="{{editingId !== item.id}}"
+          data-id="{{item.id}}"
+          data-field="endTime"
+          bindchange="onPickDT"
+        >
+          <view class="ad-box ad-box--time {{editingId === item.id ? 'ad-box--edit' : ''}}">{{item.endTime}}</view>
+        </picker>
+      </view>
+
+    </view>
+  </view>
+
+  <view class="bk-spacer"></view>
+
+</view>

@@ -1,0 +1,65 @@
+<!--pages/my-certificates/index.wxml-->
+<view class="mc-page">
+
+  <!-- 拉接口时的细条 loading（带 spinner） -->
+  <view class="mc-loading" wx:if="{{loading}}">
+    <view class="mc-load-spin"></view>
+    <text class="mc-load-t">{{loadingText}}</text>
+  </view>
+
+  <!-- 列表 -->
+  <view class="mc-list">
+    <view
+      wx:for="{{list}}"
+      wx:key="id"
+      wx:for-item="cert"
+      class="mc-card"
+      hover-class="mc-card--hover"
+      hover-stay-time="80"
+      data-id="{{cert.id}}"
+      bindtap="onCardTap"
+    >
+      <view class="mc-card-hd">
+        <view class="mc-ic">
+          <van-icon name="medal-o" size="32px" color="#0A7BB8" />
+        </view>
+        <view class="mc-card-b">
+          <text class="mc-name">{{cert.name}}</text>
+          <text class="mc-type" wx:if="{{cert.typeLabel}}">{{cert.typeLabel}}</text>
+        </view>
+        <view class="mc-tag mc-tag--{{cert.statusCls}}">{{cert.statusText}}</view>
+      </view>
+
+      <view class="mc-rows">
+        <view class="mc-row" wx:if="{{cert.certNo}}">
+          <text class="k">证书编号</text>
+          <text class="v">{{cert.certNo}}</text>
+        </view>
+        <view class="mc-row" wx:if="{{cert.deviceName}}">
+          <text class="k">对应设备 / 培训</text>
+          <text class="v">{{cert.deviceName}}</text>
+        </view>
+        <view class="mc-row" wx:if="{{cert.score}}">
+          <text class="k">考试分数</text>
+          <text class="v">{{cert.score}}</text>
+        </view>
+        <view class="mc-row" wx:if="{{cert.validPeriod}}">
+          <text class="k">有效期</text>
+          <text class="v">{{cert.validPeriod}}</text>
+        </view>
+        <view class="mc-row" wx:if="{{cert.issueDate && !cert.expireDate}}">
+          <text class="k">发证时间</text>
+          <text class="v">{{cert.issueDate}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="mc-empty" wx:if="{{showEmpty && !loading}}">
+      <view class="mc-empty-ic">📜</view>
+      <text class="mc-empty-t">{{emptyText}}</text>
+    </view>
+  </view>
+
+  <view class="mc-bottom-safe"></view>
+</view>

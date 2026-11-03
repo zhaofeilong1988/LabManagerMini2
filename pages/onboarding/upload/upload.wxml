@@ -1,0 +1,110 @@
+<!-- pages/onboarding/upload/upload.wxml -->
+<view class="ob-wrap">
+  <scroll-view scroll-y style="height:100vh">
+
+    <!-- 提示说明 -->
+    <view class="upload-tip-bar">
+      <van-icon name="info-o" size="16px" color="#0A7BB8" />
+      <text class="upload-tip-text">仅支持上传 PDF/Word 等文档，每份材料仅可上传1个文件</text>
+    </view>
+
+    <!-- 模板下载：空白审批文件 -->
+    <view class="upload-tpl-block">
+      <view class="upload-tpl-head">
+        <view class="upload-tpl-title-row">
+          <van-icon name="down" size="16px" color="#33ADDE" />
+          <text class="upload-tpl-title">模板下载</text>
+        </view>
+        <text class="upload-tpl-sub">下载空白模板，填写并签字盖章后扫描上传</text>
+      </view>
+
+      <view
+        wx:for="{{templates}}"
+        wx:key="id"
+        class="upload-tpl-item"
+        hover-class="upload-tpl-hover"
+        bindtap="downloadTemplate"
+        data-idx="{{index}}"
+      >
+        <view class="upload-tpl-file">
+          <view class="upload-tpl-icon">📄</view>
+          <view class="upload-tpl-meta">
+            <text class="upload-tpl-name">{{item.name}}</text>
+            <text class="upload-tpl-fmt">{{item.fmt}}</text>
+          </view>
+        </view>
+        <view class="upload-tpl-btn">
+          <van-icon name="down" size="12px" color="#fff" />
+          <text>下载</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 文件列表 -->
+    <view wx:for="{{docs}}" wx:for-item="doc" wx:key="id" class="upload-doc-block">
+
+      <!-- 文件信息头：图标 + 名称/说明 + 已传数量 -->
+      <view class="upload-doc-header">
+        <view class="upload-doc-ic">
+          <van-icon name="notes-o" size="30rpx" color="#33ADDE" />
+        </view>
+        <view class="upload-doc-main">
+          <view class="upload-doc-name-row">
+            <text class="upload-doc-name">{{doc.name}}</text>
+            <text wx:if="{{doc.required}}" class="upload-doc-required">必填</text>
+            <text wx:else class="upload-doc-optional-tag">选填</text>
+          </view>
+          <text class="upload-doc-desc">{{doc.desc}}</text>
+        </view>
+        <view class="upload-doc-count {{doc.photos.length > 0 ? 'has' : ''}}">
+          {{doc.photos.length}}/1 份
+        </view>
+      </view>
+
+      <!-- 已上传文件网格 + 添加文件格（只上传文档，列表均为文件卡片；
+           图片分支仅用于渲染历史缓存里已有的图片项，新上传不再产生） -->
+      <view class="upload-photo-list">
+        <view wx:for="{{doc.photos}}" wx:for-item="photo" wx:for-index="pIdx"
+              wx:key="origin" class="upload-photo-item" hover-class="upload-photo-hover">
+
+          <!-- 文档：文件卡片，点击下载打开 -->
+          <view wx:if="{{photo.isFile}}" class="upload-file-card"
+                bindtap="previewPhoto" data-docid="{{doc.id}}" data-idx="{{pIdx}}">
+            <text class="upload-file-icon">📄</text>
+            <text class="upload-file-name">{{photo.fileName}}</text>
+            <text wx:if="{{photo.ext}}" class="upload-file-ext">{{photo.ext}}</text>
+          </view>
+
+          <!-- 历史图片项：缩略图，点击预览原图 -->
+          <image wx:else class="upload-photo-img" src="{{photo.thumb}}" mode="aspectFill"
+                 bindtap="previewPhoto" data-docid="{{doc.id}}" data-idx="{{pIdx}}" />
+
+          <view class="upload-photo-del" catchtap="removePhoto"
+                data-docid="{{doc.id}}" data-pidx="{{pIdx}}">
+            <van-icon name="cross" size="16rpx" color="#fff" />
+          </view>
+        </view>
+
+        <!-- 未达上限则显示添加文件格（点击后直接选择文档）
+             每个上传项只能上传 1 份：已有文件时隐藏添加格，需先删除再上传 -->
+        <view wx:if="{{doc.photos.length < 1}}" class="upload-add-btn"
+              hover-class="upload-add-hover" bindtap="showActionSheet" data-docid="{{doc.id}}">
+          <van-icon name="plus" size="40rpx" color="#33ADDE" />
+          <text class="upload-add-text">添加文档</text>
+        </view>
+      </view>
+
+    </view>
+
+    <!-- 提交 / 暂存 -->
+    <view class="ob-footer">
+      <view style="display:flex; flex-direction:column; gap:20rpx;">
+        <button class="btn-main" bindtap="submitUpload">保存并返回</button>
+        <button class="btn-sec" bindtap="saveDraft">暂存</button>
+      </view>
+    </view>
+
+    <view style="height: 40rpx;"></view>
+  </scroll-view>
+
+</view>

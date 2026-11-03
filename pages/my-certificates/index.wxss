@@ -1,0 +1,154 @@
+/* pages/my-certificates/index.wxss */
+
+.mc-page {
+  --mc-primary: #0A7BB8;
+  --mc-accent: #33ADDE;
+  --mc-bg: #F5FAFD;
+  --mc-surface: #FFFFFF;
+  --mc-border: #D5E4ED;
+  --mc-text: #161C20;
+  --mc-sub: #41484D;
+  --mc-hint: #6E7F8A;
+  --mc-ok: #0D86BE;
+  --mc-warn: #E65100;
+  --mc-err: #BA1A1A;
+  min-height: 100vh;
+  background: var(--mc-bg);
+  padding-bottom: 64rpx;
+  box-sizing: border-box;
+}
+
+/* ── loading 条 ── */
+.mc-loading {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+  padding: 36rpx 24rpx;
+}
+.mc-load-spin {
+  width: 28rpx;
+  height: 28rpx;
+  border: 3rpx solid #C9E2F0;
+  border-top-color: var(--mc-primary);
+  border-radius: 50%;
+  animation: mc-spin 0.7s linear infinite;
+}
+.mc-load-t {
+  font-size: 24rpx;
+  color: var(--mc-hint);
+}
+@keyframes mc-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── 列表 ── */
+.mc-list {
+  padding: 24rpx 24rpx 0;
+}
+.mc-card {
+  background: var(--mc-surface);
+  border-radius: 24rpx;
+  box-shadow: 0 6rpx 22rpx rgba(10, 123, 184, 0.08);
+  padding: 28rpx 28rpx 24rpx;
+  margin-bottom: 24rpx;
+}
+.mc-card--hover {
+  background: #F4FAFD;
+}
+.mc-card-hd {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20rpx;
+  padding-bottom: 22rpx;
+  border-bottom: 1rpx solid #E8F1F6;
+}
+.mc-ic {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 16rpx;
+  background: #E7F4FB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.mc-card-b {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+.mc-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--mc-text);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.mc-type {
+  font-size: 22rpx;
+  color: var(--mc-hint);
+  background: #F2F7FA;
+  padding: 4rpx 14rpx;
+  border-radius: 10rpx;
+  align-self: flex-start;
+}
+
+/* 状态徽章 */
+.mc-tag {
+  font-size: 22rpx;
+  font-weight: 600;
+  padding: 6rpx 18rpx;
+  border-radius: 999rpx;
+  flex-shrink: 0;
+}
+.mc-tag--valid    { background: #E0F4E7; color: #1E7E34; }
+.mc-tag--invalid  { background: #FCE3E3; color: #C0392B; }
+.mc-tag--reviewing{ background: #FFF2DC; color: #B66A00; }
+.mc-tag--expired  { background: #EFE3F8; color: #6F42C1; }
+
+/* 字段行 */
+.mc-rows { padding-top: 20rpx; display: flex; flex-direction: column; gap: 12rpx; }
+.mc-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16rpx;
+  font-size: 26rpx;
+  line-height: 1.6;
+}
+.mc-row .k {
+  flex-shrink: 0;
+  width: 180rpx;
+  color: var(--mc-hint);
+}
+.mc-row .v {
+  flex: 1;
+  word-break: break-all;
+  color: var(--mc-text);
+}
+
+/* 空状态 */
+.mc-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80rpx 24rpx 40rpx;
+  gap: 16rpx;
+}
+.mc-empty-ic { font-size: 72rpx; }
+.mc-empty-t {
+  font-size: 26rpx;
+  color: var(--mc-hint);
+  text-align: center;
+}
+
+.mc-bottom-safe { height: 32rpx; }

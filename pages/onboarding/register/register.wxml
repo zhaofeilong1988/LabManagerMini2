@@ -1,0 +1,212 @@
+<!-- pages/onboarding/register/register.wxml -->
+<view class="ob-wrap">
+  <scroll-view scroll-y style="height:100vh">
+
+    <!-- 身份切换 -->
+    <view class="identity-tabs">
+      <view class="identity-tab {{identity === 'inside' ? 'active' : ''}}"
+            bindtap="switchIdentity" data-val="inside">院内人员</view>
+      <view class="identity-tab {{identity === 'outside' ? 'active' : ''}}"
+            bindtap="switchIdentity" data-val="outside">院外人员</view>
+    </view>
+
+    <!-- 基本信息 -->
+    <view class="form-section">
+      <text class="form-section-title">基本信息</text>
+      <view class="form-card">
+        <!-- ① 人员类型（院内人员）：单选按钮 -->
+        <view class="field" wx:if="{{identity === 'inside'}}">
+          <text class="field-label"><text class="field-required">*</text>人员类型</text>
+          <radio-group class="opt-group" bindchange="onScopeChange">
+            <label class="opt-item">
+              <radio value="所内" checked="{{form.scope === '所内'}}" color="#1f6feb" />
+              <text>所内</text>
+            </label>
+            <label class="opt-item">
+              <radio value="所外" checked="{{form.scope === '所外'}}" color="#1f6feb" />
+              <text>所外</text>
+            </label>
+          </radio-group>
+        </view>
+        <!-- ② 身份（院内人员）：选项与值来自 identity_type 字典（dictLabel / dictValue） -->
+        <view class="field" wx:if="{{identity === 'inside'}}">
+          <text class="field-label"><text class="field-required">*</text>身份</text>
+          <radio-group class="opt-group" bindchange="onIdentityChange">
+            <label class="opt-item" wx:for="{{identityOpts}}" wx:key="value">
+              <radio value="{{item.value}}" checked="{{form.identity == item.value}}" color="#1f6feb" />
+              <text>{{item.label}}</text>
+            </label>
+          </radio-group>
+        </view>
+        <view class="field">
+          <text class="field-label"><text class="field-required">*</text>姓名</text>
+          <input class="field-input" placeholder="请输入真实姓名"
+                 value="{{form.name}}" bindinput="onFieldChange" data-key="name" />
+        </view>
+        <view class="field">
+          <text class="field-label"><text class="field-required">*</text>性别</text>
+          <radio-group class="sex-group" bindchange="onSexChange">
+            <label class="sex-item">
+              <radio value="0" checked="{{form.sex === 0 || form.sex === '0'}}" color="#1f6feb" />
+              <text>男</text>
+            </label>
+            <label class="sex-item">
+              <radio value="1" checked="{{form.sex === 1 || form.sex === '1'}}" color="#1f6feb" />
+              <text>女</text>
+            </label>
+          </radio-group>
+        </view>
+        <!-- 学号/工号：「科研组自聘」身份不展示，也不用填写 -->
+        <view class="field" wx:if="{{!hideIdNo}}">
+          <text class="field-label"><text class="field-required">*</text>学号/工号</text>
+          <input class="field-input" placeholder="请输入学号/工号"
+                 value="{{form.idNo}}" bindinput="onFieldChange" data-key="idNo" />
+        </view>
+        <view class="field">
+          <text class="field-label"><text class="field-required">*</text>手机号</text>
+          <input class="field-input" type="number" placeholder="请输入手机号"
+                 value="{{form.phone}}" bindinput="onFieldChange" data-key="phone" />
+        </view>
+        <view class="field" wx:if="{{identity === 'outside'}}">
+          <text class="field-label"><text class="field-required field-required--ghost">*</text>专业</text>
+          <input class="field-input" placeholder="请输入所学专业（选填）"
+                 value="{{form.major}}" bindinput="onFieldChange" data-key="major" />
+        </view>
+        <view class="field pick-field" wx:if="{{identity === 'inside'}}" bindtap="openPicker" data-picker-key="dept">
+          <text class="field-label"><text class="field-required">*</text>部门</text>
+          <view class="field-input field-pick {{form.dept ? 'has' : ''}}">{{form.dept || '请选择'}}</view>
+          <text class="field-arrow">›</text>
+        </view>
+        <view class="field">
+          <text class="field-label"><text class="field-required field-required--ghost">*</text>邮箱</text>
+          <input class="field-input" placeholder="请输入邮箱（选填）"
+                 value="{{form.email}}" bindinput="onFieldChange" data-key="email" />
+        </view>
+      </view>
+    </view>
+
+    <!-- 课题组信息 -->
+    <view class="form-section">
+      <text class="form-section-title">课题组信息</text>
+      <view class="form-card">
+        <view class="field pick-field" bindtap="openPicker" data-picker-key="supervisor">
+          <text class="field-label"><text class="field-required">*</text>导师姓名</text>
+          <view class="field-input field-pick {{form.supervisor ? 'has' : ''}}">{{form.supervisor || '请选择'}}</view>
+          <text class="field-arrow">›</text>
+        </view>
+        <view class="field">
+          <text class="field-label"><text class="field-required">*</text>导师手机号</text>
+          <view class="field-input-wrap">
+            <input class="field-input" type="number" placeholder="用于审批自动通知，可自动关联"
+                   value="{{form.superphone}}" bindinput="onFieldChange" data-key="superphone" />
+            <text class="link-btn" bindtap="linkSuperPhone">关联</text>
+          </view>
+        </view>
+        <view class="field pick-field" bindtap="openPicker" data-picker-key="group">
+          <text class="field-label"><text class="field-required">*</text>课题组</text>
+          <view class="field-input field-pick {{form.group ? 'has' : ''}}">{{form.group || '请选择'}}</view>
+          <text class="field-arrow">›</text>
+        </view>
+        <view class="field" wx:if="{{identity === 'outside'}}">
+          <text class="field-label"><text class="field-required">*</text>所在单位</text>
+          <input class="field-input" placeholder="请输入学校/机构名称"
+                 value="{{form.org}}" bindinput="onFieldChange" data-key="org" />
+        </view>
+        <view class="field" wx:if="{{identity === 'outside'}}">
+          <text class="field-label"><text class="field-required field-required--ghost">*</text>合作项目</text>
+          <input class="field-input" placeholder="请输入合作项目名称（选填）"
+                 value="{{form.project}}" bindinput="onFieldChange" data-key="project" />
+        </view>
+      </view>
+    </view>
+
+    <!-- 使用目的 -->
+    <view class="form-section">
+      <text class="form-section-title">使用目的</text>
+      <view class="form-card">
+        <view class="field field--col">
+          <text class="field-label"><text class="field-required">*</text>实验内容</text>
+          <textarea class="field-input field-textarea" placeholder="请简述您的实验内容和仪器使用需求"
+                    value="{{form.purpose}}" bindinput="onFieldChange" data-key="purpose"></textarea>
+        </view>
+      </view>
+    </view>
+
+    <!-- 准入期限：院内 / 院外人员都需填写；结束时间须在开始时间起 6 年内 -->
+    <view class="form-section">
+      <text class="form-section-title">准入期限</text>
+      <view class="form-card">
+        <view class="field pick-field">
+          <text class="field-label"><text class="field-required">*</text>开始时间</text>
+          <picker mode="date" start="{{startMin}}" value="{{form.start_date}}"
+                  bindchange="onDateChange" data-key="start_date">
+            <view class="field-input field-pick {{form.start_date ? 'has' : ''}}">{{form.start_date || '请选择'}}</view>
+          </picker>
+          <text class="field-arrow">›</text>
+        </view>
+        <view class="field pick-field">
+          <text class="field-label"><text class="field-required">*</text>结束时间</text>
+          <picker mode="date" start="{{endMin}}" end="{{endMax}}" value="{{form.end_date}}"
+                  bindchange="onDateChange" data-key="end_date">
+            <view class="field-input field-pick {{form.end_date ? 'has' : ''}}">{{form.end_date || '请选择'}}</view>
+          </picker>
+          <text class="field-arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 声明 -->
+    <view class="form-section">
+      <view class="form-card">
+        <view class="declare-box">
+          <view class="declare-check" bindtap="toggleAgree">
+            <view class="checkbox {{agreed ? 'checked' : ''}}">✓</view>
+            <text class="declare-text">我已阅读并同意遵守实验平台使用规则、安全规定及知识产权共享协议</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 提交 -->
+    <view class="ob-footer">
+      <button class="btn-main" bindtap="submitRegister">提交申请登记</button>
+    </view>
+
+    <view style="height: 40rpx;"></view>
+  </scroll-view>
+
+  <!-- 提交二次确认弹窗（参照 prototype.html .mask/.modal：居中卡片 + 双按钮） -->
+  <view wx:if="{{showConfirm}}" class="ob-mask" catchtouchmove="noop">
+    <view class="ob-modal">
+      <view class="ob-modal-title">确认提交</view>
+      <view class="ob-modal-content">请确认所填信息真实有效，提交后进入「材料提交」环节：上传审批文件、参加安全考试，通过后提交审核。</view>
+      <view class="ob-modal-actions">
+        <view class="ob-modal-btn ob-modal-cancel" hover-class="ob-modal-hover" bindtap="cancelConfirm">再检查一下</view>
+        <view class="ob-modal-btn ob-modal-confirm" hover-class="ob-modal-hover" bindtap="confirmSubmit">确认提交</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 可搜索下拉弹层（导师姓名 / 课题组 / 部门） -->
+  <view wx:if="{{picker.show}}" class="pk-mask" catchtouchmove="noop" bindtap="closePicker">
+    <view class="pk-panel" catchtap="noop">
+      <view class="pk-hd">
+        <text class="pk-title">请选择{{picker.label}}</text>
+        <text class="pk-cancel" catchtap="closePicker">取消</text>
+      </view>
+      <view class="pk-search">
+        <text class="pk-search-ic">🔍</text>
+        <input class="pk-search-input" placeholder="输入名称或拼音首字母" value="{{picker.kw}}"
+               bindinput="onPickerKw" confirm-type="search" />
+      </view>
+      <scroll-view scroll-y class="pk-list">
+        <view wx:for="{{picker.list}}" wx:key="idx" class="pk-item"
+              bindtap="onPickerItem" data-index="{{item.idx}}">
+          <text class="pk-item-n">{{item.name}}</text>
+          <text wx:if="{{item.sub}}" class="pk-item-s">{{item.sub}}</text>
+        </view>
+        <view wx:if="{{picker.list.length === 0}}" class="pk-empty">未找到匹配项，可尝试其它关键词</view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

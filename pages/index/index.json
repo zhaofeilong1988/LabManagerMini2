@@ -1,5 +1,7 @@
 {
-  "component": true,
+  "navigationBarTitleText": "实验室管理",
+  "navigationBarBackgroundColor": "#0A7BB8",
+  "navigationBarTextStyle": "white",
   "usingComponents": {
     "van-icon": "@vant/weapp/icon/index",
     "home":       "/components/home/home",

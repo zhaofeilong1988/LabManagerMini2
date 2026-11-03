@@ -1,0 +1,61 @@
+<!-- pages/scan-detail/index.wxml —— 仪器扫码详情 -->
+<view class="sd2-page">
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="sd2-state">
+    <view class="sd2-spin"></view>
+    <text class="sd2-state-t">正在查询设备详情…</text>
+  </view>
+
+  <!-- 查询失败 -->
+  <view wx:elif="{{error}}" class="sd2-state">
+    <view class="sd2-err-ic">⚠️</view>
+    <text class="sd2-state-t">{{errMsg}}</text>
+    <view class="sd2-state-btn" hover-class="sd2-hover" bindtap="onRetry">重新查询</view>
+    <view class="sd2-state-btn sd2-state-btn--ghost" hover-class="sd2-hover" bindtap="goBack">返回</view>
+  </view>
+
+  <!-- 查询成功 -->
+  <block wx:else>
+    <view class="sd2-content">
+
+      <!-- 设备概要 -->
+      <view class="sd2-hero">
+        <view class="sd2-hero-ic">{{heroIcon}}</view>
+        <view class="sd2-hero-b">
+          <view class="sd2-hero-t">{{heroName}}</view>
+          <view class="sd2-no">{{deviceId}}</view>
+        </view>
+      </view>
+
+      <!-- 设备信息（字段顺序与需求一致） -->
+      <view class="sd2-card">
+        <view class="sd2-row" wx:for="{{rows}}" wx:key="label">
+          <text class="sd2-k">{{item.label}}</text>
+          <!-- 手机号：可点击呼出 -->
+          <view
+            wx:if="{{item.callable}}"
+            class="sd2-v sd2-phone"
+            hover-class="sd2-phone--hover"
+            hover-stay-time="80"
+            catchtap="onCallPhone"
+            data-phone="{{item.phone}}"
+          >
+            <text>{{item.v}}</text>
+          </view>
+          <text wx:else class="sd2-v {{item.cls}}" user-select="{{true}}">{{item.v}}</text>
+        </view>
+      </view>
+
+      <!-- 开机 / 关机：按钮文案随当前状态切换 -->
+      <view
+        class="sd2-power {{poweredOn ? 'sd2-power--off' : 'sd2-power--on'}}"
+        hover-class="sd2-power--hover"
+        bindtap="onTogglePower"
+      >{{powerBusy ? (poweredOn ? '正在关机…' : '正在开机…') : powerBtnText}}</view>
+
+      <!-- 蓝牙操作进度：搜索设备 → 匹配 → 握手 → 下发指令 各阶段文案 -->
+      <view wx:if="{{bleMsg}}" class="sd2-ble-msg">{{bleMsg}}</view>
+    </view>
+  </block>
+</view>

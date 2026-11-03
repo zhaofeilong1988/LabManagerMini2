@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>实验室小程序 · 开发甘特图</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: #f8fafc; color: #1e293b; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
+
+  h1 { font-size: 1.25rem; font-weight: 700; color: #1e293b; }
+  .subtitle { font-size: 0.8rem; color: #94a3b8; margin-top: 4px; }
+
+  /* Summary cards */
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0; }
+  .card { background: #fff; border-radius: 12px; padding: 14px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  .card-val { font-size: 1.6rem; font-weight: 700; }
+  .card-val span { font-size: 0.7rem; font-weight: 400; color: #94a3b8; margin-left: 2px; }
+  .card-label { font-size: 0.72rem; color: #94a3b8; margin-top: 2px; }
+  .c-gray { color: #374151; }
+  .c-green { color: #16a34a; }
+  .c-orange { color: #ea580c; }
+
+  /* Progress bar */
+  .progress-box { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  .progress-header { display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 8px; }
+  .progress-header span:last-child { font-weight: 700; color: #2563eb; }
+  .progress-track { height: 16px; background: #f1f5f9; border-radius: 999px; overflow: hidden; display: flex; }
+  .progress-seg { height: 100%; transition: width .3s; }
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 4px; font-size: 0.72rem; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* Filter */
+  .filters { display: flex; gap: 8px; margin-bottom: 16px; }
+  .filter-btn { padding: 5px 16px; border-radius: 999px; font-size: 0.8rem; font-weight: 500; border: 1px solid #e2e8f0; background: #fff; color: #475569; cursor: pointer; transition: all .15s; }
+  .filter-btn.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+
+  /* Gantt table */
+  .gantt { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.06); overflow: hidden; }
+  .gantt-header { display: grid; grid-template-columns: 210px 1fr 120px; border-bottom: 1px solid #f1f5f9; }
+  .gantt-header div { padding: 8px 16px; font-size: 0.7rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: .05em; }
+  .gantt-header .col-time { position: relative; }
+  .month-label { position: absolute; bottom: 4px; font-size: 0.68rem; color: #cbd5e1; pointer-events: none; }
+
+  .mod-row { display: grid; grid-template-columns: 210px 1fr 120px; border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: background .12s; }
+  .mod-row:hover { background: #eff6ff; }
+  .mod-row.odd { background: #fafafa; }
+  .mod-row.odd:hover { background: #eff6ff; }
+
+  .mod-name-cell { padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
+  .mod-icon { font-size: 1rem; flex-shrink: 0; }
+  .mod-title { font-size: 0.85rem; font-weight: 600; color: #1e293b; line-height: 1.3; }
+  .mod-meta { font-size: 0.7rem; color: #94a3b8; }
+  .chevron { margin-left: auto; color: #cbd5e1; font-size: 0.7rem; }
+
+  .bar-cell { padding: 10px 16px; display: flex; align-items: center; }
+  .bar-track { width: 100%; height: 22px; background: #f8fafc; border-radius: 4px; overflow: hidden; border: 1px solid #f1f5f9; position: relative; }
+  .bar-fill { position: absolute; height: 100%; border-radius: 3px; opacity: .85; }
+
+  .pd-cell { padding: 10px 16px; text-align: right; }
+  .pd-remain { font-size: 0.85rem; font-weight: 700; color: #ea580c; }
+  .pd-total { font-size: 0.7rem; color: #cbd5e1; }
+  .pd-dates { font-size: 0.7rem; color: #94a3b8; margin-top: 1px; }
+
+  /* Item rows */
+  .item-rows { display: none; }
+  .item-rows.open { display: block; }
+  .item-row { display: grid; grid-template-columns: 210px 1fr 120px; border-bottom: 1px solid #f8fafc; background: rgba(239,246,255,.4); }
+  .item-name-cell { padding: 7px 16px 7px 40px; display: flex; align-items: center; gap: 6px; }
+  .item-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .item-name { font-size: 0.78rem; color: #374151; line-height: 1.4; }
+  .item-bar-cell { padding: 7px 16px; display: flex; align-items: center; gap: 8px; }
+  .item-bar-track { flex: 1; height: 14px; background: #f1f5f9; border-radius: 3px; overflow: hidden; }
+  .item-bar-fill { height: 100%; border-radius: 3px; }
+  .status-badge { font-size: 0.65rem; padding: 1px 6px; border-radius: 999px; color: #fff; flex-shrink: 0; white-space: nowrap; }
+  .item-pd-cell { padding: 7px 16px; text-align: right; font-size: 0.78rem; font-weight: 500; }
+
+  .footer { margin-top: 16px; text-align: center; font-size: 0.72rem; color: #94a3b8; }
+
+  @media (max-width: 600px) {
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    .gantt-header, .mod-row, .item-row { grid-template-columns: 140px 1fr 80px; }
+    .item-name-cell { padding-left: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="mb-header">
+    <h1>实验室小程序 · 开发甘特图</h1>
+    <p class="subtitle">项目开始：2026-06-22（下周一）· 工时单位：人日（0.5 最小）</p>
+  </div>
+
+  <!-- Summary cards -->
+  <div class="cards" id="cards"></div>
+
+  <!-- Overall progress -->
+  <div class="progress-box">
+    <div class="progress-header">
+      <span style="font-weight:500;color:#475569">整体进度</span>
+      <span id="pct-label">0%</span>
+    </div>
+    <div class="progress-track" id="progress-track"></div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters" id="filters"></div>
+
+  <!-- Gantt -->
+  <div class="gantt">
+    <div class="gantt-header">
+      <div>模块 / 功能</div>
+      <div class="col-time" id="col-time">时间轴</div>
+      <div style="text-align:right">人日 / 日期</div>
+    </div>
+    <div id="gantt-body"></div>
+  </div>
+
+  <p class="footer">点击模块行展开查看详细功能 · 甘特条按工作日顺序排列 · 项目开始：2026-06-22</p>
+</div>
+
+<script>
+const START_DATE = new Date("2026-06-22");
+
+const STATUS_COLOR = {
+  "完成":     { bar: "#22c55e", text: "#15803d" },
+  "旧版已有": { bar: "#60a5fa", text: "#1d4ed8" },
+  "进行中":   { bar: "#f59e0b", text: "#b45309" },
+  "待开发":   { bar: "#d1d5db", text: "#6b7280" },
+};
+
+const MODULES = [
+  { side:"用户端", priority:1, name:"权限准入流程", icon:"🔐", items:[
+    { name:"准入流程总览", status:"进行中", pd:0.5 },
+    { name:"所内注册（工号/门禁卡/课题组/科室）", status:"进行中", pd:1.5 },
+    { name:"所外/院内注册", status:"进行中", pd:0.5 },
+    { name:"科室主任审批分支", status:"待开发", pd:1 },
+    { name:"导师手机号自动关联", status:"待开发", pd:1 },
+    { name:"材料拍照上传", status:"进行中", pd:1 },
+    { name:"安全考试（随机组卷/必答+优选）", status:"进行中", pd:2 },
+    { name:"系统自动批改安全题", status:"进行中", pd:0.5 },
+    { name:"操作题老师批改", status:"待开发", pd:1 },
+    { name:"准入结果页", status:"进行中", pd:0.5 },
+    { name:"默认账户有效期（无预约无权限仪器）", status:"待开发", pd:1 },
+  ]},
+  { side:"用户端", priority:2, name:"实验台分配与打卡", icon:"🪑", items:[
+    { name:"工位概览", status:"待开发", pd:1 },
+    { name:"工位申请（课题来源/研究目的）", status:"待开发", pd:1 },
+    { name:"工位类型选择（免费/收费/课题/省部级）", status:"待开发", pd:0.5 },
+    { name:"免费工位确认书签署", status:"待开发", pd:0.5 },
+    { name:"签到扫码（确认位置）", status:"待开发", pd:1.5 },
+    { name:"申请进度追踪", status:"待开发", pd:0.5 },
+    { name:"经费到期提醒", status:"待开发", pd:0.5 },
+    { name:"申请记录列表", status:"待开发", pd:0.5 },
+  ]},
+  { side:"用户端", priority:3, name:"安全培训", icon:"📚", items:[
+    { name:"培训课程列表（必看时间限制）", status:"完成", pd:0 },
+    { name:"课程详情/视频（看完解锁考试）", status:"待开发", pd:1.5 },
+    { name:"学习进度记录", status:"待开发", pd:0.5 },
+    { name:"安全考核入口（完成课程后）", status:"进行中", pd:0.5 },
+    { name:"考试结果与证书", status:"进行中", pd:0.5 },
+    { name:"技术指导发起（学生→老师确认）", status:"待开发", pd:1.5 },
+  ]},
+  { side:"用户端", priority:4, name:"仪器预约", icon:"🔬", items:[
+    { name:"仪器列表", status:"旧版已有", pd:0 },
+    { name:"仪器详情", status:"旧版已有", pd:0 },
+    { name:"预约申请", status:"旧版已有", pd:0 },
+    { name:"预约日历", status:"旧版已有", pd:0 },
+    { name:"预约记录", status:"旧版已有", pd:0 },
+    { name:"预约取消", status:"旧版已有", pd:0 },
+    { name:"报修提交（推送工程师+老师）", status:"待开发", pd:1 },
+    { name:"报修记录查看", status:"待开发", pd:0.5 },
+    { name:"校准证书/质控记录查看", status:"待开发", pd:0.5 },
+  ]},
+  { side:"用户端", priority:5, name:"实验台值日管理（组长端）", icon:"🗓️", items:[
+    { name:"实验台人员管理", status:"待开发", pd:1 },
+    { name:"值日排班表制定（按月）", status:"待开发", pd:1.5 },
+    { name:"未排班预警（停止预约倒计时）", status:"待开发", pd:1 },
+    { name:"禁止预约设置（组内成员）", status:"待开发", pd:0.5 },
+    { name:"值日签到确认", status:"待开发", pd:0.5 },
+  ]},
+  { side:"用户端", priority:6, name:"信用与安全", icon:"⭐", items:[
+    { name:"信用积分查看", status:"待开发", pd:0.5 },
+    { name:"积分明细记录", status:"待开发", pd:0.5 },
+    { name:"警告函查看", status:"待开发", pd:0.5 },
+    { name:"整改反馈提交", status:"待开发", pd:0.5 },
+  ]},
+  { side:"管理端", priority:1, name:"准入审批", icon:"✅", items:[
+    { name:"待审核列表", status:"待开发", pd:1 },
+    { name:"申请详情审核（含材料）", status:"待开发", pd:1.5 },
+    { name:"科室主任审批入口", status:"待开发", pd:1 },
+    { name:"操作题评分（老师批改）", status:"待开发", pd:1.5 },
+    { name:"审批通过/驳回/备注", status:"待开发", pd:0.5 },
+    { name:"账户有效期管理", status:"待开发", pd:0.5 },
+    { name:"权限分级管理（基础/临时/特殊）", status:"待开发", pd:1.5 },
+  ]},
+  { side:"管理端", priority:2, name:"实验台管理", icon:"🪑", items:[
+    { name:"实验台列表与人员分配", status:"待开发", pd:1.5 },
+    { name:"工位申请审批", status:"待开发", pd:1 },
+    { name:"值日排班监控（未排班预警）", status:"待开发", pd:1.5 },
+    { name:"预约禁用管理（按台/按人）", status:"待开发", pd:1 },
+    { name:"签到记录统计", status:"待开发", pd:0.5 },
+  ]},
+  { side:"管理端", priority:3, name:"培训管理", icon:"📖", items:[
+    { name:"课程管理（上传视频，设必看时间）", status:"待开发", pd:2 },
+    { name:"题库管理（必答/优选/模块分类）", status:"待开发", pd:2 },
+    { name:"组卷规则配置", status:"待开发", pd:1.5 },
+    { name:"考试记录与成绩统计", status:"待开发", pd:1 },
+    { name:"电子证书管理", status:"待开发", pd:1.5 },
+    { name:"技术指导确认与记录", status:"待开发", pd:1 },
+    { name:"外出培训学习计划记录（照片+证书）", status:"待开发", pd:1.5 },
+    { name:"大设备年度培训任务", status:"待开发", pd:1 },
+  ]},
+  { side:"管理端", priority:4, name:"仪器管理", icon:"⚙️", items:[
+    { name:"仪器列表（管理工程师分配）", status:"待开发", pd:1.5 },
+    { name:"使用权限设置（是否需权限/预约）", status:"待开发", pd:1 },
+    { name:"报修受理与派单（推送工程师+老师）", status:"待开发", pd:1.5 },
+    { name:"维护保养记录", status:"待开发", pd:1 },
+    { name:"校准管理与证书上传", status:"待开发", pd:1 },
+    { name:"质控周期配置（生成质控任务）", status:"待开发", pd:1.5 },
+    { name:"质控任务完成记录", status:"待开发", pd:1 },
+    { name:"方法质控（周期提醒+倒计时）", status:"待开发", pd:1.5 },
+    { name:"报废管理（线下材料上传）", status:"待开发", pd:1 },
+    { name:"供应商信息管理", status:"待开发", pd:1 },
+    { name:"保修信息管理（推送工程师+老师）", status:"待开发", pd:1 },
+  ]},
+  { side:"管理端", priority:5, name:"科学方法学门诊", icon:"🧪", items:[
+    { name:"门诊预约（提前N天可配置）", status:"待开发", pd:1.5 },
+    { name:"门诊日历管理", status:"待开发", pd:1 },
+    { name:"预约记录与统计", status:"待开发", pd:0.5 },
+  ]},
+  { side:"管理端", priority:6, name:"信用与违规管理", icon:"⚖️", items:[
+    { name:"积分规则配置", status:"待开发", pd:1 },
+    { name:"积分调整记录", status:"待开发", pd:0.5 },
+    { name:"警告函发送（附整改要求）", status:"待开发", pd:1 },
+    { name:"整改反馈查看与确认", status:"待开发", pd:0.5 },
+  ]},
+];
+
+function addWorkdays(date, days) {
+  let d = new Date(date), added = 0;
+  while (added < days) {
+    d.setDate(d.getDate() + 1);
+    const dow = d.getDay();
+    if (dow !== 0 && dow !== 6) added++;
+  }
+  return d;
+}
+
+function fmt(d) {
+  return `${d.getMonth()+1}/${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function buildTimeline(mods) {
+  let cursor = new Date(START_DATE);
+  return mods.map(mod => {
+    const totalPd = mod.items.reduce((s,i)=>s+i.pd,0);
+    const workdays = Math.ceil(totalPd);
+    const start = new Date(cursor);
+    const end = workdays > 0 ? addWorkdays(cursor, workdays) : new Date(cursor);
+    if (workdays > 0) cursor = new Date(end);
+    return { ...mod, start, end, totalPd };
+  });
+}
+
+const timed = buildTimeline(MODULES);
+const projectStart = timed[0].start;
+const projectEnd = timed[timed.length-1].end;
+const totalMs = projectEnd - projectStart;
+
+const allItems = MODULES.flatMap(m=>m.items);
+const totalPd = allItems.reduce((s,i)=>s+i.pd,0);
+const donePd = allItems.filter(i=>i.status==="完成"||i.status==="旧版已有").reduce((s,i)=>s+i.pd,0);
+const remainPd = totalPd - donePd;
+const doneCnt = allItems.filter(i=>i.status==="完成"||i.status==="旧版已有").length;
+const totalCnt = allItems.length;
+
+// Cards
+document.getElementById("cards").innerHTML = [
+  { label:"总功能项", value:totalCnt, unit:"项", cls:"c-gray" },
+  { label:"已完成",   value:doneCnt,  unit:"项", cls:"c-green" },
+  { label:"总工时",   value:totalPd,  unit:"人日", cls:"c-gray" },
+  { label:"剩余工时", value:remainPd, unit:"人日", cls:"c-orange" },
+].map(c=>`<div class="card"><div class="card-val ${c.cls}">${c.value}<span>${c.unit}</span></div><div class="card-label">${c.label}</div></div>`).join("");
+
+// Progress
+const pct = Math.round(donePd/totalPd*100);
+document.getElementById("pct-label").textContent = pct+"%";
+const track = document.getElementById("progress-track");
+["完成","旧版已有","进行中"].forEach(s=>{
+  const spd = allItems.filter(i=>i.status===s).reduce((a,i)=>a+i.pd,0);
+  const p = spd/totalPd*100;
+  if(p>0){
+    const seg = document.createElement("div");
+    seg.className="progress-seg";
+    seg.style.cssText=`width:${p}%;background:${STATUS_COLOR[s].bar}`;
+    seg.title=`${s}: ${spd}人日`;
+    track.appendChild(seg);
+  }
+});
+document.getElementById("legend").innerHTML = Object.entries(STATUS_COLOR).map(([k,v])=>
+  `<span class="legend-item"><span class="legend-dot" style="background:${v.bar}"></span><span style="color:${v.text}">${k}</span></span>`
+).join("");
+
+// Month marks on time axis header
+const colTime = document.getElementById("col-time");
+let md = new Date(projectStart); md.setDate(1);
+while(md <= projectEnd){
+  const pct2 = totalMs>0?(md-projectStart)/totalMs*100:0;
+  if(pct2>=0&&pct2<=100){
+    const sp = document.createElement("span");
+    sp.className="month-label";
+    sp.style.left=Math.max(0,pct2)+"%";
+    sp.textContent=`${md.getMonth()+1}月`;
+    colTime.appendChild(sp);
+  }
+  md = new Date(md.getFullYear(), md.getMonth()+1, 1);
+}
+
+// Filters
+let currentSide = "全部";
+const SIDES = ["全部","用户端","管理端"];
+const filtersEl = document.getElementById("filters");
+function renderFilters(){
+  filtersEl.innerHTML = SIDES.map(s=>
+    `<button class="filter-btn${s===currentSide?' active':''}" onclick="setSide('${s}')">${s}</button>`
+  ).join("");
+}
+
+function setSide(s){ currentSide=s; renderFilters(); renderGantt(); }
+
+// Gantt body
+function renderGantt(){
+  const body = document.getElementById("gantt-body");
+  const filtered = timed.filter(m=>currentSide==="全部"||m.side===currentSide);
+  body.innerHTML = "";
+
+  filtered.forEach((mod, mi)=>{
+    const modRemainPd = mod.items.filter(i=>i.status!=="完成"&&i.status!=="旧版已有").reduce((s,i)=>s+i.pd,0);
+    const barLeft = totalMs>0?(mod.start-projectStart)/totalMs*100:0;
+    const barWidth = totalMs>0?Math.max(1,(mod.end-mod.start)/totalMs*100):2;
+    const dominantStatus = mod.items.find(i=>i.status==="进行中")?"进行中":
+      mod.items.find(i=>i.status==="待开发")?"待开发":
+      mod.items.find(i=>i.status==="完成")?"完成":"旧版已有";
+    const barColor = STATUS_COLOR[dominantStatus]?.bar||"#d1d5db";
+
+    const rowEl = document.createElement("div");
+    rowEl.className="mod-row"+(mi%2===1?" odd":"");
+    rowEl.innerHTML=`
+      <div class="mod-name-cell">
+        <span class="mod-icon">${mod.icon}</span>
+        <div>
+          <div class="mod-title">${mod.name}</div>
+          <div class="mod-meta">${mod.side} · P${mod.priority} · ${mod.items.length}项</div>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="bar-cell">
+        <div class="bar-track">
+          <div class="bar-fill" style="left:${barLeft}%;width:${barWidth}%;background:${barColor}"></div>
+        </div>
+      </div>
+      <div class="pd-cell">
+        <div class="pd-remain">${modRemainPd}<span class="pd-total">/${mod.totalPd}d</span></div>
+        <div class="pd-dates">${fmt(mod.start)}→${fmt(mod.end)}</div>
+      </div>
+    `;
+
+    const itemsEl = document.createElement("div");
+    itemsEl.className="item-rows";
+    itemsEl.innerHTML = mod.items.map(item=>{
+      const c = STATUS_COLOR[item.status]||STATUS_COLOR["待开发"];
+      const barPct = mod.totalPd>0?item.pd/mod.totalPd*100:0;
+      return `
+        <div class="item-row">
+          <div class="item-name-cell">
+            <span class="item-dot" style="background:${c.bar}"></span>
+            <span class="item-name">${item.name}</span>
+          </div>
+          <div class="item-bar-cell">
+            ${item.pd>0?`<div class="item-bar-track"><div class="item-bar-fill" style="width:${barPct}%;background:${c.bar}"></div></div>`:'<div style="flex:1;font-size:.72rem;color:#cbd5e1">—</div>'}
+            <span class="status-badge" style="background:${c.bar}">${item.status}</span>
+          </div>
+          <div class="item-pd-cell" style="color:${c.text}">${item.pd>0?item.pd+'d':'—'}</div>
+        </div>
+      `;
+    }).join("");
+
+    rowEl.addEventListener("click", ()=>{
+      const open = itemsEl.classList.toggle("open");
+      rowEl.querySelector(".chevron").textContent = open?"▲":"▼";
+    });
+
+    body.appendChild(rowEl);
+    body.appendChild(itemsEl);
+  });
+}
+
+renderFilters();
+renderGantt();
+</script>
+</body>
+</html>

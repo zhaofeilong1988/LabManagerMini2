@@ -1,0 +1,395 @@
+/* pages/onboarding/index/index.wxss */
+/* 所有基础样式都在共享文件里，直接引入即可 */
+@import "../onboarding.wxss";
+
+/* ── 步骤节点可点击反馈 ── */
+.ob-step-hover {
+  opacity: 0.7;
+}
+
+.ob-withdraw-hover {
+  opacity: 0.7;
+}
+
+.ob-step-hint {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  padding: 16rpx 24rpx 0;
+}
+
+.ob-step-hint-text {
+  font-size: 22rpx;
+  color: var(--ob-hint);
+}
+
+/* ── 第 2 步「材料提交」子任务卡片 ── */
+.ob-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-bottom: 28rpx;
+}
+
+.ob-task {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20rpx;
+  background: #E7F4FB;
+  border: 2rpx solid #D5E4ED;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  transition: all 0.2s;
+}
+
+.ob-task.done {
+  background: #E2F3FB;
+  border-color: #A0D8F2;
+}
+
+/* 部分上传：亮蓝实心图标 + 浅蓝底（介于「全部上传」与「未上传」之间） */
+.ob-task.partial {
+  background: #EAF6FD;
+  border-color: #B8E0F2;
+}
+
+.ob-task-icon.partial {
+  background: var(--ob-accent);
+  border-color: var(--ob-accent);
+}
+
+.ob-task.partial .ob-task-title {
+  color: var(--ob-accent);
+}
+
+.ob-task.partial .ob-task-sub {
+  color: var(--ob-accent);
+}
+
+/* 未通过：红 */
+.ob-task.failed {
+  background: #FBEAE3;
+  border-color: #F4BFA9;
+}
+
+.ob-task-icon.failed {
+  background: var(--ob-error);
+  border-color: var(--ob-error);
+}
+
+.ob-task-sub--failed {
+  color: var(--ob-error) !important;
+}
+
+.ob-task.failed .ob-task-title {
+  color: var(--ob-error);
+}
+
+/* 「评卷中」：与 passed（深蓝）同色系但更柔和（亮淡蓝），用 medal-o 图标与 ✔ 区分开 */
+.ob-task.grading {
+  background: #E0F4FB;
+  border-color: #8FCDE9;
+}
+
+.ob-task.grading .ob-task-title {
+  color: var(--ob-accent);
+}
+
+.ob-task.grading .ob-task-sub {
+  color: var(--ob-accent);
+}
+
+.ob-task-hover {
+  opacity: 0.8;
+}
+
+.ob-task-icon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2rpx solid #A9D9F2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ob-task-icon.done {
+  background: var(--ob-done);
+  border-color: var(--ob-done);
+}
+
+.ob-task-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.ob-task-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--ob-text);
+}
+
+.ob-task.done .ob-task-title {
+  color: var(--ob-done);
+}
+
+.ob-task-sub {
+  font-size: 22rpx;
+  color: var(--ob-hint);
+  line-height: 1.4;
+}
+
+.ob-task.done .ob-task-sub {
+  color: var(--ob-done);
+}
+
+.ob-submit-btn {
+  margin-bottom: 16rpx;
+}
+
+.ob-submit-hint {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  font-size: 22rpx;
+  color: var(--ob-accent);
+  line-height: 1.5;
+  text-align: center;
+  padding: 0 16rpx;
+}
+
+.ob-btn-hover {
+  opacity: 0.85;
+}
+
+/* ── 节点详情底部弹层 ── */
+.node-mask {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+}
+
+.node-sheet {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 16rpx 32rpx 32rpx;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 24rpx);
+  display: flex;
+  flex-direction: column;
+  animation: node-sheet-up 0.24s ease;
+}
+
+@keyframes node-sheet-up {
+  from {
+    transform: translateY(40%);
+    opacity: 0.4;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.node-sheet-grip {
+  width: 72rpx;
+  height: 8rpx;
+  border-radius: 4rpx;
+  background: var(--ob-border);
+  margin: 8rpx auto 20rpx;
+  flex-shrink: 0;
+}
+
+.node-sheet-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8rpx 0 16rpx;
+  flex-shrink: 0;
+}
+
+.node-sheet-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: var(--ob-text);
+}
+
+.node-sheet-x {
+  width: 52rpx;
+  height: 52rpx;
+  border-radius: 50%;
+  background: #F2F6F9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.node-hover {
+  background: #E2EAF0;
+}
+
+.node-sheet-body {
+  width: 100%;
+  min-height: 120rpx;
+}
+
+.node-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 64rpx 0 48rpx;
+}
+
+.node-empty-text {
+  margin-top: 20rpx;
+  font-size: 26rpx;
+  color: var(--ob-hint);
+}
+
+.node-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #F5FAFD;
+}
+
+.node-row:last-child {
+  border-bottom: none;
+}
+
+.node-row-key {
+  width: 190rpx;
+  flex-shrink: 0;
+  font-size: 26rpx;
+  color: var(--ob-hint);
+  line-height: 1.5;
+}
+
+.node-row-val {
+  flex: 1;
+  font-size: 26rpx;
+  color: var(--ob-text);
+  line-height: 1.5;
+  word-break: break-all;
+  text-align: right;
+}
+
+.node-row-val--accent {
+  color: var(--ob-accent);
+  font-weight: 600;
+}
+
+.node-sheet-foot {
+  padding-top: 20rpx;
+  flex-shrink: 0;
+}
+
+.node-sheet-btn {
+  margin-top: 0;
+}
+
+.node-btn-hover {
+  opacity: 0.85;
+}
+
+/* ── 重新开始 / 撤回 二次确认弹窗（自绘居中卡片，对齐 register 页同款样式） ── */
+.ob-mask {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ob-modal {
+  width: 560rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  overflow: hidden;
+  animation: ob-pop 0.2s ease;
+}
+
+@keyframes ob-pop {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.ob-modal-title {
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--ob-text);
+  padding: 40rpx 40rpx 16rpx;
+}
+
+.ob-modal-content {
+  text-align: center;
+  font-size: 26rpx;
+  color: var(--ob-sub);
+  padding: 8rpx 40rpx 36rpx;
+  line-height: 1.6;
+}
+
+.ob-modal-actions {
+  display: flex;
+  flex-direction: row;
+  border-top: 1rpx solid #EEF4F8;
+}
+
+.ob-modal-btn {
+  flex: 1;
+  height: 92rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+}
+
+.ob-modal-btn + .ob-modal-btn {
+  border-left: 1rpx solid #EEF4F8;
+}
+
+.ob-modal-cancel {
+  color: #555555;
+}
+
+.ob-modal-confirm {
+  color: var(--ob-accent);
+  font-weight: 600;
+}
+
+.ob-modal-confirm.danger {
+  color: var(--ob-error);
+}
+
+.ob-modal-hover {
+  background: #EEF4F8;
+}

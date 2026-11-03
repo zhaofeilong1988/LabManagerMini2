@@ -1,0 +1,66 @@
+<!-- pages/booking-approval/index.wxml —— 预约审批列表
+     入口：① 首页「预约审批」（全部申请单） ② 仪器详情页「预约记录」（按仪器过滤）
+     卡片风格与「我的预约」(pages/my-booking) 一致 -->
+<view class="ba-page">
+  <view class="ba-list">
+
+    <view
+      class="ba-card"
+      wx:for="{{list}}"
+      wx:key="id"
+      hover-class="ba-card--hover"
+      data-id="{{item.id}}"
+      bindtap="openDetail"
+    >
+
+      <!-- 头部：仪器图标 + 名称 + 实验室/方式 + 状态徽标 -->
+      <view class="ba-hd">
+        <view class="ba-ic">{{item.icon}}</view>
+        <view class="ba-b">
+          <text class="ba-n">{{item.instName}}</text>
+          <text class="ba-s">{{item.labText}} · {{item.modeName}}</text>
+        </view>
+        <text class="ba-tag {{item.tagCls}}">{{item.tagText}}</text>
+      </view>
+
+      <!-- 信息区 -->
+      <view class="ba-rows">
+        <view class="ba-row"><text class="k">申请人</text><text class="v">{{item.userText}}</text></view>
+        <view class="ba-row"><text class="k">预约日期</text><text class="v">{{item.dateLabel}}</text></view>
+        <view class="ba-row"><text class="k">预约时段</text><text class="v">{{item.timeText}}{{item.durText}}</text></view>
+        <view class="ba-row"><text class="k">费用明细</text><text class="v ba-v-wrap">{{item.feeLeft}}</text></view>
+      </view>
+
+      <!-- 底部：预计费用 + 操作 -->
+      <view class="ba-ft">
+        <view class="ba-pay">
+          <text class="ba-pay-k">预计费用</text>
+          <text class="ba-pay-v">{{item.amountText}}</text>
+        </view>
+        <view class="ba-links">
+          <view class="ba-btn ba-btn-plain" hover-class="ba-btn-plain--hover" catchtap="openDetail" data-id="{{item.id}}">查看详情</view>
+          <view
+            wx:if="{{item.canApprove}}"
+            class="ba-btn ba-btn-primary"
+            hover-class="ba-btn-primary--hover"
+            catchtap="onApprove"
+            data-id="{{item.id}}"
+          >审批</view>
+        </view>
+      </view>
+
+    </view>
+
+    <!-- 空态 / 加载中 / 加载失败 -->
+    <view class="ba-empty" wx:if="{{!list.length}}">
+      <text class="ba-empty-t">{{emptyText}}</text>
+      <view
+        wx:if="{{!loading}}"
+        class="ba-btn ba-btn-plain"
+        hover-class="ba-btn-plain--hover"
+        bindtap="reload"
+      >重新加载</view>
+    </view>
+
+  </view>
+</view>

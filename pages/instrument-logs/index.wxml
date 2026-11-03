@@ -1,0 +1,60 @@
+<!-- pages/instrument-logs/index.wxml —— 使用记录
+     仪器详情页「上机记录」与「我的 → 使用记录与费用」共用本页
+     卡片风格与「我的预约」(pages/my-booking) 一致，顶部无状态页签 -->
+<view class="il-page">
+  <view class="il-list">
+
+    <view class="il-card" wx:for="{{list}}" wx:key="id">
+
+      <!-- 头部：仪器图标 + 名称 + 型号 + 使用人类型 -->
+      <view class="il-hd">
+        <view class="il-ic">{{item.icon}}</view>
+        <view class="il-b">
+          <text class="il-n">{{item.devName}}</text>
+          <text class="il-s" wx:if="{{item.devSub}}">{{item.devSub}}</text>
+        </view>
+        <text class="il-tag {{item.deptCls}}">{{item.deptText}}</text>
+      </view>
+
+      <!-- 信息区 -->
+      <view class="il-rows">
+        <view class="il-row"><text class="k">使用人</text><text class="v">{{item.userName}}</text></view>
+        <view class="il-row"><text class="k">电话</text><text class="v">{{item.phone}}</text></view>
+        <view class="il-row"><text class="k">上机时间</text><text class="v">{{item.begin}}</text></view>
+        <view class="il-row"><text class="k">下机时间</text><text class="v">{{item.finishText}}</text></view>
+        <view class="il-row"><text class="k">费用明细</text><text class="v il-v-wrap">{{item.feeLeft}}</text></view>
+      </view>
+
+      <!-- 底部：实付金额 + 改单 -->
+      <view class="il-ft">
+        <view class="il-pay">
+          <text class="il-pay-k">实付</text>
+          <text class="il-pay-v">{{item.totalText}}</text>
+        </view>
+        <view
+          wx:if="{{item.canEdit}}"
+          class="il-btn"
+          hover-class="il-btn--hover"
+          catch:tap="onEditFee"
+          data-id="{{item.id}}"
+        >
+          <van-icon name="edit" size="15px" color="#0A7BB8" />
+          <text class="il-btn-t">改单</text>
+        </view>
+      </view>
+
+    </view>
+
+    <!-- 空态 / 加载中 / 加载失败 -->
+    <view class="il-empty" wx:if="{{!list.length}}">
+      <text class="il-empty-t">{{emptyText}}</text>
+      <view
+        wx:if="{{!loading && emptyText}}"
+        class="il-reload"
+        hover-class="il-reload--hover"
+        bindtap="reload"
+      >重新加载</view>
+    </view>
+
+  </view>
+</view>

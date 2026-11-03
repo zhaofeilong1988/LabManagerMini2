@@ -1,0 +1,373 @@
+<!-- pages/workbench/index.wxml —— 实验工位（合并页） -->
+<view class="wb-wrap">
+
+  <!-- ════════ 模式 A：申请表单单（mode=apply，无记录） ════════ -->
+  <block wx:if="{{mode === 'apply'}}">
+    <view class="wb-card">
+      <view class="wb-card-hd">
+        <text class="wb-hd-icon">📝</text>
+        <text class="wb-hd-title">实验工位使用申请</text>
+      </view>
+      <text class="wb-hd-sub">提交后等待管理员审核，审核通过即可使用实验工位并扫码打卡</text>
+    </view>
+
+    <view class="wb-card">
+      <!-- 课题组 -->
+      <view class="wb-row" bindtap="openGroupPicker">
+        <text class="wb-row-key"><text class="wb-req">*</text>课题组</text>
+        <view class="wb-row-val wb-row-val-flex">
+          <text class="{{form.group ? 'wb-text' : 'wb-placeholder'}}">{{form.group || '请选择课题组'}}</text>
+          <text class="wb-arrow">›</text>
+        </view>
+      </view>
+
+      <!-- 工位（选填）：级联自所选课题组（/api/workstation/team/tree 的 children） -->
+      <view class="wb-row" bindtap="openSeatPicker">
+        <text class="wb-row-key"><text class="wb-req-ph">*</text>工位</text>
+        <view class="wb-row-val wb-row-val-flex">
+          <text class="{{form.seat ? 'wb-text' : 'wb-placeholder'}}">{{form.seat || '请选择工位（选填）'}}</text>
+          <text class="wb-arrow">›</text>
+        </view>
+      </view>
+
+      <!-- 使用期限 -->
+      <view class="wb-row">
+        <text class="wb-row-key"><text class="wb-req">*</text>开始时间</text>
+        <view class="wb-picker-wrap">
+          <picker mode="date" value="{{form.startDate}}" bindchange="onStartDate">
+            <view class="wb-picker-inner">
+              <text class="{{form.startDate ? 'wb-text' : 'wb-placeholder'}}">{{form.startDate || '请选择'}}</text>
+              <text class="wb-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+      <view class="wb-row">
+        <text class="wb-row-key"><text class="wb-req">*</text>结束时间</text>
+        <view class="wb-picker-wrap">
+          <picker mode="date" value="{{form.endDate}}" start="{{form.startDate}}" bindchange="onEndDate">
+            <view class="wb-picker-inner">
+              <text class="{{form.endDate ? 'wb-text' : 'wb-placeholder'}}">{{form.endDate || '请选择'}}</text>
+              <text class="wb-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+    </view>
+
+    <view class="wb-card">
+      <text class="wb-block-title"><text class="wb-req">*</text>申请理由</text>
+      <textarea
+        class="wb-textarea"
+        placeholder="请简要说明实验台用途、计划安排等"
+        maxlength="500"
+        value="{{form.reason}}"
+        bindinput="onReasonInput"
+        auto-height
+      />
+      <text class="wb-textarea-count">{{reasonLen}} / 500</text>
+    </view>
+
+    <view class="wb-card">
+      <view class="wb-block-title-row">
+        <text class="wb-block-title"><text class="wb-req">*</text>导师签字同意书</text>
+        <text class="wb-block-hint">最多 3 个</text>
+      </view>
+      <view class="wb-photo-list">
+        <view
+          wx:for="{{photos}}"
+          wx:key="*this"
+          wx:for-index="pidx"
+          class="wb-photo-item"
+        >
+          <view wx:if="{{item.isFile}}" class="wb-photo-file" catchtap="previewPhoto" data-idx="{{pidx}}">
+            <van-icon name="description" size="32px" color="#0A7BB8" />
+            <text class="wb-photo-file-name">{{item.fileName}}</text>
+          </view>
+          <image
+            wx:else
+            class="wb-photo-img"
+            src="{{item.thumb || item.origin}}"
+            mode="aspectFill"
+            catchtap="previewPhoto"
+            data-idx="{{pidx}}"
+          />
+          <view class="wb-photo-del" catchtap="removePhoto" data-idx="{{pidx}}">
+            <van-icon name="cross" size="14px" color="#fff" />
+          </view>
+        </view>
+        <view wx:if="{{photos.length < 3}}" class="wb-photo-add" bindtap="showActionSheet">
+          <van-icon name="plus" size="28px" color="#9aa6ad" />
+          <text class="wb-photo-add-text">上传</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="wb-submit-bar">
+      <button class="wb-submit-btn" bindtap="submitApply">提交申请</button>
+    </view>
+  </block>
+
+  <!-- ════════ 模式 B：待审核（mode=pending，已提交未审核） ════════ -->
+  <block wx:if="{{mode === 'pending'}}">
+    <view class="ck-card ck-head">
+      <view class="ck-head-hd">
+        <text class="ck-head-icon">🪑</text>
+        <text class="ck-head-title">我的工位</text>
+        <view class="ck-badge {{statusCls}}">{{statusText}}</view>
+      </view>
+      <text class="ck-head-sub">{{submitted.group}}</text>
+      <view class="ck-head-rows">
+        <view class="ck-row">
+          <text class="ck-row-key">工位</text>
+          <text class="ck-row-val">{{submitted.seat}}</text>
+        </view>
+        <view class="ck-row">
+          <text class="ck-row-key">使用期限</text>
+          <text class="ck-row-val">{{submitted.startDate}} 至 {{submitted.endDate}}</text>
+        </view>
+        <view class="ck-row">
+          <text class="ck-row-key">提交时间</text>
+          <text class="ck-row-val">{{submitted.submitTime}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="ck-card">
+      <view class="ck-chart-title-wrap">
+        <text class="ck-chart-icon">📄</text>
+        <text class="ck-chart-title">申请理由</text>
+      </view>
+      <text class="wb-reason-text">{{submitted.reason}}</text>
+    </view>
+
+    <view class="ck-card" wx:if="{{submitted.attachments.length}}">
+      <view class="ck-chart-title-wrap">
+        <text class="ck-chart-icon">📎</text>
+        <text class="ck-chart-title">导师签字同意书（{{submitted.attachments.length}}）</text>
+      </view>
+      <view class="ck-rec-list">
+        <view class="ck-rec-item" wx:for="{{submitted.attachments}}" wx:key="idx" wx:for-index="aIdx"
+              bindtap="previewAttachment" data-idx="{{aIdx}}">
+          <van-icon name="{{item.isFile ? 'description' : 'photo-o'}}" size="18px" color="#0A7BB8" />
+          <text class="ck-rec-text">{{item.fileName}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="wb-poll-tip">
+      <text class="wb-poll-dot"></text>
+      <text>正在等待管理员审核，结果自动刷新中…</text>
+    </view>
+
+    <!-- 模拟审核通过：仅开发/体验版显示，便于本地演示 -->
+    <view class="wb-submit-bar" wx:if="{{isDevEnv}}">
+      <button class="wb-mock-btn" bindtap="mockApprove">模拟审核通过（开发版）</button>
+    </view>
+  </block>
+
+  <!-- ════════ 模式 B2：已驳回（mode=rejected，state=2） ════════ -->
+  <block wx:if="{{mode === 'rejected'}}">
+    <view class="ck-card ck-head">
+      <view class="ck-head-hd">
+        <text class="ck-head-icon">🪑</text>
+        <text class="ck-head-title">我的工位</text>
+        <view class="ck-badge {{statusCls}}">{{statusText}}</view>
+      </view>
+      <text class="ck-head-sub">{{submitted.group}}</text>
+      <view class="ck-head-rows">
+        <view class="ck-row">
+          <text class="ck-row-key">工位</text>
+          <text class="ck-row-val">{{submitted.seat}}</text>
+        </view>
+        <view class="ck-row">
+          <text class="ck-row-key">使用期限</text>
+          <text class="ck-row-val">{{submitted.startDate}} 至 {{submitted.endDate}}</text>
+        </view>
+        <view class="ck-row">
+          <text class="ck-row-key">提交时间</text>
+          <text class="ck-row-val">{{submitted.submitTime}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="ck-card">
+      <view class="ck-chart-title-wrap">
+        <text class="ck-chart-icon">⚠️</text>
+        <text class="ck-chart-title">驳回原因</text>
+      </view>
+      <text class="wb-reason-text wb-reject-text">{{rejectReason || '管理员未填写驳回原因'}}</text>
+    </view>
+
+    <view class="wb-submit-bar">
+      <button class="wb-submit-btn" bindtap="reapply">重新申请</button>
+    </view>
+  </block>
+
+  <!-- ════════ 模式 C：审核通过（mode=approved，原扫码详情） ════════ -->
+  <block wx:if="{{mode === 'approved' && rec}}">
+    <view class="ck-card ck-head">
+      <view class="ck-head-hd">
+        <text class="ck-head-icon">🪑</text>
+        <text class="ck-head-title">我的工位</text>
+        <view class="ck-badge {{statusCls}}">{{statusText}}</view>
+      </view>
+      <text class="ck-head-sub">{{rec.group}}</text>
+      <view class="ck-head-rows">
+        <view class="ck-row">
+          <text class="ck-row-key">工位</text>
+          <text class="ck-row-val">{{rec.seat}}</text>
+        </view>
+        <view class="ck-row">
+          <text class="ck-row-key">有效期至</text>
+          <text class="ck-row-val ck-val-orange">{{rec.endDate}}</text>
+        </view>
+        <view class="ck-row">
+          <text class="ck-row-key">本月出勤</text>
+          <text class="ck-row-val ck-val-green">{{stats.checked}} / {{stats.total}} 天 · {{stats.rate}}%</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="ck-card ck-scan">
+      <view class="ck-scan-title-wrap">
+        <text class="ck-scan-icon">📱</text>
+        <text class="ck-scan-title">扫码打卡</text>
+      </view>
+      <text class="ck-scan-code">{{stationCode}}</text>
+      <text class="ck-scan-tip">将二维码对准工位现场张贴的专属码</text>
+      <button class="ck-scan-btn" bindtap="openScan">
+        <text class="ck-scan-btn-icon">📷</text>
+        <text>扫码打卡</text>
+      </button>
+    </view>
+
+    <view class="ck-card ck-chart">
+      <view class="ck-chart-title-wrap">
+        <text class="ck-chart-icon">📊</text>
+        <text class="ck-chart-title">本月考勤</text>
+      </view>
+      <view class="ck-bars">
+        <view wx:for="{{monthDays}}" wx:key="label"
+              class="ck-bar {{item.checked ? 'on' : ''}}" style="{{item.hStyle}}"></view>
+      </view>
+      <view class="ck-axis">
+        <text class="ck-axis-label">1</text>
+        <text class="ck-axis-label ck-axis-mid">15</text>
+        <text class="ck-axis-label">{{stats.total}}/31</text>
+      </view>
+    </view>
+
+    <view class="ck-card" wx:if="{{checkIns.length}}">
+      <view class="ck-chart-title-wrap">
+        <text class="ck-chart-icon">🕐</text>
+        <text class="ck-chart-title">打卡记录</text>
+      </view>
+      <view class="ck-rec-list">
+        <view class="ck-rec-item" wx:for="{{checkIns}}" wx:key="index">
+          <van-icon name="clock-o" size="18px" color="#0D86BE" />
+          <text class="ck-rec-text">{{item.time}} · 扫码打卡</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="ck-card" wx:if="{{attachments.length}}">
+      <view class="ck-chart-title-wrap">
+        <text class="ck-chart-icon">📎</text>
+        <text class="ck-chart-title">导师签字同意书</text>
+      </view>
+      <view class="ck-rec-list">
+        <view class="ck-rec-item" wx:for="{{attachments}}" wx:key="idx"
+              bindtap="previewAttachment" data-idx="{{item.idx}}">
+          <van-icon name="{{item.isFile ? 'description' : 'photo-o'}}" size="18px" color="#0A7BB8" />
+          <text class="ck-rec-text">{{item.fileName}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 已通过 → 去打卡（扫码打卡） -->
+    <view class="wb-submit-bar">
+      <button class="wb-submit-btn" bindtap="goCheckIn">去打卡</button>
+    </view>
+
+    <view style="height: 48rpx;"></view>
+  </block>
+
+  <!-- ════════ 开发版/体验版专属：实验工位申请数据重置（放在页面最下方） ════════ -->
+  <view wx:if="{{isDevEnv}}" class="ck-reset">
+    <view class="ck-reset-btn" hover-class="ck-reset-btn--hover" bindtap="onResetWorkbench">
+      <text class="ck-reset-ic">⟲</text>
+      <text class="ck-reset-t">重置实验工位</text>
+    </view>
+    <text class="ck-reset-tip">仅开发/体验版可见。点击后清空实验工位申请记录与表单草稿，下次进入实验工位将从第一步（申请）开始。</text>
+  </view>
+
+  <!-- ════════ 提交二次确认弹窗（apply 模式） ════════ -->
+  <view class="wb-modal-mask" wx:if="{{showConfirm}}" bindtap="cancelConfirm">
+    <view class="wb-modal" catchtap="noop">
+      <view class="wb-modal-title">确认提交</view>
+      <view class="wb-modal-content">
+        <view class="wb-modal-row">
+          <text class="wb-modal-key">课题组</text>
+          <text class="wb-modal-val">{{form.group}}</text>
+        </view>
+        <view class="wb-modal-row">
+          <text class="wb-modal-key">工位</text>
+          <text class="wb-modal-val">{{form.seat || '未选择'}}</text>
+        </view>
+        <view class="wb-modal-row">
+          <text class="wb-modal-key">使用期限</text>
+          <text class="wb-modal-val">{{form.startDate}} 至 {{form.endDate}}</text>
+        </view>
+        <view class="wb-modal-note">提交后进入管理员审核，请确认信息真实有效。</view>
+      </view>
+      <view class="wb-modal-actions">
+        <view class="wb-modal-btn wb-modal-cancel" bindtap="cancelConfirm">取消</view>
+        <view class="wb-modal-btn wb-modal-ok" bindtap="confirmSubmit">确认提交</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ════════ 课题组 / 工位 选择：底部弹起（样式与修改上机记录选人一致） ════════
+       picker.mode 区分：team = 选课题组 / seat = 选工位；常驻 DOM，靠 class 做上滑动画 -->
+  <view class="wb-sheet-mask {{picker.show ? 'wb-sheet-mask--on' : ''}}"
+        bindtap="closePicker" catch:touchmove="noop"></view>
+
+  <view class="wb-sheet {{picker.show ? 'wb-sheet--on' : ''}}" catch:touchmove="noop">
+    <view class="wb-sheet-hd">
+      <text class="wb-sheet-t">{{picker.mode === 'seat' ? '选择工位' : '选择课题组'}}</text>
+      <view class="wb-sheet-x" hover-class="wb-sheet-x--hover" bindtap="closePicker">✕</view>
+    </view>
+
+    <view class="wb-search">
+      <text class="wb-search-ic">🔍</text>
+      <input
+        class="wb-search-input"
+        placeholder="{{picker.mode === 'seat' ? '搜索工位 / 编号' : '搜索课题组 / 拼音首字母'}}"
+        value="{{picker.kw}}"
+        bindinput="onPickerKw"
+        confirm-type="search"
+      />
+    </view>
+
+    <scroll-view class="wb-sheet-bd" scroll-y>
+      <view
+        wx:for="{{picker.list}}"
+        wx:key="idx"
+        class="wb-opt {{item.checked ? 'wb-opt--on' : ''}}"
+        data-index="{{item.idx}}"
+        hover-class="wb-opt--hover"
+        bindtap="onPickerItem"
+      >
+        <view class="wb-opt-av" style="background: {{item.bg}}">{{item.avatar}}</view>
+        <view class="wb-opt-b">
+          <text class="wb-opt-n">{{item.name}}</text>
+          <text wx:if="{{item.sub}}" class="wb-opt-l">{{item.sub}}</text>
+        </view>
+        <van-icon wx:if="{{item.checked}}" class="wb-opt-ck" name="success" size="18px" color="#0A7BB8" />
+      </view>
+      <view wx:if="{{!picker.list.length}}" class="wb-empty">无匹配结果</view>
+    </scroll-view>
+  </view>
+
+</view>

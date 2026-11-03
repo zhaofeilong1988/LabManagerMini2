@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "值日管理",
+  "navigationBarBackgroundColor": "#0A7BB8",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#F5FAFD",
+  "enablePullDownRefresh": true
+}

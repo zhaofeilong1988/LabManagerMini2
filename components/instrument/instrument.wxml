@@ -1,2 +1,104 @@
-<!--components/instrument/instrument.wxml-->
-<text>components/instrument/instrument.wxml</text>
+<!-- components/instrument/instrument.wxml -->
+<view class="ins-page">
+  <scroll-view
+    scroll-y
+    class="ins-scroll"
+    enhanced
+    scroll-with-animation
+    show-scrollbar="{{false}}"
+    scroll-top="{{scrollTop}}"
+    bindscroll="onScroll"
+  >
+
+    <!-- 搜索框 -->
+    <view class="ins-search">
+      <van-search
+        value="{{keyword}}"
+        placeholder="搜索仪器 / 单位 / 机构"
+        shape="round"
+        custom-class="ins-search-box"
+        bind:change="onSearch"
+      />
+    </view>
+
+    <!-- 仪器列表 -->
+    <view class="ins-list">
+      <view
+        class="ins-card"
+        wx:for="{{filtered}}"
+        wx:key="id"
+        bindtap="goDetail"
+        data-id="{{item.id}}"
+      >
+        <!-- 顶部：仪器名称 -->
+        <view class="ins-hd">
+          <view class="ins-name">{{item.name}}</view>
+        </view>
+
+        <!-- 中部：缩略图 + 标记/状态 + 预约按钮 -->
+        <view class="ins-mid">
+          <view class="ins-thumb">
+            <image
+              wx:if="{{item.imgOk}}"
+              class="ins-img"
+              src="{{item.image}}"
+              mode="aspectFill"
+              lazy-load
+              binderror="onImgErr"
+              data-id="{{item.id}}"
+            />
+            <text wx:else class="ins-thumb-bg">{{item.icon}}</text>
+          </view>
+
+          <view class="ins-info">
+            <view wx:if="{{item.needBook}}" class="ins-flag">
+              <view class="ins-flag-ic ins-flag-ic--book">📅</view>
+              <text class="ins-flag-t">需预约</text>
+            </view>
+            <view class="ins-flag">
+              <view class="ins-flag-ic {{item.needApprove ? 'ins-flag-ic--warn' : 'ins-flag-ic--ok'}}">{{item.needApprove ? '!' : '✓'}}</view>
+              <text class="ins-flag-t">{{item.needApprove ? '需审批' : '无需审批'}}</text>
+            </view>
+            <view class="ins-status">
+              <view class="ins-status-ic">⏻</view>
+              <text class="ins-status-t">{{item.statusText}}</text>
+            </view>
+          </view>
+
+          <!-- 预约按钮：直接进入该仪器的预约时段选择页 -->
+          <view
+            class="ins-book"
+            hover-class="ins-book--hover"
+            hover-stay-time="80"
+            catchtap="goBook"
+            data-id="{{item.id}}"
+          >
+            <van-icon name="calendar-o" size="15px" color="#FFFFFF" />
+            <text class="ins-book-t">预约</text>
+          </view>
+        </view>
+
+        <!-- 底部：所在单位 + 机构名称 -->
+        <view class="ins-foot">
+          <text class="ins-foot-l">{{item.company}}</text>
+          <text class="ins-foot-r">{{item.organName}}</text>
+        </view>
+      </view>
+
+      <view wx:if="{{filtered.length === 0}}" class="empty-hint">未找到相关仪器</view>
+    </view>
+
+    <view class="bottom-safe"></view>
+  </scroll-view>
+
+  <!-- 悬浮「回到顶部」按钮：滚动超过 200px 后才显示 -->
+  <view
+    wx:if="{{showBackTop}}"
+    class="ins-back-top"
+    hover-class="ins-back-top--hover"
+    hover-stay-time="80"
+    catchtap="onBackTop"
+  >
+    <van-icon name="arrow-up" size="22px" color="#0A7BB8" />
+  </view>
+</view>

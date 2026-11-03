@@ -1,0 +1,89 @@
+<!-- pages/scan-device/index.wxml -->
+<view class="sd-page">
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="sd-loading">
+    <view class="sd-loading-spin"></view>
+    <text class="sd-loading-t">正在获取设备状态…</text>
+  </view>
+
+  <!-- 设备信息 -->
+  <block wx:elif="{{device}}">
+    <view class="sd-content">
+
+      <!-- 设备头部 -->
+      <view class="sd-hero">
+        <view class="sd-ic">{{device.icon}}</view>
+        <view class="sd-hero-b">
+          <view class="sd-name">{{device.name}}</view>
+          <view class="sd-lab">{{device.lab}}</view>
+        </view>
+      </view>
+
+      <!-- 开机状态条 -->
+      <view class="sd-status {{device.poweredOn ? 'sd-status--on' : 'sd-status--off'}}">
+        <view class="sd-status-l">
+          <view class="sd-dot"></view>
+          <text class="sd-status-t">{{device.poweredOn ? '已开机' : '未开机'}}</text>
+        </view>
+        <text wx:if="{{device.poweredOn}}" class="sd-status-time">开机时间 {{device.powerOnTime}}</text>
+        <text wx:else class="sd-status-tip">开机后即可上机使用</text>
+      </view>
+
+      <!-- 设备信息列表 -->
+      <view class="sd-card">
+        <view class="sd-row">
+          <text class="k">设备名称</text>
+          <text class="v">{{device.name}}</text>
+        </view>
+        <view class="sd-row">
+          <text class="k">管理员</text>
+          <text class="v">{{device.manager}}</text>
+        </view>
+        <view class="sd-row">
+          <text class="k">设备预约</text>
+          <text class="v">{{device.bookText}}</text>
+        </view>
+        <view class="sd-row">
+          <text class="k">最近预约时间</text>
+          <text class="v">{{device.lastBookText}}</text>
+        </view>
+        <view class="sd-row">
+          <text class="k">控制方式</text>
+          <text class="v">{{device.controlText}}</text>
+        </view>
+        <view class="sd-row">
+          <text class="k">设备编号</text>
+          <text class="v sd-no">{{device.deviceNo}}</text>
+        </view>
+        <view class="sd-row">
+          <text class="k">当前状态</text>
+          <text class="v {{device.poweredOn ? 'sd-v-ok' : 'sd-v-off'}}">{{device.poweredOn ? '开机' : '未开机'}}</text>
+        </view>
+        <view class="sd-row">
+          <text class="k">开机时间</text>
+          <text class="v">{{device.powerOnTime || '--'}}</text>
+        </view>
+      </view>
+
+      <view class="sd-hint">设备编号即机身二维码信息，下次扫码将自动识别当前状态。</view>
+    </view>
+
+    <!-- 未开机：底部开机按钮 -->
+    <view wx:if="{{!device.poweredOn}}" class="sd-cta">
+      <view
+        class="sd-btn {{powering ? 'sd-btn--disabled' : ''}}"
+        hover-class="sd-btn--hover"
+        hover-stay-time="80"
+        bindtap="onPowerOn"
+      >{{powering ? '正在开机…' : '开机'}}</view>
+    </view>
+  </block>
+
+  <!-- 未找到设备 -->
+  <view wx:else class="sd-miss">
+    <view class="sd-miss-ic">⚠️</view>
+    <text class="sd-miss-t">未找到对应设备</text>
+    <view class="sd-miss-btn" bindtap="goBack">返回</view>
+  </view>
+</view>

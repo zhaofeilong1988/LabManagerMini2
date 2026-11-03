@@ -1,0 +1,203 @@
+/* pages/booking-approval/index.wxss —— 预约审批列表
+   卡片风格与「我的预约」(pages/my-booking) 保持一致 */
+.ba-page {
+  --ba-primary: #0A7BB8;
+  --ba-accent: #33ADDE;
+  --ba-bg: #F5FAFD;
+  --ba-surface: #FFFFFF;
+  --ba-text: #161C20;
+  --ba-hint: #6E7F8A;
+  --ba-ok: #0D86BE;
+  --ba-warn: #E65100;
+  --ba-err: #BA1A1A;
+  min-height: 100vh;
+  background: var(--ba-bg);
+  box-sizing: border-box;
+}
+
+.ba-list {
+  padding: 24rpx 24rpx 40rpx;
+}
+
+/* ── 卡片 ── */
+.ba-card {
+  background: var(--ba-surface);
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+.ba-card--hover {
+  box-shadow: 0 6rpx 20rpx rgba(10, 123, 184, 0.14);
+}
+
+/* 头部：图标 + 名称 */
+.ba-hd {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16rpx;
+}
+.ba-ic {
+  width: 84rpx;
+  height: 84rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #DBEFF9, #C9E9FA);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.ba-b {
+  flex: 1;
+  min-width: 0;
+}
+.ba-n {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--ba-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ba-s {
+  display: block;
+  font-size: 22rpx;
+  color: var(--ba-hint);
+  margin-top: 4rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 状态徽标 */
+.ba-tag {
+  flex-shrink: 0;
+  font-size: 22rpx;
+  font-weight: 600;
+  padding: 6rpx 18rpx;
+  border-radius: 18rpx;
+  white-space: nowrap;
+}
+.ba-st--pending   { background: #EAF2F7; color: #365B73; }
+.ba-st--approved  { background: #E8F5E9; color: #2E7D32; }
+.ba-st--noshow    { background: #FFF3E0; color: var(--ba-warn); }
+.ba-st--off       { background: #EDE7F6; color: #5E35B1; }
+.ba-st--expired   { background: #ECEFF1; color: #546E7A; }
+.ba-st--rejected  { background: #FCE8E6; color: var(--ba-err); }
+.ba-st--cancelled { background: #F1F3F5; color: #78909C; }
+
+/* ── 信息区（浅蓝底） ── */
+.ba-rows {
+  background: #EFF6FB;
+  border-radius: 14rpx;
+  padding: 4rpx 22rpx;
+  margin-top: 20rpx;
+}
+.ba-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20rpx;
+  padding: 14rpx 0;
+  font-size: 26rpx;
+  border-bottom: 1rpx solid #E1EBF2;
+}
+.ba-row:last-child { border-bottom: none; }
+.ba-row .k { color: var(--ba-hint); flex-shrink: 0; }
+.ba-row .v {
+  color: var(--ba-text);
+  font-weight: 600;
+  text-align: right;
+  line-height: 1.5;
+}
+.ba-v-wrap {
+  flex: 1;
+  min-width: 0;
+  word-break: break-all;
+}
+
+/* ── 底部：预计费用 + 操作 ── */
+.ba-ft {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12rpx;
+  margin-top: 20rpx;
+}
+.ba-pay {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 10rpx;
+  flex: 1;
+  min-width: 0;
+}
+.ba-pay-k {
+  font-size: 22rpx;
+  color: var(--ba-hint);
+  flex-shrink: 0;
+}
+.ba-pay-v {
+  font-size: 38rpx;
+  font-weight: 800;
+  color: var(--ba-primary);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 操作按钮 */
+.ba-links {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14rpx;
+  flex-shrink: 0;
+}
+.ba-btn {
+  font-size: 22rpx;
+  font-weight: 600;
+  padding: 12rpx 24rpx;
+  border-radius: 24rpx;
+  white-space: nowrap;
+}
+.ba-btn-plain {
+  color: var(--ba-hint);
+  background: #F5FAFD;
+  border: 1rpx solid #D5E4ED;
+}
+.ba-btn-plain--hover {
+  background: #E7EFF5;
+}
+.ba-btn-primary {
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #33ADDE, #0A7BB8);
+  box-shadow: 0 4rpx 12rpx rgba(10, 123, 184, 0.24);
+}
+.ba-btn-primary--hover {
+  opacity: 0.88;
+}
+
+/* ── 空态 / 加载中 / 加载失败 ── */
+.ba-empty {
+  padding: 80rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+}
+.ba-empty-t {
+  font-size: 26rpx;
+  color: var(--ba-hint);
+  line-height: 1.6;
+  text-align: center;
+  white-space: pre-wrap;
+}
+

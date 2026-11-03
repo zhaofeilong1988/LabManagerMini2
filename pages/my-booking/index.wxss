@@ -1,0 +1,277 @@
+/* pages/my-booking/index.wxss */
+
+.mb-page {
+  --mb-primary: #0A7BB8;
+  --mb-accent: #33ADDE;
+  --mb-bg: #F5FAFD;
+  --mb-surface: #FFFFFF;
+  --mb-border: #D5E4ED;
+  --mb-text: #161C20;
+  --mb-sub: #41484D;
+  --mb-hint: #6E7F8A;
+  --mb-ok: #0D86BE;
+  --mb-warn: #E65100;
+  --mb-err: #BA1A1A;
+  --mb-grad: linear-gradient(135deg, #0A7BB8 0%, #33ADDE 100%);
+  min-height: 100vh;
+  background: var(--mb-bg);
+  box-sizing: border-box;
+}
+
+/* ── 页签 ── */
+.mb-tabs {
+  display: flex;
+  flex-direction: row;
+  gap: 16rpx;
+  padding: 24rpx 24rpx 8rpx;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--mb-bg);
+}
+
+.mb-tab {
+  flex: 1;
+  text-align: center;
+  padding: 18rpx 0;
+  font-size: 26rpx;
+  color: var(--mb-hint);
+  background: var(--mb-surface);
+  border-radius: 30rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.mb-tab.on {
+  background: var(--mb-grad);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.mb-cnt {
+  font-size: 20rpx;
+  background: #EEF4F8;
+  color: var(--mb-hint);
+  border-radius: 16rpx;
+  padding: 0 12rpx;
+  margin-left: 8rpx;
+}
+
+.mb-tab.on .mb-cnt {
+  background: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+}
+
+/* ── 列表 ── */
+.mb-list {
+  padding: 16rpx 24rpx 24rpx;
+}
+
+.mb-card {
+  background: var(--mb-surface);
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.mb-hd {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16rpx;
+}
+
+/* 仪器图标 + 名称区：整块可点击进仪器详情页 */
+.mb-inst {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16rpx;
+  border-radius: 12rpx;
+}
+.mb-inst--hover {
+  background: rgba(10, 123, 184, 0.06);
+}
+
+.mb-ic {
+  width: 84rpx;
+  height: 84rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #DBEFF9, #C9E9FA);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  flex-shrink: 0;
+}
+
+.mb-b {
+  flex: 1;
+  min-width: 0;
+}
+
+.mb-n {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--mb-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mb-s {
+  display: block;
+  font-size: 22rpx;
+  color: var(--mb-hint);
+  margin-top: 4rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mb-tag {
+  flex-shrink: 0;
+  font-size: 22rpx;
+  font-weight: 600;
+  padding: 6rpx 18rpx;
+  border-radius: 18rpx;
+  white-space: nowrap;
+}
+
+.mb-tag-warn { background: #FFF3E0; color: var(--mb-warn); }
+.mb-tag-ok   { background: #E1F2FA; color: var(--mb-ok); }
+.mb-tag-err  { background: #FCE7E7; color: var(--mb-err); }
+.mb-tag-gray { background: #F5FAFD; color: var(--mb-hint); }
+
+/* 时间信息区 */
+.mb-rows {
+  background: #EFF6FB;
+  border-radius: 14rpx;
+  padding: 4rpx 22rpx;
+  margin-top: 20rpx;
+}
+
+.mb-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14rpx 0;
+  font-size: 26rpx;
+  border-bottom: 1rpx solid #E1EBF2;
+}
+
+.mb-row:last-child { border-bottom: none; }
+
+.mb-row .k { color: var(--mb-hint); flex-shrink: 0; }
+.mb-row .v { color: var(--mb-text); font-weight: 600; text-align: right; flex: 1; }
+
+/* 卡片底部操作 */
+.mb-ft {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12rpx;
+  margin-top: 20rpx;
+}
+
+.mb-sub {
+  font-size: 20rpx;
+  color: var(--mb-hint);
+}
+
+.mb-links {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14rpx;
+}
+
+.mb-btn {
+  font-size: 22rpx;
+  font-weight: 600;
+  padding: 10rpx 24rpx;
+  border-radius: 24rpx;
+  white-space: nowrap;
+}
+
+.mb-btn-danger {
+  border: 2rpx solid #F0A5A5;
+  color: var(--mb-err);
+  background: #ffffff;
+}
+
+.mb-btn-plain {
+  border: 2rpx solid var(--mb-accent);
+  color: var(--mb-accent);
+  background: #ffffff;
+}
+
+/* 待审核状态下的仪器扫码按钮：置灰、不可点击（无 catchtap） */
+.mb-btn-plain--disabled {
+  border-color: #C8D4DC;
+  color: #A0B0BB;
+  background: #F5F8FA;
+}
+
+/* ── 空状态 ── */
+.mb-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 40rpx;
+  color: var(--mb-hint);
+}
+
+.mb-empty-ic { font-size: 80rpx; margin-bottom: 20rpx; }
+
+.mb-empty-t {
+  font-size: 26rpx;
+  text-align: center;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+
+.mb-empty-go {
+  margin-top: 32rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--mb-grad);
+  border-radius: 32rpx;
+  padding: 18rpx 56rpx;
+}
+
+.mb-bottom-safe {
+  height: env(safe-area-inset-bottom);
+}
+
+/* ── 顶部加载条（进行中 tab 拉接口时显示） ── */
+.mb-loading {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+  padding: 24rpx 24rpx 8rpx;
+  font-size: 26rpx;
+  color: var(--mb-hint);
+}
+.mb-load-spin {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  border: 4rpx solid #DBEFF9;
+  border-top-color: #0A7BB8;
+  animation: mb-spin 0.9s linear infinite;
+}
+.mb-load-t {
+  font-size: 24rpx;
+}
+@keyframes mb-spin {
+  to { transform: rotate(360deg); }
+}

@@ -3,10 +3,10 @@
 
 <!-- 内容区域 -->
 <view class="page-view">
-  <home      wx:if="{{page == 'home'}}"      bind:switchTab="onSwitchTab"></home>
-  <instrument wx:elif="{{page == 'instrument'}}"></instrument>
-  <training   wx:elif="{{page == 'training'}}"></training>
-  <profile    wx:elif="{{page == 'profile'}}"></profile>
+  <home      wx:if="{{page == 'home'}}"      id="home"    bind:switchTab="onSwitchTab"></home>
+  <instrument wx:elif="{{page == 'instrument'}}" id="instrument"></instrument>
+  <training   wx:elif="{{page == 'training'}}"   id="training"></training>
+  <profile    wx:elif="{{page == 'profile'}}"    id="profile"></profile>
 </view>
 
 <!-- 自定义 Toolbar -->
@@ -16,15 +16,16 @@
         bindtap="toolbarClick" data-page="home">
     <view class="toolbar-indicator"></view>
     <van-icon name="wap-home{{page == 'home' ? '' : '-o'}}" size="24px"
-              color="{{page == 'home' ? '#03A9F4' : '#8A9BB0'}}" />
+              color="{{page == 'home' ? '#33ADDE' : '#6E7F8A'}}" />
     <text class="toolbar-label">首页</text>
   </view>
 
   <view class="toolbar-button {{page == 'instrument' ? 'active' : ''}}"
         bindtap="toolbarClick" data-page="instrument">
     <view class="toolbar-indicator"></view>
-    <van-icon name="apps{{page == 'instrument' ? '' : '-o'}}" size="24px"
-          color="{{page == 'instrument' ? '#03A9F4' : '#8A9BB0'}}" />
+    <!-- vant 图标库仅有 apps-o（无实心 apps），选中态以颜色区分，避免图标缺失塌陷导致错位 -->
+    <van-icon name="apps-o" size="24px"
+          color="{{page == 'instrument' ? '#33ADDE' : '#6E7F8A'}}" />
     <text class="toolbar-label">仪器</text>
   </view>
 
@@ -32,7 +33,7 @@
         bindtap="toolbarClick" data-page="training">
     <view class="toolbar-indicator"></view>
     <van-icon name="records{{page == 'training' ? '' : '-o'}}" size="24px"
-              color="{{page == 'training' ? '#03A9F4' : '#8A9BB0'}}" />
+              color="{{page == 'training' ? '#33ADDE' : '#6E7F8A'}}" />
     <text class="toolbar-label">培训</text>
   </view>
 
@@ -40,7 +41,7 @@
         bindtap="toolbarClick" data-page="profile">
     <view class="toolbar-indicator"></view>
     <van-icon name="contact{{page == 'profile' ? '' : '-o'}}" size="24px"
-              color="{{page == 'profile' ? '#03A9F4' : '#8A9BB0'}}" />
+              color="{{page == 'profile' ? '#33ADDE' : '#6E7F8A'}}" />
     <text class="toolbar-label">我的</text>
   </view>
 

@@ -1,0 +1,435 @@
+/* pages/instrument-log-edit/index.wxss —— 修改上机记录
+   卡片分区 + 蓝色主色：上机信息 / 金额明细 / 实际支付 / 底部取消·修改 */
+page {
+  background: #F5FAFD;
+}
+.le-page {
+  box-sizing: border-box;
+  padding: 24rpx 24rpx 200rpx;
+}
+
+/* ── 卡片 ── */
+.le-card {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 24rpx 28rpx 8rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+.le-card-t {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14rpx;
+  margin-bottom: 12rpx;
+}
+.le-dot {
+  width: 8rpx;
+  height: 26rpx;
+  border-radius: 4rpx;
+  background: linear-gradient(180deg, #0A7BB8, #44B3E8);
+}
+.le-card-tt {
+  font-size: 29rpx;
+  font-weight: 700;
+  color: #11243A;
+}
+
+/* ── 上机信息行 ── */
+.le-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20rpx;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #F0F4F8;
+}
+.le-row--last {
+  border-bottom: none;
+}
+.le-k {
+  flex-shrink: 0;
+  width: 150rpx;
+  font-size: 26rpx;
+  color: #6B7785;
+}
+.le-v {
+  flex: 1;
+  min-width: 0;
+  text-align: right;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #11243A;
+  word-break: break-all;
+}
+.le-v--time {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #3D5263;
+}
+/* 结束时间<｜hy_place▁holder▁no▁813｜>：时间一行 + 时长一行，都靠右 */
+.le-vbox {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6rpx;
+}
+.le-dur {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #4CAF50;
+}
+
+/* 修改用户按钮 */
+.le-edit {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6rpx;
+  padding: 8rpx 18rpx;
+  border-radius: 24rpx;
+  background: #EFF6FB;
+  border: 1rpx solid #D5E4ED;
+}
+.le-edit--hover {
+  background: #E1EEF7;
+}
+.le-edit-t {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #0A7BB8;
+  line-height: 1;
+}
+
+/* ── 金额明细：单价 × 数量 = 金额（可添加多行） ── */
+.le-calcs {
+  padding: 8rpx 0 16rpx;
+  border-bottom: 1rpx solid #F0F4F8;
+}
+.le-calc {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 12rpx;
+  padding: 8rpx 0 0;
+}
+/* 行间加号：与 le-calc 同列宽结构，+ 落在「数量」列下方 */
+.le-plus-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+  padding: 6rpx 0;
+}
+/* 占位运算符：保留 × / = 的字宽以对齐列宽，但整块隐藏不显示
+   （用 .le-plus-wrap 后代选择器，避免被后面的 .le-op 规则覆盖） */
+.le-plus-wrap .le-op {
+  visibility: hidden;
+  height: auto;
+  line-height: 1;
+}
+.le-field--center {
+  align-items: center;
+}
+.le-plus {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #8A99A8;
+  line-height: 1;
+}
+/* 行尾删除：垃圾桶图标（van-icon delete-o），点击态整体变淡 */
+.le-del {
+  flex-shrink: 0;
+  width: 48rpx;
+  height: 64rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.le-del--hover {
+  opacity: 0.5;
+}
+/* 标题右侧「添加」按钮 */
+.le-add {
+  margin-left: auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6rpx;
+  height: 52rpx;
+  padding: 0 22rpx;
+  border: 1rpx solid #CFE0EC;
+  border-radius: 26rpx;
+  background: #F7FBFD;
+}
+.le-add--hover {
+  background: #E9F2F8;
+}
+.le-add-t {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #0A7BB8;
+  line-height: 1;
+}
+.le-field {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+/* 输入框内的占位提示（单价 / 数量）：比输入值更浅 */
+.le-ph {
+  color: #A9B4BF;
+  font-weight: 400;
+}
+.le-in {
+  box-sizing: border-box;
+  height: 64rpx;
+  line-height: 64rpx;
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #11243A;
+  background: #F5F8FB;
+  border: 1rpx solid #DDE6EE;
+  border-radius: 12rpx;
+  padding: 0 10rpx;
+}
+.le-out {
+  height: 64rpx;
+  line-height: 64rpx;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #0A7BB8;
+}
+.le-op {
+  flex-shrink: 0;
+  height: 64rpx;
+  line-height: 64rpx;
+  font-size: 28rpx;
+  color: #8A99A8;
+}
+
+/* 罚金 / 折扣 */
+.le-lines {
+  padding: 20rpx 0 8rpx;
+}
+.le-line {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16rpx;
+  padding: 12rpx 0;
+}
+.le-line-k {
+  flex-shrink: 0;
+  width: 150rpx;
+  font-size: 26rpx;
+  color: #6B7785;
+}
+.le-in--line {
+  flex: 1;
+  min-width: 0;
+  max-width: 280rpx;
+}
+.le-unit {
+  font-size: 26rpx;
+  color: #8A99A8;
+}
+
+/* ── 实际支付（浅蓝底描边卡，金额用主色强调，其余弱化） ── */
+.le-pay {
+  border-radius: 20rpx;
+  padding: 26rpx 28rpx;
+  background: linear-gradient(180deg, #FFFFFF, #F7FBFD);
+  border: 1rpx solid #DCEBF5;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+.le-pay-row {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.le-pay-k {
+  font-size: 26rpx;
+  color: #6B7785;
+}
+.le-pay-v {
+  font-size: 44rpx;
+  font-weight: 800;
+  color: #0A7BB8;
+  line-height: 1.2;
+}
+.le-pay-formula {
+  margin-top: 14rpx;
+  padding-top: 14rpx;
+  border-top: 1rpx solid #EDF1F5;
+}
+.le-pay-txt {
+  font-size: 22rpx;
+  color: #8A99A8;
+  line-height: 1.7;
+  word-break: break-all;
+}
+.le-pay-total {
+  color: #0A7BB8;
+  font-weight: 700;
+}
+
+/* ── 选择上机用户：底部弹起 ── */
+.le-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 120;
+  background: rgba(15, 28, 38, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+.le-mask--on {
+  opacity: 1;
+  visibility: visible;
+}
+.le-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 121;
+  background: #ffffff;
+  border-radius: 24rpx 24rpx 0 0;
+  box-shadow: 0 -4rpx 20rpx rgba(20, 40, 56, 0.16);
+  transform: translateY(100%);
+  transition: transform 0.26s cubic-bezier(0.32, 0.72, 0, 1);
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+}
+.le-sheet--on {
+  transform: translateY(0);
+}
+.le-sheet-hd {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 96rpx;
+  border-bottom: 1rpx solid #EDF1F5;
+  position: relative;
+}
+.le-sheet-t {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #161C20;
+}
+.le-sheet-x {
+  position: absolute;
+  right: 24rpx;
+  font-size: 30rpx;
+  color: #8A99A8;
+  padding: 8rpx;
+}
+.le-sheet-x--hover {
+  opacity: 0.6;
+}
+.le-sheet-bd {
+  max-height: 720rpx;
+}
+.le-opt {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20rpx;
+  padding: 22rpx 32rpx;
+  border-bottom: 1rpx solid #F3F6F9;
+}
+.le-opt:last-child {
+  border-bottom: none;
+}
+.le-opt--on {
+  background: #EFF6FB;
+}
+.le-opt--hover {
+  background: #F5FAFD;
+}
+.le-opt-av {
+  flex-shrink: 0;
+  width: 76rpx;
+  height: 76rpx;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 30rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.le-opt-b {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.le-opt-n {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #161C20;
+}
+.le-opt-l {
+  font-size: 24rpx;
+  color: #6E7F8A;
+  margin-top: 6rpx;
+}
+.le-opt-ck {
+  flex-shrink: 0;
+}
+
+/* ── 底部按钮 ── */
+.le-spacer {
+  height: 40rpx;
+}
+.le-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: row;
+  gap: 30rpx;
+  padding: 20rpx 32rpx calc(20rpx + env(safe-area-inset-bottom));
+  background: #ffffff;
+  border-top: 1rpx solid #EDF1F5;
+}
+.le-btn {
+  flex: 1;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+.le-btn--cancel {
+  background: #F5F6F7;
+  border: 1rpx solid #E2E6EA;
+  color: #161C20;
+}
+.le-btn--ok {
+  background: linear-gradient(135deg, #33ADDE, #0A7BB8);
+  color: #ffffff;
+  box-shadow: 0 8rpx 20rpx rgba(27, 82, 112, 0.24);
+}
+.le-btn--hover {
+  opacity: 0.85;
+}

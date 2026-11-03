@@ -2,55 +2,66 @@
 
 /* ==========================================
    MD3 Light Scheme
-   Source Color: #03A9F4 (Light Blue 500)
+   Source Color: #33ADDE（天蓝 Sky Blue）
+   渐变主色：#0A7BB8 → #33ADDE
    ========================================== */
    page {
     /* --- Primary --- */
-    --md-primary:                #1B5270;
+    --md-primary:                #0A7BB8;
+    --md-primary-light:          #33ADDE;
     --md-on-primary:             #FFFFFF;
-    --md-primary-container:      #C3E7FF;
-    --md-on-primary-container:   #001E2E;
-    --md-primary-fixed:          #C3E7FF;
-    --md-on-primary-fixed:       #001E2E;
-  
-    /* --- Secondary --- */
-    --md-secondary:              #4A6070;
+    --md-primary-container:      #C9E9FA;
+    --md-on-primary-container:   #06324A;
+    --md-primary-fixed:          #C9E9FA;
+    --md-on-primary-fixed:       #06324A;
+
+    /* --- Secondary（冷蓝灰） --- */
+    --md-secondary:              #4C6673;
     --md-on-secondary:           #FFFFFF;
-    --md-secondary-container:    #CCE5F0;
-    --md-on-secondary-container: #04202D;
-  
-    /* --- Tertiary (紫色调，用于培训/标签) --- */
-    --md-tertiary:               #574B6E;
+    --md-secondary-container:    #D4E6F0;
+    --md-on-secondary-container: #0E1E26;
+
+    /* --- Tertiary（蓝紫色调，用于培训/标签） --- */
+    --md-tertiary:               #5C5A9E;
     --md-on-tertiary:            #FFFFFF;
-    --md-tertiary-container:     #DDD8F0;
-    --md-on-tertiary-container:  #120827;
-  
+    --md-tertiary-container:     #E0DFF8;
+    --md-on-tertiary-container:  #17125A;
+
     /* --- Error --- */
     --md-error:                  #BA1A1A;
     --md-on-error:               #FFFFFF;
     --md-error-container:        #FFDAD6;
     --md-on-error-container:     #410002;
-  
-    /* --- Surface --- */
-    --md-surface:                #F5FAFE;
-    --md-on-surface:             #1A1C1E;
-    --md-surface-variant:        #DCE4EC;
-    --md-on-surface-variant:     #42474E;
-    --md-surface-container-low:  #EFF4F9;
+
+    /* --- Surface（微蓝底） --- */
+    --md-surface:                #F5FAFD;
+    --md-on-surface:             #161C20;
+    --md-surface-variant:        #DCE5EA;
+    --md-on-surface-variant:     #41484D;
+    --md-surface-container-low:  #EEF4F8;
     --md-surface-container:      #FFFFFF;
-    --md-surface-container-high: #E5EDF3;
-  
+    --md-surface-container-high: #E2EAF0;
+
     /* --- Outline --- */
-    --md-outline:                #72787E;
-    --md-outline-variant:        #C2C7CE;
-  
+    --md-outline:                #71797E;
+    --md-outline-variant:        #C2CAD0;
+
+    /* --- 品牌渐变 --- */
+    --grad-primary:      linear-gradient(135deg, #0A7BB8 0%, #33ADDE 100%);
+    --grad-primary-rev:  linear-gradient(135deg, #33ADDE 0%, #0A7BB8 100%);
+    --grad-hero:         linear-gradient(135deg, #0D86BE 0%, #33ADDE 60%, #74CFF2 100%);
+    --grad-soft:         linear-gradient(135deg, #E1F2FA 0%, #C9E9FA 100%);
+
     /* --- 语义化别名（推荐使用这套） --- */
     --color-bg:          var(--md-surface);           /* 页面背景 */
     --color-card:        var(--md-surface-container); /* 卡片背景 */
     --color-divider:     var(--md-outline-variant);   /* 分割线 */
     --color-text-main:   var(--md-on-surface);        /* 主体文字 */
     --color-text-sub:    var(--md-on-surface-variant);/* 说明文字 */
-  
+
+    /* --- 兼容旧别名 --- */
+    --md-background:     var(--md-surface);           /* 旧页面背景引用 */
+
     /* --- 基础设置 --- */
     background-color: var(--md-surface);
     color: var(--md-on-surface);
@@ -58,11 +69,11 @@
     font-size: 28rpx;
     line-height: 1.5;
   }
-  
+
   /* ==========================================
      通用工具类
      ========================================== */
-  
+
   /* 卡片基础样式 */
   .card {
     background: var(--md-surface-container);
@@ -70,14 +81,14 @@
     padding: 24rpx;
     box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
   }
-  
+
   .card--outlined {
     background: var(--md-surface-container);
     border-radius: 24rpx;
     padding: 24rpx;
     border: 2rpx solid var(--md-outline-variant);
   }
-  
+
   /* 按钮 - Filled（Primary） */
   .btn-filled {
     display: inline-flex;
@@ -92,7 +103,7 @@
     font-weight: 500;
     border: none;
   }
-  
+
   /* 按钮 - Tonal（Primary Container） */
   .btn-tonal {
     display: inline-flex;
@@ -107,7 +118,7 @@
     font-weight: 500;
     border: none;
   }
-  
+
   /* 按钮 - Outlined */
   .btn-outlined {
     display: inline-flex;
@@ -122,7 +133,7 @@
     font-weight: 500;
     border: 2rpx solid var(--md-outline);
   }
-  
+
   /* Chip */
   .chip {
     display: inline-flex;
@@ -133,27 +144,27 @@
     font-size: 24rpx;
     font-weight: 500;
   }
-  
+
   .chip--primary {
     background: var(--md-primary-container);
     color: var(--md-on-primary-container);
   }
-  
+
   .chip--secondary {
     background: var(--md-secondary-container);
     color: var(--md-on-secondary-container);
   }
-  
+
   .chip--tertiary {
     background: var(--md-tertiary-container);
     color: var(--md-on-tertiary-container);
   }
-  
+
   .chip--error {
     background: var(--md-error-container);
     color: var(--md-on-error-container);
   }
-  
+
   /* Badge（未读数） */
   .badge {
     display: inline-flex;
@@ -168,14 +179,14 @@
     font-size: 20rpx;
     font-weight: 600;
   }
-  
+
   /* 分割线 */
   .divider {
     height: 1rpx;
     background: var(--md-outline-variant);
     margin: 16rpx 0;
   }
-  
+
   /* 文字层级 */
   .text-title-large  { font-size: 40rpx; font-weight: 400; line-height: 1.4; }
   .text-title-medium { font-size: 32rpx; font-weight: 500; line-height: 1.4; }
@@ -186,9 +197,8 @@
   .text-label-large  { font-size: 28rpx; font-weight: 500; }
   .text-label-medium { font-size: 24rpx; font-weight: 500; }
   .text-label-small  { font-size: 22rpx; font-weight: 500; }
-  
+
   .text-primary     { color: var(--md-primary); }
   .text-secondary   { color: var(--md-secondary); }
   .text-sub         { color: var(--md-on-surface-variant); }
   .text-error       { color: var(--md-error); }
-  

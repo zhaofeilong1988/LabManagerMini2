@@ -1,0 +1,170 @@
+<!-- pages/instrument-log-edit/index.wxml
+     修改上机记录：上机信息(用户可改) / 金额明细(单价 × 数量 + 罚金 - 折扣) /
+                   实际支付 / 底部取消·修改 -->
+<view class="le-page">
+
+  <!-- 上机信息：用户可改（底部弹起选人），时间为只读 -->
+  <view class="le-card">
+    <view class="le-card-t">
+      <text class="le-dot"></text>
+      <text class="le-card-tt">上机信息</text>
+    </view>
+
+    <view class="le-row">
+      <text class="le-k">上机用户</text>
+      <text class="le-v">{{userName || '--'}}</text>
+      <view class="le-edit" hover-class="le-edit--hover" bindtap="onOpenUserPicker">
+        <van-icon name="edit" size="15px" color="#0A7BB8" />
+        <text class="le-edit-t">修改</text>
+      </view>
+    </view>
+
+    <view class="le-row">
+      <text class="le-k">开始时间</text>
+      <text class="le-v le-v--time">{{begin || '--'}}</text>
+    </view>
+
+    <view class="le-row le-row--last">
+      <text class="le-k">结束时间</text>
+      <view class="le-vbox">
+        <text class="le-v le-v--time">{{finish || '--'}}</text>
+        <text wx:if="{{durText}}" class="le-dur">{{durText}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 金额明细：单价 × 数量 = 金额（可添加多行），再加罚金、减折扣 -->
+  <view class="le-card">
+    <view class="le-card-t">
+      <text class="le-dot"></text>
+      <text class="le-card-tt">金额明细</text>
+      <!-- 添加一行明细 -->
+      <view class="le-add" hover-class="le-add--hover" bindtap="onAddItem">
+        <van-icon name="plus" size="13px" color="#0A7BB8" />
+        <text class="le-add-t">添加</text>
+      </view>
+    </view>
+
+    <view class="le-calcs">
+      <block wx:for="{{items}}" wx:key="key">
+        <view class="le-calc">
+          <!-- 单价 / 数量：字段名走输入框内的占位提示，不再显示在框上方 -->
+          <view class="le-field">
+            <input
+              class="le-in"
+              type="digit"
+              value="{{item.unit}}"
+              placeholder="单价"
+              placeholder-class="le-ph"
+              data-i="{{index}}"
+              bindinput="onUnitInput"
+            />
+          </view>
+          <text class="le-op">×</text>
+          <view class="le-field">
+            <input
+              class="le-in"
+              type="digit"
+              value="{{item.qty}}"
+              placeholder="数量"
+              placeholder-class="le-ph"
+              data-i="{{index}}"
+              bindinput="onQtyInput"
+            />
+          </view>
+          <text class="le-op">=</text>
+          <!-- 金额：只显示数值，不再带「金额」字样 -->
+          <view class="le-field">
+            <text class="le-out">{{item.amount}}</text>
+          </view>
+          <!-- 多于一行时可删除该行：用垃圾桶图标（不用 ✕，容易被看成乘号） -->
+          <view
+            wx:if="{{items.length > 1}}"
+            class="le-del"
+            hover-class="le-del--hover"
+            catch:tap="onRemoveItem"
+            data-i="{{index}}"
+          >
+            <van-icon name="delete-o" size="17px" color="#A6B3BF" />
+          </view>
+        </view>
+        <!-- 行间加号：与上一行「数量」列对齐
+             结构与 le-calc 完全一致（单价列 / × / 数量列 / = / 金额列 / 删除列占位），
+             只是把 + 放在数量列下方，其余列留空占位 -->
+        <view wx:if="{{index < items.length - 1}}" class="le-plus-wrap">
+          <view class="le-field"></view>
+          <text class="le-op">×</text>
+          <view class="le-field le-field--center">
+            <text class="le-plus">＋</text>
+          </view>
+          <text class="le-op">=</text>
+          <view class="le-field"></view>
+          <view wx:if="{{items.length > 1}}" class="le-del"></view>
+        </view>
+      </block>
+    </view>
+
+    <view class="le-lines">
+      <view class="le-line">
+        <text class="le-line-k">罚金</text>
+        <input class="le-in le-in--line" type="digit" value="{{penalty}}" bindinput="onPenalty" />
+        <text class="le-unit">元</text>
+      </view>
+      <view class="le-line">
+        <text class="le-line-k">折扣</text>
+        <input class="le-in le-in--line" type="digit" value="{{discount}}" bindinput="onDiscount" />
+        <text class="le-unit">元</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 实际支付：算式 + 总计 -->
+  <view class="le-pay">
+    <view class="le-pay-row">
+      <text class="le-pay-k">实际支付</text>
+      <text class="le-pay-v">¥ {{total}}</text>
+    </view>
+    <view class="le-pay-formula">
+      <text class="le-pay-txt">{{formula}}<text class="le-pay-total">{{total}}(总计)</text></text>
+    </view>
+  </view>
+
+  <view class="le-spacer"></view>
+
+  <!-- 底部操作 -->
+  <view class="le-bar">
+    <view class="le-btn le-btn--cancel" hover-class="le-btn--hover" bindtap="onCancel">取消</view>
+    <view class="le-btn le-btn--ok" hover-class="le-btn--hover" bindtap="onSave">修改</view>
+  </view>
+
+  <!-- 选择上机用户：底部弹起（姓名 + 登录号），点遮罩或右上角关闭 -->
+  <view
+    class="le-mask {{showUserPicker ? 'le-mask--on' : ''}}"
+    bindtap="onCloseUserPicker"
+    catch:touchmove="noop"
+  ></view>
+  <view class="le-sheet {{showUserPicker ? 'le-sheet--on' : ''}}" catch:touchmove="noop">
+    <view class="le-sheet-hd">
+      <text class="le-sheet-t">选择上机用户</text>
+      <view class="le-sheet-x" hover-class="le-sheet-x--hover" bindtap="onCloseUserPicker">✕</view>
+    </view>
+    <scroll-view class="le-sheet-bd" scroll-y>
+      <view
+        class="le-opt {{item.checked ? 'le-opt--on' : ''}}"
+        wx:for="{{users}}"
+        wx:key="userId"
+        data-i="{{index}}"
+        hover-class="le-opt--hover"
+        bindtap="onSelectUser"
+      >
+        <view class="le-opt-av" style="background: {{item.bg}}">{{item.avatar}}</view>
+        <view class="le-opt-b">
+          <text class="le-opt-n">{{item.name}}</text>
+          <text class="le-opt-l">登录号 {{item.login}}</text>
+        </view>
+        <van-icon wx:if="{{item.checked}}" class="le-opt-ck" name="success" size="18px" color="#0A7BB8" />
+      </view>
+    </scroll-view>
+  </view>
+
+</view>

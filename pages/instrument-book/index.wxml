@@ -1,0 +1,204 @@
+<!--pages/instrument-book/index.wxml-->
+<view class="bk-page" wx:if="{{detail}}">
+
+  <!-- 仪器信息条 -->
+  <view class="bk-ins">
+    <view class="bk-ins-ic">{{detail.icon}}</view>
+    <view class="bk-ins-b">
+      <view class="bk-ins-r">
+        <text class="bk-ins-n">{{detail.name}}</text>
+        <text class="bk-tag {{detail.status === 'online' ? 'on' : 'idle'}}">{{detail.statusText}}</text>
+      </view>
+      <text class="bk-ins-m">🧪 {{detail.lab}} · {{detail.needBook ? '需预约' : '免预约'}}{{detail.needApprove ? ' · 需审批' : ''}}</text>
+    </view>
+  </view>
+
+  <!-- ① 选择日期 -->
+  <view class="bk-card">
+    <view class="bk-card-hd">
+      <view class="bk-dot"></view>
+      <text class="bk-card-tt">选择日期</text>
+    </view>
+    <view class="cal-head">
+      <view class="cal-arrow {{canPrev ? '' : 'dis'}}" bindtap="onPrevMonth">‹</view>
+      <text class="cal-title">{{year}} 年 {{month}} 月</text>
+      <view class="cal-arrow {{canNext ? '' : 'dis'}}" bindtap="onNextMonth">›</view>
+    </view>
+    <view class="cal-week">
+      <text wx:for="{{weekTitles}}" wx:key="*this">{{item}}</text>
+    </view>
+    <view class="cal-grid">
+      <view
+        wx:for="{{days}}"
+        wx:key="id"
+        class="cal-cell {{item.blank ? 'blank' : ''}} {{item.td ? 'td' : ''}} {{item.dis ? 'dis' : ''}} {{item.ban ? 'ban' : ''}} {{item.sel ? 'sel' : ''}}"
+        data-ds="{{item.ds}}"
+        bindtap="onPickDate"
+      >{{item.d || ''}}</view>
+    </view>
+  </view>
+
+  <!-- ② 选择时段：点击任一空闲档位 = 以该时刻为开始自动按推荐时长选中；再点其它档位即重选，不做向后累加 -->
+  <view class="bk-card">
+    <view class="bk-card-hd">
+      <view class="bk-dot"></view>
+      <text class="bk-card-tt">选择时段</text>
+      <text class="bk-clear" wx:if="{{startMin >= 0}}" bindtap="onClear">清空重选</text>
+    </view>
+    <view class="bk-legend">
+      <view class="bk-lg"><view class="lg-dot sel"></view><text>当前预约</text></view>
+      <view class="bk-lg"><view class="lg-dot occ"></view><text>已占用</text></view>
+      <view class="bk-lg"><view class="lg-dot idle"></view><text>空闲（可约）</text></view>
+      <view class="bk-lg"><view class="lg-dot off"></view><text>禁用</text></view>
+    </view>
+
+    <view class="slot-tag">预约日期 · {{dateLabel}}</view>
+    <view class="time-table">
+      <view class="time-group" wx:for="{{timeGroups}}" wx:key="g" wx:for-index="g">
+        <view class="group-header">
+          <view class="header-cell" wx:for="{{item.cols}}" wx:key="h" wx:for-item="col">{{col.h}}时</view>
+        </view>
+        <view class="group-body">
+          <view class="hour-col" wx:for="{{item.cols}}" wx:key="h" wx:for-item="col">
+            <view
+              wx:for="{{col.quads}}"
+              wx:key="i"
+              wx:for-item="c"
+              class="tcell {{c.state}}"
+              data-i="{{c.i}}"
+              bindtap="onCell"
+            ></view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+  </view>
+
+  <!-- ③ 已选时间 -->
+  <view class="bk-card">
+    <view class="bk-card-hd">
+      <view class="bk-dot"></view>
+      <text class="bk-card-tt">已选时间</text>
+    </view>
+    <view class="sel-section">
+      <view class="sel-tip">预约区间 · 点击下方日期或时刻可分别调整</view>
+
+      <view class="sel-seg">
+        <view class="seg-row">
+          <text class="seg-lab st">开始</text>
+          <picker mode="date" value="{{startDs || dateDs}}" bindchange="onChangeStartDate">
+            <view class="seg-chip">{{startDs || dateDs}}</view>
+          </picker>
+          <picker mode="time" value="{{startVal}}" bindchange="onChangeStart">
+            <view class="seg-chip tm">{{startText || '--:--'}}</view>
+          </picker>
+        </view>
+        <view class="seg-row">
+          <text class="seg-lab ed">结束</text>
+          <picker mode="date" value="{{endDs || startDs || dateDs}}" bindchange="onChangeEndDate" disabled="{{startMin < 0}}">
+            <view class="seg-chip {{startMin < 0 ? 'dis' : ''}}">{{endDs || '选择日期'}}</view>
+          </picker>
+          <picker mode="time" value="{{endVal}}" bindchange="onChangeEnd" disabled="{{startMin < 0}}">
+            <view class="seg-chip tm {{startMin < 0 ? 'dis' : ''}}">{{endText || '--:--'}}</view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="sel-divider"></view>
+
+      <view class="sel-total">
+        <text class="tl">共计</text>
+        <text class="tv">{{durText}}</text>
+      </view>
+
+      <view class="dur-grid">
+        <view class="dur-cell">
+          <view class="nrow">
+            <block wx:if="{{minDurNum !== null}}">
+              <text class="n">{{minDurNum}}</text><text class="u">分钟</text>
+            </block>
+            <text wx:else class="n n-unlimit">不限</text>
+          </view>
+          <text class="l">至少</text>
+        </view>
+        <view class="dur-cell rec">
+          <view class="nrow">
+            <block wx:if="{{recDurNum !== null}}">
+              <text class="n">{{recDurNum}}</text><text class="u">分钟</text>
+            </block>
+            <text wx:else class="n n-unlimit">不限</text>
+          </view>
+          <text class="l">推荐</text>
+        </view>
+        <view class="dur-cell">
+          <view class="nrow">
+            <block wx:if="{{maxDurNum !== null}}">
+              <text class="n">{{maxDurNum}}</text><text class="u">分钟</text>
+            </block>
+            <text wx:else class="n n-unlimit">不限</text>
+          </view>
+          <text class="l">最大</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ④ 计费方式（选择后价格实时变动） -->
+  <view class="bk-card">
+    <view class="bk-card-hd">
+      <view class="bk-dot"></view>
+      <text class="bk-card-tt">计费方式</text>
+      <text class="bk-count">元 / 小时</text>
+    </view>
+    <view class="mode-opt {{mode === 'self' ? 'on' : ''}}" data-mode="self" bindtap="onMode">
+      <view class="mode-ic">{{mode === 'self' ? '✓' : ''}}</view>
+      <view class="mode-b">
+        <text class="mode-t">自助上机</text>
+        <text class="mode-s">自行操作 · 价格最低{{detail.needApprove ? ' · 需审批' : ''}}</text>
+      </view>
+      <view class="mode-p">¥{{selfPrice}}<text class="p-u"> / 小时</text></view>
+    </view>
+    <view class="mode-opt {{mode === 'entrust' ? 'on' : ''}}" data-mode="entrust" bindtap="onMode">
+      <view class="mode-ic">{{mode === 'entrust' ? '✓' : ''}}</view>
+      <view class="mode-b">
+        <text class="mode-t">平台委托</text>
+        <text class="mode-s">技术人员代测 · 结果数据统一交付</text>
+      </view>
+      <view class="mode-p">¥{{entrustPrice}}<text class="p-u"> / 小时</text></view>
+    </view>
+  </view>
+
+  <!-- ⑤ 测试信息（选填） -->
+  <view class="bk-card">
+    <view class="bk-card-hd">
+      <view class="bk-dot"></view>
+      <text class="bk-card-tt">测试信息</text>
+      <text class="bk-count">选填</text>
+    </view>
+    <view class="bk-field">
+      <text class="bk-field-l">测试目的</text>
+      <input class="bk-input" placeholder="请输入测试目的" placeholder-class="bk-ph" value="{{purpose}}" bindinput="onPurposeInput" maxlength="50" />
+    </view>
+    <view class="bk-field">
+      <text class="bk-field-l">测试内容及数量</text>
+      <textarea class="bk-textarea" placeholder="请输入测试内容及数量，如样品类型、份数等" placeholder-class="bk-ph" value="{{contentQty}}" bindinput="onContentInput" maxlength="200" />
+    </view>
+    <view class="bk-field">
+      <text class="bk-field-l">备注</text>
+      <textarea class="bk-textarea" placeholder="请输入备注，如送样方式、特殊要求等" placeholder-class="bk-ph" value="{{remark}}" bindinput="onRemarkInput" maxlength="200" />
+    </view>
+  </view>
+
+  <view class="bk-spacer"></view>
+
+  <!-- 底部：预估费用 + 提交 -->
+  <view class="bk-bar">
+    <view class="bk-cost">
+      <text class="bk-cost-l">预估费用（{{modeName}} · {{priceCat}}）</text>
+      <text class="bk-cost-v">{{costText}}</text>
+      <text class="bk-cost-s">{{costSub}}</text>
+    </view>
+    <view class="bk-sub" bindtap="onSubmit">提交预约</view>
+  </view>
+</view>

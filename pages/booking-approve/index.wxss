@@ -1,0 +1,196 @@
+/* pages/approval-detail/index.wxss —— 预约审批详情（仿参考图：白卡片 + 灰底合计 + 三色按钮） */
+page {
+  background: #F2F4F6;
+}
+.ad-page {
+  padding: 24rpx 24rpx 200rpx;
+}
+
+/* ── 申请信息卡 ── */
+.ad-card {
+  background: #ffffff;
+  border-radius: 8rpx;
+  padding: 28rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+.ad-dev {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  flex-wrap: wrap;
+  padding-bottom: 18rpx;
+  border-bottom: 1rpx solid #E4E8EB;
+}
+.ad-dev-n {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #161C20;
+  line-height: 1.5;
+}
+.ad-dev-m {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #161C20;
+  line-height: 1.5;
+}
+
+.ad-lines {
+  padding-top: 8rpx;
+}
+.ad-line {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  flex-wrap: wrap;
+  padding: 10rpx 0;
+}
+.ad-k {
+  flex-shrink: 0;
+  font-size: 28rpx;
+  color: #3D5263;
+  line-height: 1.6;
+}
+.ad-v {
+  flex: 1;
+  min-width: 0;
+  font-size: 28rpx;
+  color: #161C20;
+  line-height: 1.6;
+  word-break: break-all;
+}
+
+/* 预约人右侧的电话 */
+.ad-phone {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8rpx;
+  margin-left: 28rpx;
+  flex-shrink: 0;
+}
+.ad-phone-n {
+  font-size: 28rpx;
+  color: #161C20;
+  line-height: 1.6;
+}
+/* 手机号行的点击态 */
+.ad-phone--hover {
+  opacity: 0.6;
+}
+
+/* 金额高亮（图里 0元 为红色） */
+.ad-red {
+  color: #E53935;
+  font-weight: 600;
+}
+/* 时长绿色 */
+.ad-green {
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+/* ── 罚金 / 折扣 ── */
+.ad-field {
+  margin-top: 26rpx;
+}
+.ad-field-k {
+  display: block;
+  font-size: 28rpx;
+  color: #161C20;
+  margin-bottom: 12rpx;
+}
+.ad-input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 80rpx;
+  background: #ffffff;
+  border: 1rpx solid #D6DEE5;
+  border-radius: 4rpx;
+  text-align: center;
+  font-size: 30rpx;
+  color: #161C20;
+  padding: 0 16rpx;
+}
+
+/* ── 实际价格 ── */
+.ad-total {
+  margin-top: 26rpx;
+  background: #F5F6F7;
+  border: 1rpx solid #E4E8EB;
+  border-radius: 6rpx;
+  padding: 30rpx 24rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.ad-total-t {
+  font-size: 28rpx;
+  color: #161C20;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* ── 备注 ── */
+.ad-remark {
+  margin-top: 26rpx;
+}
+.ad-textarea {
+  box-sizing: border-box;
+  width: 100%;
+  height: 160rpx;
+  background: #ffffff;
+  border: 1rpx solid #D6DEE5;
+  border-radius: 4rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  color: #161C20;
+  line-height: 1.6;
+}
+.ad-ph {
+  color: #9AA7B2;
+}
+
+/* ── 底部三个按钮 ── */
+.ad-spacer {
+  height: 40rpx;
+}
+.ad-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: row;
+  gap: 20rpx;
+  padding: 20rpx 24rpx calc(20rpx + env(safe-area-inset-bottom));
+  background: #ffffff;
+  border-top: 1rpx solid #E4E8EB;
+}
+.ad-btn {
+  flex: 1;
+  height: 84rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+.ad-btn--pass {
+  background: #4CAF50;
+  color: #ffffff;
+}
+.ad-btn--reject {
+  background: #E53935;
+  color: #ffffff;
+}
+.ad-btn--close {
+  background: #ffffff;
+  border: 1rpx solid #D6DEE5;
+  color: #161C20;
+}
+.ad-btn--hover {
+  opacity: 0.86;
+}

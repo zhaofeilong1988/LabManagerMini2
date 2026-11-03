@@ -1,0 +1,86 @@
+<!--pages/my-booking/index.wxml-->
+<view class="mb-page">
+
+  <!-- 状态页签 -->
+  <view class="mb-tabs">
+    <view class="mb-tab {{tab === 'active' ? 'on' : ''}}" bindtap="setTab" data-t="active">
+      进行中<text class="mb-cnt">{{countActive}}</text>
+    </view>
+    <view class="mb-tab {{tab === 'history' ? 'on' : ''}}" bindtap="setTab" data-t="history">
+      历史<text class="mb-cnt">{{countHistory}}</text>
+    </view>
+  </view>
+
+  <!-- 进行中 tab 拉接口时的细条 loading（用 mb-loading 与 mb-empty 互斥） -->
+  <view class="mb-loading" wx:if="{{loading}}">
+    <view class="mb-load-spin"></view>
+    <text class="mb-load-t">正在加载预约列表…</text>
+  </view>
+
+  <!-- 预约卡片列表 -->
+  <view class="mb-list">
+    <view
+      wx:for="{{list}}"
+      wx:key="id"
+      class="mb-card"
+      bindtap="onDetail"
+      data-id="{{item.id}}"
+    >
+      <view class="mb-hd">
+        <!-- 仪器图标 + 名称 + 实验室：整块 catchtap 进仪器详情页（阻止冒泡到卡片 onDetail） -->
+        <view
+          class="mb-inst"
+          catchtap="onGoInstDetail"
+          data-id="{{item.instId}}"
+          hover-class="mb-inst--hover"
+          hover-stay-time="80"
+        >
+          <view class="mb-ic">{{item.instIcon}}</view>
+          <view class="mb-b">
+            <text class="mb-n">{{item.instName}}</text>
+            <text class="mb-s">{{item.lab}}</text>
+          </view>
+        </view>
+        <text class="mb-tag {{item.tagCls}}">{{item.tagText}}</text>
+      </view>
+
+      <view class="mb-rows">
+        <view class="mb-row"><text class="k">日期</text><text class="v">{{item.endDateLabel ? item.dateLabel + ' ~ ' + item.endDateLabel : item.dateLabel}}</text></view>
+        <view class="mb-row"><text class="k">时段</text><text class="v">{{item.startText}} - {{item.endText}}</text></view>
+        <view class="mb-row" wx:if="{{item.endDs}}"><text class="k">占用</text><text class="v">连续 {{item.durText}}</text></view>
+        <view class="mb-row"><text class="k">方式 / 费用</text><text class="v">{{item.modeName}} · {{item.costText}}</text></view>
+      </view>
+
+      <view class="mb-ft">
+        <text class="mb-sub">提交于 {{item.submitTime}}</text>
+        <view class="mb-links">
+          <view
+            wx:if="{{item.cancellable}}"
+            class="mb-btn mb-btn-danger"
+            catchtap="onCancel"
+            data-id="{{item.id}}"
+          >取消预约</view>
+          <view
+            wx:if="{{item.status === 'approved'}}"
+            class="mb-btn mb-btn-plain"
+            catchtap="onScan"
+          >仪器扫码</view>
+          <view
+            wx:elif="{{item.status === 'pending'}}"
+            class="mb-btn mb-btn-plain mb-btn-plain--disabled"
+            catchtap="onScanDisabled"
+          >仪器扫码</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="mb-empty" wx:if="{{!list.length}}">
+      <view class="mb-empty-ic">📭</view>
+      <text class="mb-empty-t">{{emptyText}}</text>
+      <view class="mb-empty-go" wx:if="{{tab === 'active'}}" bindtap="goBrowse">去仪器列表预约</view>
+    </view>
+  </view>
+
+  <view class="mb-bottom-safe"></view>
+</view>

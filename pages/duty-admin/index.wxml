@@ -1,0 +1,69 @@
+<!-- pages/duty-admin/index.wxml —— 值日管理（数据来自 /api/workstation/duty/myWeek） -->
+<view class="da-wrap {{canCheckIn ? 'da-wrap--fab' : ''}}">
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="da-state">
+    <text class="da-state-text">加载中…</text>
+  </view>
+
+  <!-- 加载失败 → 重试 -->
+  <view wx:elif="{{error}}" class="da-state">
+    <text class="da-state-text da-state-text--err">{{error}}</text>
+    <view class="da-retry" bindtap="retry">重新加载</view>
+  </view>
+
+  <block wx:else>
+    <!-- 组长（接口给了才展示） -->
+    <view wx:if="{{leader}}" class="da-leader">
+      <view class="da-leader-avatar">{{leaderAvatar}}</view>
+      <view class="da-leader-info">
+        <text class="da-leader-tag">组长</text>
+        <text class="da-leader-name">{{leader}}</text>
+      </view>
+      <view class="da-leader-badge">LEADER</view>
+    </view>
+
+    <!-- 每天 -->
+    <view wx:if="{{days.length}}" class="da-list">
+      <view
+        wx:for="{{days}}"
+        wx:for-item="d"
+        wx:key="key"
+        class="da-row {{d.isToday ? 'da-row--today' : ''}}"
+      >
+        <view class="da-row-day">
+          <text class="da-row-dow">{{d.dow}}</text>
+          <text class="da-row-num">{{d.isToday ? '今天' : (d.dateText || ('DAY ' + (index + 1)))}}</text>
+        </view>
+        <view class="da-row-divider"></view>
+        <view class="da-row-people {{d.expanded ? 'da-row-people--wrap' : ''}}">
+          <block wx:for="{{d.show}}" wx:for-item="m" wx:key="key">
+            <view wx:if="{{index > 0}}" class="da-row-plus">+</view>
+            <view class="da-person">
+              <view class="da-person-avatar">{{m.avatar}}</view>
+              <text class="da-person-name">{{m.name}}</text>
+            </view>
+          </block>
+          <!-- 超过 3 人：折叠显示 +N（点击可展开全部） -->
+          <text wx:if="{{d.more > 0}}" class="da-row-more" data-index="{{index}}" bindtap="toggleMore">+{{d.more}}</text>
+          <text wx:if="{{!d.total}}" class="da-row-empty">未安排</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 接口成功但没数据 -->
+    <view wx:else class="da-state">
+      <text class="da-state-text">近期暂无值日安排</text>
+    </view>
+  </block>
+
+  <view class="da-tip">排班表仅作展示，如需调班请联系管理员。</view>
+
+  <!-- 底部浮动「值日打卡」：仅今天的值日人员包含「我」时显示 -->
+  <view wx:if="{{canCheckIn}}" class="da-fab-wrap">
+    <view class="da-fab {{checkedToday ? 'da-fab--done' : ''}}" bindtap="onDutyCheckIn">
+      <text class="da-fab-icon">{{checkedToday ? '✓' : '📷'}}</text>
+      <text class="da-fab-text">{{checkedToday ? '今日已打卡' : '值日打卡'}}</text>
+    </view>
+  </view>
+</view>

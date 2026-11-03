@@ -1,0 +1,521 @@
+/* pages/booking-adjust/index.wxss
+   卡片 / 日历 / 24h×15min 档位表沿用「预约时段页」样式；
+   新增：禁用操作按钮组 + 预约单列表 */
+page {
+  background: #F5FAFD;
+}
+.bk-page {
+  padding: 24rpx 0 48rpx;
+}
+
+/* ── 仪器信息条 ── */
+.bk-ins {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20rpx;
+  margin: 0 24rpx 24rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+.bk-ins-ic {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 20rpx;
+  background: linear-gradient(135deg, #DBEFF9, #C9E9FA);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44rpx;
+  flex-shrink: 0;
+}
+.bk-ins-b { flex: 1; min-width: 0; }
+.bk-ins-r { display: flex; flex-direction: row; align-items: center; gap: 14rpx; }
+.bk-ins-n {
+  flex: 1;
+  min-width: 0;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #161C20;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bk-tag {
+  flex-shrink: 0;
+  font-size: 20rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 16rpx;
+  font-weight: 600;
+}
+.bk-tag.on { background: #FFF3E0; color: #E65100; }
+.bk-ins-m {
+  display: block;
+  font-size: 22rpx;
+  color: #6E7F8A;
+  margin-top: 8rpx;
+}
+
+/* ── 通用卡片 ── */
+.bk-card {
+  margin: 0 24rpx 24rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+.bk-card-hd {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.bk-dot {
+  width: 8rpx;
+  height: 28rpx;
+  border-radius: 4rpx;
+  background: linear-gradient(180deg, #33ADDE, #0A7BB8);
+  margin-right: 12rpx;
+}
+.bk-card-tt { font-size: 30rpx; font-weight: 700; color: #161C20; }
+.bk-clear {
+  margin-left: auto;
+  font-size: 22rpx;
+  color: #33ADDE;
+  padding: 4rpx 0 4rpx 20rpx;
+}
+
+/* ── 日历 ── */
+.cal-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+.cal-arrow {
+  width: 52rpx;
+  height: 52rpx;
+  border-radius: 50%;
+  background: #F5FAFD;
+  color: #566B78;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  line-height: 1;
+}
+.cal-arrow.dis { opacity: 0.35; pointer-events: none; }
+.cal-title { font-size: 30rpx; font-weight: 700; color: #0E3A50; }
+.cal-week { display: flex; flex-direction: row; margin-bottom: 8rpx; }
+.cal-week text {
+  flex: 1;
+  text-align: center;
+  font-size: 20rpx;
+  color: #6E7F8A;
+}
+.cal-grid { display: flex; flex-direction: row; flex-wrap: wrap; }
+.cal-cell {
+  flex: 0 0 14.2857%;
+  height: 84rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  color: #161C20;
+  position: relative;
+  border-radius: 42rpx;
+}
+.cal-cell.td { color: #33ADDE; font-weight: 700; }
+.cal-cell.td::after {
+  content: '';
+  position: absolute;
+  bottom: 8rpx;
+  width: 6rpx;
+  height: 6rpx;
+  border-radius: 50%;
+  background: #33ADDE;
+}
+.cal-cell.dis { color: #C4D0D8; }
+.cal-cell.sel {
+  background: linear-gradient(135deg, #33ADDE, #0A7BB8);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 4rpx 12rpx rgba(27, 82, 112, 0.25);
+}
+.cal-cell.td.sel::after { background: #ffffff; }
+
+/* ── 图例 ── */
+.bk-legend {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12rpx 28rpx;
+  padding: 18rpx 4rpx 22rpx;
+}
+.bk-lg {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 20rpx;
+  color: #6E7F8A;
+}
+.lg-dot { width: 20rpx; height: 20rpx; border-radius: 6rpx; }
+.lg-dot.sel { background: #FFC107; border: 2rpx solid #F57F17; }
+.lg-dot.occ { background: #0D86BE; border: 2rpx solid #0D86BE; }
+.lg-dot.idle { background: #FFFFFF; border: 2rpx solid #BDBDBD; }
+.lg-dot.off { background: #E0E0E0; border: 2rpx solid #BDBDBD; }
+
+/* ── 24h × 15min 档位表 ── */
+.slot-tag {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #0E3A50;
+  margin: 4rpx 0 12rpx;
+}
+.time-table { margin-top: 4rpx; border: 1rpx solid #D9D9D9; }
+.time-group { border-bottom: 1rpx solid #D9D9D9; }
+.time-group:last-child { border-bottom: none; }
+.group-header {
+  display: flex;
+  flex-direction: row;
+  background: #E8E8E8;
+  border-bottom: 1rpx solid #D9D9D9;
+}
+.header-cell {
+  flex: 1;
+  text-align: center;
+  font-size: 24rpx;
+  color: #333;
+  padding: 10rpx 0;
+  border-right: 1rpx solid #D9D9D9;
+}
+.header-cell:last-child { border-right: none; }
+.group-body { display: flex; flex-direction: row; }
+.hour-col {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  border-right: 1rpx solid #D9D9D9;
+}
+.hour-col:last-child { border-right: none; }
+.tcell { flex: 1; height: 52rpx; }
+.tcell.idle { background: #FFFFFF; }
+.tcell.occ { background: #0D86BE; }
+.tcell.off { background: #E0E0E0; }
+.tcell.sel { background: #FFC107; }
+
+/* ── 禁用操作按钮组（时段表下方） ── */
+.adj-acts {
+  display: flex;
+  flex-direction: row;
+  gap: 16rpx;
+  margin-top: 22rpx;
+}
+.adj-act {
+  flex: 1;
+  min-width: 0;
+  height: 68rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: #333333;
+  background: #ffffff;
+  border: 1rpx solid #CFD8DC;
+  border-radius: 6rpx;
+}
+.adj-act--hover {
+  background: #F2F6FA;
+}
+/* picker 包按钮：占位等分，与相邻按钮同宽 */
+.adj-picker {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── 禁用时段列表（参考 appointChange 的 disableList 区块）── */
+/* 当前日期没有禁用、但其它日期有：一行灰色说明 */
+.dis-hint {
+  margin-top: 24rpx;
+  padding-top: 18rpx;
+  border-top: 1rpx dashed #DCE6EC;
+  font-size: 24rpx;
+  line-height: 1.6;
+  color: #7A8894;
+}
+.dis-box {
+  margin-top: 24rpx;
+  border-top: 1rpx dashed #DCE6EC;
+  padding-top: 18rpx;
+}
+.dis-t {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #0E3A50;
+  margin-bottom: 12rpx;
+}
+.dis-item {
+  background: #F7FBFD;
+  border: 1rpx solid #DDE8EF;
+  border-radius: 12rpx;
+  padding: 16rpx 18rpx;
+  margin-bottom: 16rpx;
+}
+.dis-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+}
+.dis-lab {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #365B73;
+  flex-shrink: 0;
+}
+.dis-ops {
+  margin-left: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.dis-pick {
+  flex-shrink: 0;
+}
+.dis-op {
+  flex-shrink: 0;
+  font-size: 22rpx;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 10rpx 20rpx;
+  border-radius: 8rpx;
+  background: #ffffff;
+  border: 1rpx solid #CFD8DC;
+  color: #365B73;
+}
+.dis-op--hover {
+  opacity: 0.75;
+}
+.dis-op--del {
+  color: #BA1A1A;
+  border-color: #F0C4C4;
+  background: #FDF3F3;
+}
+.dis-op--edit {
+  color: #E65100;
+  border-color: #F5D6B8;
+  background: #FDF6EF;
+}
+.dis-op--save {
+  color: #ffffff;
+  border-color: #0A7BB8;
+  background: linear-gradient(135deg, #33ADDE, #0A7BB8);
+}
+.dis-time {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10rpx;
+  margin-top: 14rpx;
+}
+.dis-pick--time {
+  width: 150rpx;
+}
+.dis-pick--dur {
+  margin-left: auto;
+  width: 160rpx;
+}
+.dis-input {
+  box-sizing: border-box;
+  height: 56rpx;
+  line-height: 56rpx;
+  padding: 0 14rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #161C20;
+  text-align: center;
+  background: #ffffff;
+  border: 1rpx solid #CFD8DC;
+  border-radius: 8rpx;
+}
+.dis-input--edit {
+  border-color: #33ADDE;
+  background: #F2FAFE;
+}
+.dis-input--readonly {
+  color: #6E7F8A;
+  background: #F2F5F7;
+  width: 150rpx;
+}
+.dis-input--dur {
+  color: #0A7BB8;
+}
+.dis-sep {
+  flex-shrink: 0;
+  font-size: 24rpx;
+  color: #8A99A8;
+}
+
+/* ── 日历 spot：蓝点＝有预约，灰点＝有禁用 ── */
+.cal-spots {
+  position: absolute;
+  bottom: 6rpx;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6rpx;
+  pointer-events: none;
+}
+.cal-spot {
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+}
+.cal-spot--book {
+  background: #33ADDE;
+}
+.cal-spot--ban {
+  background: #B0BFC8;
+}
+.cal-cell.sel .cal-spot--ban {
+  background: #E8F2F7;
+}
+
+/* ── 预约单列表 ── */
+.ad-list {
+  padding: 8rpx 0;
+}
+/* 预约单为空 / 加载中的提示（数据只来自接口，无演示数据） */
+.ad-empty {
+  padding: 36rpx 28rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: #8A98A5;
+}
+.ad-item {
+  padding: 24rpx 28rpx;
+}
+.ad-item + .ad-item {
+  border-top: 1rpx solid #EDF1F5;
+}
+.ad-item-hd {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14rpx;
+}
+.ad-item-lab {
+  font-size: 24rpx;
+  color: #6E7F8A;
+  max-width: 300rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ad-item-dept {
+  font-size: 24rpx;
+  color: #6E7F8A;
+}
+.ad-item-mode {
+  font-size: 24rpx;
+  color: #6E7F8A;
+}
+.ad-item-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.2;
+  padding: 12rpx 42rpx;
+  border-radius: 8rpx;
+  background: #E53935;
+}
+.ad-item-btn--save {
+  background: #0A7BB8;
+}
+.ad-item-btn--hover {
+  opacity: 0.86;
+}
+
+/* 预约人 + 电话 */
+.ad-user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 16rpx;
+}
+.ad-user-k {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #161C20;
+}
+.ad-user-n,
+.ad-user-wx {
+  font-size: 26rpx;
+  color: #161C20;
+}
+.ad-user-ic {
+  margin-left: 20rpx;
+}
+.ad-user-p {
+  font-size: 26rpx;
+  color: #161C20;
+  margin-left: 8rpx;
+}
+
+/* 开始 / 结束：日期框 + 时间框 */
+.ad-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+  margin-top: 14rpx;
+}
+.ad-row-k {
+  flex-shrink: 0;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #161C20;
+}
+.ad-picker {
+  flex: 1;
+  min-width: 0;
+}
+.ad-picker--time {
+  flex: 0 0 170rpx;
+}
+.ad-box {
+  box-sizing: border-box;
+  height: 64rpx;
+  border: 1rpx solid #C9D3DA;
+  border-radius: 4rpx;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 0 16rpx;
+  font-size: 28rpx;
+  color: #161C20;
+}
+.ad-box--time {
+  justify-content: center;
+  padding: 0 8rpx;
+}
+.ad-box--edit {
+  border-color: #0A7BB8;
+  background: #F2F9FE;
+}
+
+/* 底部留白 */
+.bk-spacer { height: 24rpx; }

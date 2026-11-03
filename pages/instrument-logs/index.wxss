@@ -1,0 +1,199 @@
+/* pages/instrument-logs/index.wxss —— 使用记录
+   卡片样式与「我的预约」(pages/my-booking) 保持一致，无统计信息、无状态页签 */
+.il-page {
+  --il-primary: #0A7BB8;
+  --il-accent: #33ADDE;
+  --il-bg: #F5FAFD;
+  --il-surface: #FFFFFF;
+  --il-text: #161C20;
+  --il-sub: #41484D;
+  --il-hint: #6E7F8A;
+  --il-ok: #0D86BE;
+  --il-warn: #E65100;
+  --il-err: #BA1A1A;
+  min-height: 100vh;
+  background: var(--il-bg);
+  box-sizing: border-box;
+}
+
+.il-list {
+  padding: 24rpx 24rpx 40rpx;
+}
+
+/* ── 卡片 ── */
+.il-card {
+  background: var(--il-surface);
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+/* 头部：图标 + 名称 */
+.il-hd {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16rpx;
+}
+.il-ic {
+  width: 84rpx;
+  height: 84rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #DBEFF9, #C9E9FA);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.il-b {
+  flex: 1;
+  min-width: 0;
+}
+.il-n {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--il-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.il-s {
+  display: block;
+  font-size: 22rpx;
+  color: var(--il-hint);
+  margin-top: 4rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 使用人类型标签 */
+.il-tag {
+  flex-shrink: 0;
+  font-size: 22rpx;
+  font-weight: 600;
+  padding: 6rpx 18rpx;
+  border-radius: 18rpx;
+  white-space: nowrap;
+}
+.il-tag-in  { background: #E8F5E9; color: #2E7D32; }
+.il-tag-out { background: #FFF3E0; color: var(--il-warn); }
+.il-tag-ext { background: #EDE7F6; color: #5E35B1; }
+
+/* ── 信息区（浅蓝底，与「我的预约」的 mb-rows 一致） ── */
+.il-rows {
+  background: #EFF6FB;
+  border-radius: 14rpx;
+  padding: 4rpx 22rpx;
+  margin-top: 20rpx;
+}
+.il-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20rpx;
+  padding: 14rpx 0;
+  font-size: 26rpx;
+  border-bottom: 1rpx solid #E1EBF2;
+}
+.il-row:last-child { border-bottom: none; }
+.il-row .k { color: var(--il-hint); flex-shrink: 0; }
+.il-row .v {
+  color: var(--il-text);
+  font-weight: 600;
+  text-align: right;
+  line-height: 1.5;
+}
+.il-v-wrap {
+  flex: 1;
+  min-width: 0;
+  word-break: break-all;
+}
+
+/* ── 底部：实付 + 改单 ── */
+.il-ft {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12rpx;
+  margin-top: 20rpx;
+}
+.il-pay {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 10rpx;
+  flex: 1;
+  min-width: 0;
+}
+.il-pay-k {
+  font-size: 22rpx;
+  color: var(--il-hint);
+  flex-shrink: 0;
+}
+.il-pay-v {
+  font-size: 38rpx;
+  font-weight: 800;
+  color: #2E9E5B;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.il-btn {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  color: var(--il-primary);
+  padding: 10rpx 22rpx;
+  border-radius: 24rpx;
+  background: #EFF6FB;
+  border: 1rpx solid #D5E4ED;
+}
+.il-btn--hover {
+  background: #E1EEF7;
+}
+.il-btn-t {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: var(--il-primary);
+  line-height: 1;
+}
+
+/* ── 空态 / 加载中 / 加载失败 ── */
+.il-empty {
+  padding: 80rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+}
+.il-empty-t {
+  font-size: 26rpx;
+  color: var(--il-hint);
+  line-height: 1.6;
+  text-align: center;
+}
+.il-reload {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--il-primary);
+  background: #F5FAFD;
+  border: 1rpx solid #D5E4ED;
+  border-radius: 30rpx;
+  padding: 12rpx 32rpx;
+}
+.il-reload--hover {
+  background: #E7EFF5;
+}

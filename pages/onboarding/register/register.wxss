@@ -1,0 +1,377 @@
+/* pages/onboarding/register/register.wxss */
+@import "../onboarding.wxss";
+
+/* ── 原生表单行（替代 van-field，glass-easel 下 100% 可靠，视觉对齐原型） ── */
+.field {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 24rpx 28rpx;
+  position: relative;
+  border-bottom: 1rpx solid #F5FAFD;
+}
+
+.field:last-child {
+  border-bottom: none;
+}
+
+.field--col {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.field--col .field-label {
+  width: auto;
+}
+
+.field-label {
+  width: 168rpx;
+  flex-shrink: 0;
+  font-size: 28rpx;
+  color: var(--ob-text);
+}
+
+.field-required {
+  color: var(--ob-error);
+  margin-right: 4rpx;
+}
+
+/* 占位星号：选填项与必填项共用一个星号槽位，保证所有字段名称左对齐 */
+.field-required--ghost {
+  visibility: hidden;
+}
+
+.field-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: var(--ob-text);
+  line-height: 1.6;
+}
+
+.field--col .field-input,
+.field-textarea {
+  width: 100%;
+  min-height: 120rpx;
+  margin-top: 16rpx;
+}
+
+.field-input-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.field-input-wrap .field-input {
+  flex: 1;
+  width: 0;
+}
+
+/* 导师手机号右侧「关联」按钮 */
+.link-btn {
+  font-size: 24rpx;
+  color: #33ADDE;
+  padding: 0 8rpx;
+  font-weight: 600;
+}
+
+/* ── 性别单选（姓名下方） ── */
+.sex-group {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 48rpx;
+}
+
+.sex-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 28rpx;
+  color: var(--ob-text);
+}
+
+.sex-item radio {
+  transform: scale(0.85);
+}
+
+/* ── 通用单选组（人员类型 / 身份）──
+   单行不换行：身份有「学生 / 职工 / 科研组自聘」三项，
+   字段行留给选项的宽度有限（页面边距 + 卡片内边距 + 168rpx 标签 ≈ 剩 430rpx），
+   所以统一收紧间距、缩小圆点与字号，保证三项排在一行 */
+.opt-group {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 20rpx;
+}
+
+.opt-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4rpx;
+  font-size: 26rpx;
+  white-space: nowrap;
+  color: var(--ob-text);
+}
+
+.opt-item radio {
+  transform: scale(0.72);
+  margin-right: -2rpx;
+}
+
+/* ── 声明复选框（原生 view 自绘，对齐原型） ── */
+.declare-check {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16rpx;
+}
+
+.checkbox {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 8rpx;
+  border: 3rpx solid #C2CAD0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 24rpx;
+  margin-top: 2rpx;
+  box-sizing: border-box;
+}
+
+.checkbox.checked {
+  background: #33ADDE;
+  border-color: #33ADDE;
+}
+
+/* ── 提交确认弹窗（对齐 prototype.html .mask/.modal） ── */
+.ob-mask {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ob-modal {
+  width: 560rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  overflow: hidden;
+  animation: ob-pop 0.2s ease;
+}
+
+@keyframes ob-pop {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.ob-modal-title {
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--ob-text);
+  padding: 40rpx 40rpx 16rpx;
+}
+
+.ob-modal-content {
+  text-align: center;
+  font-size: 26rpx;
+  color: var(--ob-sub);
+  padding: 8rpx 40rpx 36rpx;
+  line-height: 1.6;
+}
+
+.ob-modal-actions {
+  display: flex;
+  flex-direction: row;
+  border-top: 1rpx solid #EEF4F8;
+}
+
+.ob-modal-btn {
+  flex: 1;
+  height: 92rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+}
+
+.ob-modal-btn + .ob-modal-btn {
+  border-left: 1rpx solid #EEF4F8;
+}
+
+.ob-modal-cancel {
+  color: #555555;
+}
+
+.ob-modal-confirm {
+  color: var(--ob-accent);
+  font-weight: 600;
+}
+
+.ob-modal-hover {
+  background: #EEF4F8;
+}
+
+/* ── 下拉选择行（人员类型 / 导师姓名 / 课题组 / 部门） ── */
+.pick-field {
+  cursor: pointer;
+}
+
+.field-pick {
+  flex: 1;
+  min-width: 0;
+  font-size: 28rpx;
+  color: #A8B6BF;
+  line-height: 1.6;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.field-pick.has {
+  color: var(--ob-text);
+  font-weight: 500;
+}
+
+.field-arrow {
+  flex-shrink: 0;
+  color: #A8B6BF;
+  font-size: 30rpx;
+  transform: rotate(90deg);
+  line-height: 1;
+  padding-left: 8rpx;
+}
+
+/* ── 可搜索下拉弹层（底部面板 + 搜索过滤） ── */
+.pk-mask {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.pk-panel {
+  background: #ffffff;
+  border-radius: 24rpx 24rpx 0 0;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom);
+  max-height: 70vh;
+}
+
+.pk-hd {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 32rpx 8rpx;
+}
+
+.pk-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--ob-text);
+}
+
+.pk-cancel {
+  font-size: 26rpx;
+  color: #6E7F8A;
+  padding: 6rpx 8rpx;
+}
+
+.pk-search {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10rpx;
+  background: #F5FAFD;
+  border-radius: 34rpx;
+  margin: 12rpx 32rpx 8rpx;
+  padding: 0 24rpx;
+  height: 68rpx;
+}
+
+.pk-search-ic {
+  font-size: 24rpx;
+  color: #6E7F8A;
+  flex-shrink: 0;
+}
+
+.pk-search-input {
+  flex: 1;
+  min-width: 0;
+  font-size: 26rpx;
+  color: var(--ob-text);
+  height: 100%;
+}
+
+.pk-list {
+  height: 480rpx;
+  padding: 4rpx 16rpx 16rpx;
+  box-sizing: border-box;
+}
+
+.pk-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  padding: 20rpx;
+  border-radius: 12rpx;
+}
+
+.pk-item:active {
+  background: #EAF4FB;
+}
+
+.pk-item-n {
+  font-size: 28rpx;
+  color: var(--ob-text);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.pk-item-s {
+  font-size: 22rpx;
+  color: #6E7F8A;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pk-empty {
+  padding: 40rpx 0;
+  text-align: center;
+  font-size: 24rpx;
+  color: #6E7F8A;
+}

@@ -1,0 +1,47 @@
+<!-- pages/my-station/index.wxml —— 我的工位列表页 -->
+<view class="st-wrap">
+
+  <!-- 顶部操作条 -->
+  <view class="st-bar">
+    <text class="st-bar-text">实验台申请记录提交后在此展示审核状态</text>
+    <view class="st-bar-btn" bindtap="goApply">＋ 申请实验台</view>
+  </view>
+
+  <!-- 记录列表：点击卡片进入工位打卡详情页 -->
+  <view wx:if="{{records.length}}">
+    <view class="st-card" wx:for="{{records}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <view class="st-card-hd">
+        <view class="st-card-title-wrap">
+          <text class="st-card-title">{{item.group}}</text>
+          <text class="st-card-sub">提交于 {{item.submitTime}}</text>
+        </view>
+        <view class="st-badge {{item.statusCls}}">{{item.statusText}}</view>
+      </view>
+
+      <view class="st-row">
+        <text class="st-row-key">使用期限</text>
+        <text class="st-row-val">{{item.startDate}} 至 {{item.endDate}}</text>
+      </view>
+
+      <view class="st-card-ft">
+        <!-- 审核通过的工位：扫码打卡入口（打卡后按钮保持不变，详情在打卡页查看） -->
+        <view wx:if="{{item.statusCls === 'passed'}}"
+              class="st-checkin-btn"
+              catchtap="scanCheckIn" data-id="{{item.id}}">
+          <van-icon name="scan" size="14px" color="#fff" />
+          <text class="st-checkin-text">扫码打卡</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:else class="st-empty">
+    <van-icon name="desktop" size="72px" color="#C2CAD0" />
+    <text class="st-empty-title">暂无工位申请记录</text>
+    <text class="st-empty-sub">提交实验台使用申请后，记录将在此展示审核状态</text>
+    <button class="st-empty-btn" bindtap="goApply">去申请实验台</button>
+  </view>
+
+  <view style="height: 48rpx;"></view>
+</view>

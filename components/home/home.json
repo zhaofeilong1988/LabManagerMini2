@@ -8,7 +8,6 @@
     "van-grid":        "@vant/weapp/grid/index",
     "van-grid-item":   "@vant/weapp/grid-item/index",
     "van-progress":    "@vant/weapp/progress/index",
-    "van-empty":       "@vant/weapp/empty/index",
     "van-icon":        "@vant/weapp/icon/index"
   }
 }

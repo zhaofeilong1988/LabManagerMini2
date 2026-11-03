@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>扫码签到测试二维码</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #F5F9FC;
+    color: #0E1C26;
+    padding: 32px 20px 60px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 26px; margin-bottom: 8px; }
+  .sub { color: #8A9BB0; font-size: 14px; line-height: 1.7; margin-bottom: 24px; }
+  .tips {
+    background: #FFFFFF; border: 1px solid #E0EAF0; border-radius: 12px;
+    padding: 16px 20px; font-size: 13px; line-height: 1.9; color: #3D5263;
+    margin-bottom: 28px;
+  }
+  .tips b { color: #1B5270; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: #FFFFFF; border-radius: 16px; padding: 22px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+    text-align: center;
+  }
+  .card canvas, .card img.qr {
+    margin: 0 auto 14px;
+    display: block;
+    border: 1px dashed #D7E7F2; border-radius: 8px;
+  }
+  .name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .num {
+    font-size: 13px; color: #1B5270; font-family: Menlo, Consolas, monospace;
+    background: #EAF4FB; border-radius: 6px; display: inline-block;
+    padding: 2px 10px; word-break: break-all;
+  }
+  .state { margin-top: 8px; font-size: 12px; }
+  .state .on { color: #0D86BE; }
+  .state .off { color: #E65100; }
+  .state .bad { color: #BA1A1A; }
+  .foot { margin-top: 28px; font-size: 12px; color: #8A9BB0; text-align: center; line-height: 1.8; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>扫码签到 · 测试二维码</h1>
+  <p class="sub">
+    二维码内容均为「设备编号」字符串，可直接被小程序首页「扫码签到」识别并跳转扫描设备页。
+  </p>
+
+  <div class="tips">
+    <b>如何使用：</b><br />
+    ① 用浏览器打开本页（建议保持屏幕清晰，放大显示单个二维码）；<br />
+    ② <b>微信开发者工具</b>：触发「扫码签到」后，在扫码弹窗中点击摄像头图标扫描屏幕二维码（或直接选择「模拟扫码」输入下方编号文本）；<br />
+    ③ <b>真机预览/调试</b>：微信扫码入口扫本页二维码即可体验完整流程。
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div id="q1"></div>
+      <div class="name">共聚焦显微镜 FV3000</div>
+      <div class="num">SB-2019-00102</div>
+      <div class="state"><span class="off">● 未开机（可测开机按钮）</span></div>
+    </div>
+    <div class="card">
+      <div id="q2"></div>
+      <div class="name">流式细胞仪 CytoFLEX</div>
+      <div class="num">SB-2021-00877</div>
+      <div class="state"><span class="on">● 已开机（演示开机状态）</span></div>
+    </div>
+    <div class="card">
+      <div id="q3"></div>
+      <div class="name">透射电子显微镜 Tecnai G2</div>
+      <div class="num">SB-2018-00115</div>
+      <div class="state"><span class="off">● 未开机（可测开机按钮）</span></div>
+    </div>
+    <div class="card">
+      <div id="q4"></div>
+      <div class="name">激光共聚焦 LSM 900</div>
+      <div class="num">SB-2022-01560</div>
+      <div class="state"><span class="off">● 未开机（可测开机按钮）</span></div>
+    </div>
+    <div class="card">
+      <div id="q5"></div>
+      <div class="name">无效二维码（测试未识别提示）</div>
+      <div class="num">ABC-2026-999</div>
+      <div class="state"><span class="bad">● 非本平台设备，应弹“未识别到设备”</span></div>
+    </div>
+  </div>
+
+  <p class="foot">
+    开发工具若无法调用摄像头，也可在「扫码签到」弹窗中直接输入上方设备编号文本进行模拟。<br />
+    生成库：qrcodejs（CDN 加载，需联网；离线时可手动输入编号测试）
+  </p>
+</div>
+
+<script>
+  // 页面渲染完成后生成二维码
+  var codes = [
+    { id: 'q1', text: 'SB-2019-00102' },
+    { id: 'q2', text: 'SB-2021-00877' },
+    { id: 'q3', text: 'SB-2018-00115' },
+    { id: 'q4', text: 'SB-2022-01560' },
+    { id: 'q5', text: 'ABC-2026-999' }
+  ]
+  function render() {
+    if (typeof QRCode === 'undefined') {
+      document.querySelectorAll('.card').forEach(function (el) {
+        el.insertAdjacentHTML('afterbegin', '<div style="font-size:13px;color:#BA1A1A;">二维码组件加载失败（需要联网），请直接输入上方编号测试</div>')
+      })
+      return
+    }
+    codes.forEach(function (c) {
+      new QRCode(document.getElementById(c.id), {
+        text: c.text,
+        width: 180,
+        height: 180,
+        colorDark: '#0E1C26',
+        colorLight: '#FFFFFF',
+        correctLevel: QRCode.CorrectLevel.M
+      })
+    })
+  }
+  render()
+</script>
+</body>
+</html>

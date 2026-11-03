@@ -23,41 +23,77 @@
       custom-class="notice-bar"
     />
 
-    <!-- ③ 今日待办 -->
+    <!-- ② 准入引导横幅（未准入时显示） -->
+    <view wx:if="{{!userInfo.admitted}}" class="onboarding-banner" bindtap="goToOnboarding">
+      <view class="banner-left">
+        <text class="banner-icon">🔔</text>
+        <view class="banner-text">
+          <text class="banner-title">您尚未完成平台准入</text>
+          <text class="banner-sub">完成准入后才可预约仪器和工位</text>
+        </view>
+      </view>
+      <text class="banner-arrow">›</text>
+    </view>
+
+    <!-- ③ 今日待办：GET /api/todo/list，按 type 区分颜色 -->
     <view class="section">
       <text class="section-title">今日待办</text>
 
-      <!-- 值日卡片 -->
       <van-cell-group inset custom-class="cell-group">
-        <van-cell
-          title="今日值日"
-          label="{{dutyStatus.done ? '已完成打卡' : '记得按时打卡'}}"
-          is-link
-          bindtap="goToDuty"
-        >
-          <view slot="icon" class="cell-icon duty-icon">
-            <van-icon name="clock-o" size="20px" color="#FFFFFF" />
+        <!-- 加载中：骨架占位，避免空态闪现 -->
+        <view wx:if="{{todosLoading && !todosError}}" class="todo-skeleton">
+          <view class="todo-skel-item" wx:for="{{[0,1]}}" wx:key="*this">
+            <view class="todo-skel-icon"></view>
+            <view class="todo-skel-body">
+              <view class="todo-skel-line todo-skel-line--lg"></view>
+              <view class="todo-skel-line todo-skel-line--sm"></view>
+            </view>
           </view>
-          <van-tag
-            slot="right-icon"
-            type="{{dutyStatus.done ? 'success' : 'warning'}}"
-            size="medium"
-          >{{dutyStatus.done ? '已完成' : '待办'}}</van-tag>
-        </van-cell>
+        </view>
 
-        <!-- 值日表未设置警告 -->
-        <van-cell
-          wx:if="{{!dutyStatus.scheduleSet}}"
-          title="值日表未设置"
-          label="3月值日表尚未配置，影响仪器预约"
-          is-link
-          bindtap="goToDutyAdmin"
-        >
-          <view slot="icon" class="cell-icon error-icon">
-            <van-icon name="warning-o" size="20px" color="#FFFFFF" />
+        <!-- 错误态：点击重试 -->
+        <view wx:elif="{{todosError}}" class="todo-empty todo-empty--err" bindtap="_loadTodos">
+          <view class="todo-empty-icon">
+            <text class="todo-empty-emoji">!</text>
           </view>
-          <van-tag slot="right-icon" type="danger" size="medium">去设置</van-tag>
-        </van-cell>
+          <text class="todo-empty-title">待办加载失败</text>
+          <text class="todo-empty-sub">点击此处重试</text>
+        </view>
+
+        <!-- 空态 -->
+        <view wx:elif="{{todos.length === 0}}" class="todo-empty">
+          <view class="todo-empty-icon">
+            <text class="todo-empty-emoji">✓</text>
+          </view>
+          <text class="todo-empty-title">今日暂无待办</text>
+          <text class="todo-empty-sub">所有事项都已完成，好好休息</text>
+        </view>
+
+        <!-- 列表：图标底色 + 右侧标签按类型着色 -->
+        <block wx:else>
+          <van-cell
+            wx:for="{{todos}}"
+            wx:key="id"
+            title="{{item.title}}"
+            label="{{item.desc}}"
+            clickable
+            data-idx="{{index}}"
+            bind:click="onTodoTap"
+          >
+            <view slot="icon" class="cell-icon {{item.iconCls}}">
+              <van-icon name="{{item.icon}}" size="20px" color="#FFFFFF" />
+            </view>
+            <!-- 用 clickable 代替 is-link：van-cell 在 is-link 时用箭头占位、不渲染
+                 right-icon slot，箭头这里自己画，红点才能显示 -->
+            <view slot="right-icon" class="todo-right">
+              <!-- 待处理数红点：pendingCount=1 小红点；>1 大红点内显示数量 -->
+              <view wx:if="{{item.dot}}" class="todo-dot {{item.badge ? 'todo-dot--num' : ''}}">
+                <text wx:if="{{item.badge}}" class="todo-dot-num">{{item.badge}}</text>
+              </view>
+              <van-icon name="arrow" size="16px" custom-class="todo-arrow" />
+            </view>
+          </van-cell>
+        </block>
       </van-cell-group>
     </view>
 
@@ -66,22 +102,32 @@
       <text class="section-title">快捷入口</text>
       <view class="quick-card">
       <van-grid column-num="4" border="{{false}}" custom-class="quick-grid">
-        <van-grid-item icon="scan" text="扫码签到" bindtap="goToScan"
-                       icon-color="var(--md-primary)" custom-class="grid-item" />
-        <van-grid-item icon="calendar-o" text="仪器预约" bindtap="goToInstrument"
-                       icon-color="var(--md-secondary)" custom-class="grid-item" />
-        <van-grid-item icon="desktop-o" text="实验台" bindtap="goToWorkbench"
-                       icon-color="var(--md-tertiary)" custom-class="grid-item" />
-        <van-grid-item icon="warning-o" text="故障报修" bindtap="goToRepair"
-                       icon-color="#F44336" custom-class="grid-item" />
-        <van-grid-item icon="certificate" text="培训考核" bindtap="goToTraining"
-                       icon-color="var(--md-primary)" custom-class="grid-item" />
-        <van-grid-item icon="records-o" text="申请审批" bindtap="goToApproval"
-                       icon-color="var(--md-secondary)" custom-class="grid-item" />
-        <van-grid-item icon="contact" text="技术指导" bindtap="goToMentor"
-                       icon-color="var(--md-tertiary)" custom-class="grid-item" />
-        <van-grid-item icon="notes-o" text="值日管理" bindtap="goToDutyAdmin"
-                       icon-color="var(--md-outline)" custom-class="grid-item" />
+        <van-grid-item icon="scan" text="仪器扫码" bind:click="goToScanInstrument"
+                       icon-color="#0D86BE" custom-class="grid-item grid-item--scan" />
+        <!-- 预约审批：取代原「仪器预约」位置，进入待我审批的仪器预约列表（pages/booking-approval） -->
+        <van-grid-item icon="todo-list-o" text="预约审批" bind:click="goToBookingApproval"
+                       icon-color="#FF6B35" custom-class="grid-item grid-item--approve-booking" />
+        <!-- 仪器预约：暂时隐藏（showBookEntry 置 true 即可恢复，goToInstrument 与样式都保留） -->
+        <van-grid-item wx:if="{{showBookEntry}}" icon="calendar-o" text="仪器预约" bind:click="goToInstrument"
+                       icon-color="#7B68EE" custom-class="grid-item grid-item--book" />
+        <van-grid-item icon="desktop-o" text="实验工位" bind:click="goToWorkbench"
+                       icon-color="#14B8A6" custom-class="grid-item grid-item--work" />
+        <!-- 设备报修：已恢复显示（showRepairEntry 置 false 可再次隐藏） -->
+        <van-grid-item wx:if="{{showRepairEntry}}" icon="warning-o" text="设备报修" bind:click="goToRepair"
+                       icon-color="#FF6B35" custom-class="grid-item grid-item--warn" />
+        <van-grid-item icon="certificate" text="培训考核" bind:click="goToTraining"
+                       icon-color="#F59E0B" custom-class="grid-item grid-item--train" />
+        <!-- 准入审批：无 system:apply_user:init / system:apply_user:audit 权限时置灰 -->
+        <van-grid-item icon="records-o" bind:click="goToApproval"
+                       icon-color="{{canApprove ? '#10B981' : '#B0BEC5'}}"
+                       text-class="grid-text {{canApprove ? '' : 'grid-text--disabled'}}"
+                       custom-class="grid-item grid-item--approve {{canApprove ? '' : 'grid-item--disabled'}}">
+          <text slot="text" class="grid-text {{canApprove ? '' : 'grid-text--disabled'}}">准入审批</text>
+        </van-grid-item>
+        <van-grid-item icon="contact" text="方法学门诊" bind:click="goToMentor"
+                       icon-color="#EC4899" custom-class="grid-item grid-item--mentor" />
+        <van-grid-item icon="notes-o" text="值日管理" bind:click="goToDutyAdmin"
+                       icon-color="#6366F1" custom-class="grid-item grid-item--duty" />
       </van-grid>
       </view>
     </view>
@@ -90,26 +136,62 @@
     <view class="section">
       <view class="section-header">
         <text class="section-title">近期预约</text>
-        <text class="section-more" bindtap="goToInstrument">查看全部 ›</text>
+        <text class="section-more" bindtap="goToAppointmentDetail">查看全部 ›</text>
       </view>
 
-      <view wx:if="{{appointments.length === 0}}" class="empty-hint">
-        <van-empty image="search" description="暂无预约" />
+      <!-- 加载中：骨架占位，避免空态闪现 -->
+      <view wx:if="{{appointmentsLoading && !appointmentsError}}" class="appt-skeleton">
+        <view class="appt-skel-item" wx:for="{{[0,1]}}" wx:key="*this">
+          <view class="appt-skel-icon"></view>
+          <view class="appt-skel-body">
+            <view class="appt-skel-line appt-skel-line--lg"></view>
+            <view class="appt-skel-line appt-skel-line--sm"></view>
+          </view>
+        </view>
       </view>
 
+      <!-- 错误态：接口失败，给出「重新加载」入口 -->
+      <view wx:elif="{{appointmentsError}}" class="appt-empty" bindtap="_loadAppointments">
+        <view class="appt-empty-illust">
+          <text class="appt-empty-emoji">⚠️</text>
+        </view>
+        <text class="appt-empty-title">预约加载失败</text>
+        <text class="appt-empty-sub">点击此处重试，或稍后再来看看</text>
+      </view>
+
+      <!-- 空态：美化卡片，友好提示 + CTA 引导去预约 -->
+      <view wx:elif="{{appointments.length === 0}}" class="appt-empty">
+        <view class="appt-empty-illust">
+          <text class="appt-empty-emoji">📅</text>
+          <view class="appt-empty-deco appt-empty-deco--1"></view>
+          <view class="appt-empty-deco appt-empty-deco--2"></view>
+          <view class="appt-empty-deco appt-empty-deco--3"></view>
+        </view>
+        <text class="appt-empty-title">还没有近期预约</text>
+        <text class="appt-empty-sub">去预约一台心仪的仪器，开始今天的实验</text>
+        <view class="appt-empty-cta" catchtap="goToInstrument">
+          <text>去预约仪器</text>
+          <text class="appt-empty-cta-arrow">›</text>
+        </view>
+      </view>
+
+      <!-- 列表：最多 HOME_APPT_MAX 条 -->
       <van-cell-group inset wx:else custom-class="cell-group">
         <van-cell
           wx:for="{{appointments}}"
           wx:key="id"
           title="{{item.name}}"
           label="{{item.date}} · {{item.timeSlot}}"
+          is-link
+          bind:click="goToAppointmentDetail"
+          data-id="{{item.id}}"
         >
           <view slot="icon" class="cell-icon appt-icon">
             <van-icon name="desktop-o" size="20px" color="#FFFFFF" />
           </view>
           <van-tag
             slot="right-icon"
-            type="{{item.status === 'confirmed' ? 'primary' : item.status === 'pending' ? 'warning' : 'default'}}"
+            type="{{item.status === 'active' ? 'primary' : item.status === 'approved' ? 'primary' : item.status === 'pending' ? 'warning' : 'default'}}"
             size="medium"
           >{{item.statusText}}</van-tag>
         </van-cell>
@@ -128,7 +210,8 @@
           wx:key="id"
           title="{{item.name}}"
           is-link
-          bindtap="goToTraining"
+          bind:click="goToTrainingDetail"
+          data-id="{{item.id}}"
         >
           <view slot="icon" class="cell-icon training-icon">
             <van-icon name="records-o" size="20px" color="#FFFFFF" />

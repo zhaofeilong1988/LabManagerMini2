@@ -1,8 +1,13 @@
 {
   "compileType": "miniprogram",
-  "libVersion": "trial",
+  "libVersion": "3.8.12",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "assets/docs"
+      }
+    ],
     "include": []
   },
   "setting": {
@@ -37,6 +42,6 @@
     "tabIndent": "auto",
     "tabSize": 2
   },
-  "appid": "wx08e294dbc55b4adc",
+  "appid": "wx28ce2198e3c163ef",
   "simulatorPluginLibVersion": {}
 }

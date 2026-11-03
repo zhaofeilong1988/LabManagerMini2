@@ -1,0 +1,74 @@
+<!-- pages/onboarding/result/result.wxml -->
+<view class="result-wrap">
+
+  <!-- 考试结果 -->
+  <block wx:if="{{type === 'exam'}}">
+    <!-- 判卷中：试卷含简答题，需人工批阅 -->
+    <block wx:if="{{status === 'grading'}}">
+      <text class="result-icon">⏳</text>
+      <text class="result-title">判卷中</text>
+      <text class="result-sub">试卷已提交成功。本次考试包含简答题，需人工批阅，请稍后在准入总览中查看最终成绩。</text>
+      <view class="result-card">
+        <view class="result-row">
+          <text class="result-key">批阅状态</text>
+          <text class="result-val">判卷中</text>
+        </view>
+        <view class="result-row">
+          <text class="result-key">题目总数</text>
+          <text class="result-val">{{total}} 题</text>
+        </view>
+      </view>
+      <button class="btn-main" bindtap="backToOnboarding">返回准入总览</button>
+    </block>
+
+    <!-- 已出分 -->
+    <block wx:else>
+      <text class="result-icon">{{passed ? '✅' : '❌'}}</text>
+      <text class="result-title">{{passed ? '考试通过' : '未通过'}}</text>
+      <text class="result-sub">{{passed ? '恭喜您通过安全考试（满分100分，60分合格）。请返回材料提交页完成文件上传后提交审核。' : '本次得分未达60分合格线，请复习后重新考试。'}}</text>
+      <view class="result-card">
+        <view class="result-row">
+          <text class="result-key">考试成绩</text>
+          <text class="result-val {{passed ? 'pass' : 'fail'}}">{{score}} 分</text>
+        </view>
+        <view class="result-row">
+          <text class="result-key">合格线</text>
+          <text class="result-val">60 分</text>
+        </view>
+        <view class="result-row">
+          <text class="result-key">答题情况</text>
+          <text class="result-val">{{correct}}/{{total}} 题正确</text>
+        </view>
+      </view>
+      <button wx:if="{{passed}}" class="btn-main" bindtap="backToHub">返回材料提交</button>
+      <button wx:else class="btn-main" bindtap="retakeExam">重新考试</button>
+    </block>
+  </block>
+
+  <!-- 准入成功 -->
+  <block wx:else>
+    <text class="result-icon">🎉</text>
+    <text class="result-title">准入成功</text>
+    <text class="result-sub">恭喜您已完成平台准入！现在可以预约仪器和申请工位了。</text>
+    <view class="result-card">
+      <view class="result-row">
+        <text class="result-key">权限身份</text>
+        <text class="result-val">院内用户 · 标准计费</text>
+      </view>
+      <view class="result-row">
+        <text class="result-key">账户有效期</text>
+        <text class="result-val pass">2026-09-02 ~ 2027-09-01</text>
+      </view>
+      <view class="result-row">
+        <text class="result-key">可预约仪器</text>
+        <text class="result-val">已开通</text>
+      </view>
+      <view class="result-row">
+        <text class="result-key">工位申请</text>
+        <text class="result-val">已开通</text>
+      </view>
+    </view>
+    <button class="btn-main" bindtap="goHome">返回首页</button>
+  </block>
+
+</view>

@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "我的工位",
+  "navigationBarBackgroundColor": "#0A7BB8",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "van-icon": "@vant/weapp/icon/index"
+  }
+}

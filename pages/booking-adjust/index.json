@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "预约调整",
+  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#F5FAFD",
+  "usingComponents": {
+    "van-icon": "@vant/weapp/icon/index"
+  }
+}

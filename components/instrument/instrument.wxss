@@ -1,1 +1,276 @@
 /* components/instrument/instrument.wxss */
+
+.ins-page {
+  height: 100%;
+  background: var(--md-background, #F5FAFD);
+  position: relative;   /* 给悬浮回顶按钮提供定位上下文 */
+}
+
+.ins-scroll {
+  height: 100%;
+}
+
+/* ── 搜索框 ── */
+.ins-search {
+  padding: 16rpx 24rpx 8rpx;
+}
+
+.ins-search-box {
+  background: #ffffff;
+  border-radius: 40rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+/* ── 列表 ── */
+.ins-list {
+  padding: 8rpx 24rpx 0;
+}
+
+.ins-card {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 24rpx 24rpx 20rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(10, 123, 184, 0.06);
+}
+
+.ins-card:active {
+  opacity: 0.95;
+}
+
+/* 顶部：仪器名称 */
+.ins-hd {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18rpx;
+}
+
+.ins-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--md-on-surface, #161C20);
+  line-height: 1.35;
+}
+
+/* 中部：左侧缩略图 + 右侧标记/状态 + 预约按钮 */
+.ins-mid {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 22rpx;
+  margin-bottom: 18rpx;
+}
+
+/* 缩略图：统一浅蓝渐变底，不分彩色变体 */
+.ins-thumb {
+  width: 296rpx;
+  height: 164rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #DBEFF9, #C9E9FA);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.ins-img {
+  width: 100%;
+  height: 100%;
+}
+
+.ins-thumb-bg {
+  font-size: 76rpx;
+  line-height: 1;
+  filter: drop-shadow(0 2rpx 8rpx rgba(0, 0, 0, 0.18));
+}
+
+.ins-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14rpx;
+}
+
+.ins-flag {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10rpx;
+}
+
+/* 标记图标：彩色小徽章 */
+.ins-flag-ic {
+  font-size: 22rpx;
+  line-height: 32rpx;
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #7B68EE 0%, #B19BFF 100%);
+  box-shadow: 0 2rpx 6rpx rgba(123, 104, 238, 0.30);
+  color: #FFFFFF;
+  font-weight: 700;
+  flex-shrink: 0;
+  text-align: center;
+}
+.ins-flag-ic--book {
+  background: linear-gradient(135deg, #FF6B35 0%, #FFA071 100%);
+  box-shadow: 0 2rpx 6rpx rgba(255, 107, 53, 0.30);
+}
+.ins-flag-ic--ok {
+  background: linear-gradient(135deg, #10B981 0%, #6EE7B7 100%);
+  box-shadow: 0 2rpx 6rpx rgba(16, 185, 129, 0.30);
+}
+.ins-flag-ic--warn {
+  background: linear-gradient(135deg, #FF4757 0%, #FF7A85 100%);
+  box-shadow: 0 2rpx 6rpx rgba(255, 71, 87, 0.30);
+}
+
+.ins-flag-t {
+  font-size: 25rpx;
+  color: var(--md-on-surface, #161C20);
+  line-height: 1.3;
+  font-weight: 500;
+}
+
+.ins-status {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10rpx;
+}
+
+/* 状态图标：青色小徽章 */
+.ins-status-ic {
+  font-size: 22rpx;
+  line-height: 32rpx;
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #14B8A6 0%, #5EEAD4 100%);
+  box-shadow: 0 2rpx 6rpx rgba(20, 184, 166, 0.30);
+  color: #FFFFFF;
+  font-weight: 700;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.ins-status-t {
+  font-size: 25rpx;
+  color: var(--md-on-surface, #161C20);
+  line-height: 1.3;
+  font-weight: 500;
+}
+
+/* 预约按钮：胶囊形（点击进入仪器详情） */
+.ins-book {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  height: 64rpx;
+  padding: 0 28rpx;
+  border-radius: 32rpx;
+  background: linear-gradient(135deg, #33ADDE, #0A7BB8);
+  box-shadow: 0 6rpx 16rpx rgba(10, 123, 184, 0.28);
+}
+
+.ins-book--hover {
+  transform: scale(0.94);
+  box-shadow: 0 3rpx 8rpx rgba(10, 123, 184, 0.2);
+}
+
+.ins-book-t {
+  font-size: 26rpx;
+  color: #ffffff;
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* 底部：实验室 + 平台 */
+.ins-foot {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 14rpx;
+  border-top: 1rpx solid rgba(10, 123, 184, 0.06);
+}
+
+.ins-foot-l,
+.ins-foot-r {
+  flex: 1;
+  min-width: 0;
+  font-size: 22rpx;
+  color: #5C6E7C;
+  line-height: 1.4;
+}
+
+.ins-foot-l {
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 16rpx;
+}
+
+.ins-foot-r {
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty-hint {
+  padding: 80rpx 0;
+  text-align: center;
+  color: #94A8B5;
+  font-size: 26rpx;
+}
+
+.bottom-safe {
+  height: 32rpx;
+}
+
+/* ── 悬浮「回到顶部」按钮 ── */
+.ins-back-top {
+  position: absolute;
+  right: 28rpx;
+  bottom: 48rpx;
+  width: 84rpx;
+  height: 84rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFFFFF 0%, #E1F2FA 100%);
+  box-shadow: 0 8rpx 24rpx rgba(10, 123, 184, 0.18);
+  border: 2rpx solid rgba(51, 173, 222, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  animation: ins-back-top-in 0.22s ease;
+}
+
+.ins-back-top--hover {
+  transform: scale(0.92);
+  opacity: 0.88;
+}
+
+@keyframes ins-back-top-in {
+  from { opacity: 0; transform: scale(0.6); }
+  to   { opacity: 1; transform: scale(1); }
+}

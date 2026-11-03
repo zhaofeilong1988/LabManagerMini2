@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "证书详情",
+  "navigationBarBackgroundColor": "#0A7BB8",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#F5FAFD",
+  "usingComponents": {
+    "van-icon": "@vant/weapp/icon/index"
+  }
+}

@@ -1,0 +1,78 @@
+<!-- pages/training/cert-detail/cert-detail.wxml -->
+<view wx:if="{{cert}}" class="cd-page">
+<scroll-view class="cd-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+
+  <!-- 证书主视觉 -->
+  <view class="cd-hero">
+    <view class="cd-hero__top">
+      <view class="cd-hero__badge cd-hero__badge--{{cert.type}}">
+        {{cert.type === 'special' ? '专项证书' : '基础证书'}}
+      </view>
+      <view class="cd-hero__status">
+        <van-icon name="passed" size="12px" color="#E9F7DE" />
+        <text>有效证书</text>
+      </view>
+    </view>
+    <view class="cd-medal">
+      <van-icon name="medal-o" size="52px" color="#FFF8E1" />
+    </view>
+    <text class="cd-hero__name">{{cert.name}}</text>
+    <text class="cd-hero__no">证书编号：{{cert.no}}</text>
+  </view>
+
+  <!-- 证书信息 -->
+  <view class="cd-card">
+    <view class="cd-card__title">
+      <view class="cd-dot"></view>
+      <text class="cd-card__title-text">证书信息</text>
+    </view>
+    <view class="cd-row">
+      <text class="cd-row__label">持证人</text>
+      <text class="cd-row__value">{{holderName}}</text>
+    </view>
+    <view class="cd-row">
+      <text class="cd-row__label">颁发单位</text>
+      <text class="cd-row__value">{{cert.organizer}}</text>
+    </view>
+    <view class="cd-row">
+      <text class="cd-row__label">获得日期</text>
+      <text class="cd-row__value">{{cert.date}}</text>
+    </view>
+    <view class="cd-row">
+      <text class="cd-row__label">有效期至</text>
+      <text class="cd-row__value">{{cert.validity}}</text>
+    </view>
+  </view>
+
+  <!-- 关联培训与考核 -->
+  <view class="cd-card">
+    <view class="cd-card__title">
+      <view class="cd-dot"></view>
+      <text class="cd-card__title-text">关联培训与考核</text>
+    </view>
+    <view class="cd-course">
+      <view class="cd-course__icon">
+        <van-icon name="orders-o" size="20px" color="#0A7BB8" />
+      </view>
+      <view class="cd-course__body">
+        <text class="cd-course__name">{{cert.course}}</text>
+        <text wx:if="{{cert.instrument}}" class="cd-course__inst">关联仪器：{{cert.instrument}}</text>
+        <view class="cd-course__tag cd-course__tag--{{cert.type}}">
+          考核结果：{{cert.score}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 证书说明 -->
+  <view class="cd-card">
+    <view class="cd-card__title">
+      <view class="cd-dot"></view>
+      <text class="cd-card__title-text">证书说明</text>
+    </view>
+    <text class="cd-desc">{{cert.desc}}</text>
+  </view>
+
+  <view class="cd-bottom"></view>
+</scroll-view>
+</view>

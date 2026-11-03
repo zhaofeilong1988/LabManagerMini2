@@ -1,0 +1,144 @@
+/* pages/device-log/index.wxss —— 使用记录与费用
+   列表样式与「上机记录」页 (pages/instrument-logs) 保持一致：白底 + 细线分隔 */
+page {
+  background: #ffffff;
+}
+.dl-page {
+  min-height: 100vh;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── 状态区（加载中 / 失败） ── */
+.dl-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 200rpx 0 0;
+}
+.dl-state-t {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #5C6E7C;
+}
+.dl-state-btn {
+  margin-top: 32rpx;
+  padding: 18rpx 60rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #0A7BB8, #33ADDE);
+  color: #FFFFFF;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+.dl-err-ic { font-size: 80rpx; }
+.dl-spin {
+  width: 60rpx;
+  height: 60rpx;
+  border: 6rpx solid #DBEFF9;
+  border-top-color: #0A7BB8;
+  border-radius: 50%;
+  animation: dl-rotate 0.8s linear infinite;
+}
+@keyframes dl-rotate {
+  from { transform: rotate(0); }
+  to { transform: rotate(360deg); }
+}
+
+/* ── 空态 ── */
+.dl-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 160rpx 0 0;
+}
+.dl-empty-ic { font-size: 90rpx; }
+.dl-empty-t {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #8898A2;
+}
+.dl-hover { opacity: 0.78; }
+
+/* ── 列表（与 pages/instrument-logs/index.wxss 一致） ── */
+.il-list {
+  padding-bottom: 24rpx;
+}
+
+/* 单条记录：白底 + 细线分隔（不用卡片圆角） */
+.il-item {
+  padding: 24rpx 28rpx 26rpx;
+  border-bottom: 1rpx solid #E8EEF3;
+}
+
+/* ① 仪器名称（型号） */
+.il-head {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.il-dev {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #0A7BB8;
+  line-height: 1.4;
+}
+.il-model {
+  font-size: 26rpx;
+  color: #8A9BB0;
+  line-height: 1.4;
+}
+
+/* ② 使用人（所内/所外/院外） 电话 */
+.il-meta {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin-top: 10rpx;
+}
+.il-user {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #161C20;
+}
+.il-dept {
+  font-size: 26rpx;
+  color: #3D5263;
+  margin-left: 4rpx;
+}
+.il-phone {
+  font-size: 26rpx;
+  color: #3D5263;
+  margin-left: 28rpx;
+}
+
+/* ③ 上机时间段 */
+.il-time {
+  display: block;
+  font-size: 24rpx;
+  color: #566B78;
+  line-height: 1.6;
+  margin-top: 8rpx;
+}
+
+/* ④ 金额算式 = 合计(实付) */
+.il-fee {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+  margin-top: 8rpx;
+}
+.il-fee-txt {
+  flex: 1;
+  min-width: 0;
+  font-size: 26rpx;
+  color: #161C20;
+  line-height: 1.5;
+}
+.il-fee-green {
+  color: #4CAF50;
+  font-weight: 600;
+}

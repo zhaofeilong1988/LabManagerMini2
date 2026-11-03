@@ -1,0 +1,62 @@
+<!-- pages/onboarding/exam/exam.wxml -->
+<view class="exam-wrap">
+
+  <!-- 考试信息头 -->
+  <view class="exam-header">
+    <text class="exam-title">{{examTitle}}</text>
+    <text class="exam-timer {{timerWarning ? 'warning' : ''}}">{{timerText}}</text>
+  </view>
+
+  <!-- 进度条 -->
+  <view class="exam-progress-bar">
+    <view class="exam-progress-fill" style="width: {{progressPercent}}%"></view>
+  </view>
+
+  <!-- 题目 -->
+  <view class="question-card">
+    <view wx:if="{{loading}}" class="exam-loading">题目加载中…</view>
+    <block wx:elif="{{currentQuestion}}">
+      <view class="question-meta">
+        <text class="qtype-tag">{{currentQuestion.typeText}}</text>
+        <text class="qscore">{{index + 1}}/{{total}} · 已答 {{answeredCount}} 题</text>
+      </view>
+      <text class="question-text">{{currentQuestion.q}}</text>
+
+      <view wx:if="{{currentQuestion.multi}}" class="multi-tip">本题为多选题，请选择所有正确选项</view>
+
+      <!-- 客观题选项（单选 / 多选 / 判断） -->
+      <block wx:if="{{currentQuestion.type !== 4}}">
+        <view
+          wx:for="{{currentQuestion.options}}"
+          wx:for-item="opt"
+          wx:for-index="optIdx"
+          wx:key="letter"
+          class="option-item {{opt.selected ? 'selected' : ''}} {{currentQuestion.multi ? 'multi' : ''}}"
+          bindtap="selectOption"
+          data-index="{{optIdx}}"
+        >
+          <view class="option-circle">{{opt.letter}}</view>
+          <text class="option-text">{{opt.text}}</text>
+        </view>
+      </block>
+
+      <!-- 简答题 -->
+      <textarea
+        wx:if="{{currentQuestion.type === 4}}"
+        class="short-answer"
+        value="{{currentQuestion.textAnswer}}"
+        placeholder="请输入你的答案"
+        maxlength="1000"
+        bindinput="onShortAnswerInput"
+      />
+    </block>
+  </view>
+
+  <!-- 导航 -->
+  <view wx:if="{{!loading && currentQuestion}}" class="exam-nav">
+    <button wx:if="{{index > 0}}" class="btn-sec" bindtap="prevQuestion">上一题</button>
+    <button wx:if="{{index < total - 1}}" class="btn-main" bindtap="nextQuestion">下一题</button>
+    <button wx:else class="btn-main" bindtap="submitExam">交卷</button>
+  </view>
+
+</view>

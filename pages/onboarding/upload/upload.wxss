@@ -1,0 +1,360 @@
+/* pages/onboarding/upload/upload.wxss */
+@import "../onboarding.wxss";
+
+/* ── 模板下载区 ── */
+.upload-tpl-block {
+  margin: 0 24rpx 24rpx;
+  background: var(--ob-surface);
+  border-radius: 16rpx;
+  padding: 28rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.upload-tpl-head {
+  margin-bottom: 12rpx;
+}
+
+.upload-tpl-title-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.upload-tpl-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: var(--ob-text);
+}
+
+.upload-tpl-sub {
+  display: block;
+  font-size: 22rpx;
+  color: var(--ob-hint);
+  line-height: 1.5;
+  margin-top: 8rpx;
+}
+
+.upload-tpl-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18rpx 0;
+}
+
+.upload-tpl-item + .upload-tpl-item {
+  border-top: 1rpx solid var(--ob-border);
+}
+
+.upload-tpl-hover {
+  opacity: 0.7;
+}
+
+.upload-tpl-file {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16rpx;
+  flex: 1;
+  min-width: 0;
+}
+
+.upload-tpl-icon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 12rpx;
+  background: #E7F4FB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  flex-shrink: 0;
+}
+
+.upload-tpl-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  min-width: 0;
+}
+
+.upload-tpl-name {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: var(--ob-text);
+}
+
+.upload-tpl-fmt {
+  font-size: 20rpx;
+  color: var(--ob-hint);
+}
+
+.upload-tpl-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6rpx;
+  background: linear-gradient(135deg, var(--ob-primary), var(--ob-accent));
+  color: #fff;
+  font-size: 22rpx;
+  padding: 12rpx 24rpx;
+  border-radius: 28rpx;
+  flex-shrink: 0;
+}
+
+/* ── 上传材料卡片（优化排版 v2） ── */
+.upload-doc-block {
+  background: var(--ob-surface);
+  border-radius: 16rpx;
+  margin: 0 24rpx 20rpx;
+  padding: 24rpx 24rpx 28rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+/* 文件信息头 */
+.upload-doc-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+.upload-doc-ic {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 14rpx;
+  background: #DFF0F9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.upload-doc-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.upload-doc-name-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.upload-doc-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--ob-text);
+}
+
+.upload-doc-required {
+  font-size: 20rpx;
+  color: var(--ob-error);
+  background: #FDECEA;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  flex-shrink: 0;
+}
+
+.upload-doc-optional-tag {
+  font-size: 20rpx;
+  color: var(--ob-hint);
+  background: #F5FAFD;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  flex-shrink: 0;
+}
+
+.upload-doc-desc {
+  display: block;
+  font-size: 22rpx;
+  color: var(--ob-hint);
+  line-height: 1.5;
+  margin-top: 4rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-doc-count {
+  font-size: 20rpx;
+  font-weight: 600;
+  color: var(--ob-hint);
+  background: #F5FAFD;
+  padding: 6rpx 14rpx;
+  border-radius: 20rpx;
+  flex-shrink: 0;
+}
+
+.upload-doc-count.has {
+  color: var(--ob-done);
+  background: #E2F3FB;
+}
+
+/* 照片网格：固定方格，与添加格同尺寸对齐 */
+.upload-photo-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.upload-photo-item {
+  width: 144rpx;
+  height: 144rpx;
+  border-radius: 12rpx;
+  background: var(--ob-bg);
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 2rpx 8rpx rgba(14, 28, 38, 0.1);
+}
+
+.upload-photo-hover {
+  opacity: 0.85;
+}
+
+.upload-photo-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 文档卡片：与照片同格尺寸，展示文件图标 + 文件名 + 扩展名 */
+.upload-file-card {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: #F5FAFD;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6rpx;
+  padding: 10rpx 8rpx;
+}
+
+.upload-file-icon {
+  font-size: 40rpx;
+  line-height: 1;
+}
+
+.upload-file-name {
+  font-size: 18rpx;
+  color: var(--ob-text);
+  max-width: 100%;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+  line-height: 1.3;
+}
+
+.upload-file-ext {
+  font-size: 18rpx;
+  font-weight: 600;
+  color: var(--ob-accent);
+  line-height: 1;
+}
+
+.upload-photo-del {
+  position: absolute;
+  top: 6rpx;
+  right: 6rpx;
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  background: rgba(14, 28, 38, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid rgba(255, 255, 255, 0.9);
+}
+
+/* 添加照片格 */
+.upload-add-btn {
+  width: 144rpx;
+  height: 144rpx;
+  border-radius: 12rpx;
+  border: 2rpx dashed var(--ob-accent);
+  background: #F5FAFD;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  transition: background 0.2s;
+}
+
+.upload-add-hover {
+  background: #DFF0F9;
+}
+
+.upload-add-text {
+  font-size: 20rpx;
+  color: var(--ob-accent);
+}
+
+/* ── 签字人员字段行（与登记页同款） ── */
+.field {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 24rpx 28rpx;
+  position: relative;
+}
+
+.field-label {
+  width: 168rpx;
+  flex-shrink: 0;
+  font-size: 28rpx;
+  color: var(--ob-text);
+}
+
+.field-required {
+  color: var(--ob-error);
+  margin-right: 4rpx;
+}
+
+.field-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: var(--ob-text);
+  line-height: 1.6;
+}
+
+.pick-field {
+  cursor: pointer;
+}
+
+.field-pick {
+  flex: 1;
+  min-width: 0;
+  font-size: 28rpx;
+  color: #A8B6BF;
+  line-height: 1.6;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.field-pick.has {
+  color: var(--ob-text);
+  font-weight: 500;
+}
+
+.field-arrow {
+  flex-shrink: 0;
+  color: #A8B6BF;
+  font-size: 30rpx;
+  transform: rotate(90deg);
+  line-height: 1;
+  padding-left: 8rpx;
+}
+
